@@ -1,0 +1,7 @@
+node_modules
+dist
+*.local
+.tools
+.sites-runtime
+tools/*.png
+tools/*.jpg
