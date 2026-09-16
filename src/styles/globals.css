@@ -2465,3 +2465,16 @@ p {
 .date-beneath:after {
   z-index: 2;
 }
+/* The countdown unfolds within the revealed invitation sheet. */
+.reveal-sequence-clock { position: absolute; width: 0; height: 0; pointer-events: none; }
+.invitation-countdown-space { width: 100%; overflow: hidden; }
+.invitation-countdown { padding: 22px 0 8px; color: #6d493a; }
+.countdown-divider { height: 1px; width: 72%; margin: 0 auto 18px; background: linear-gradient(90deg, transparent, #b69a65, transparent); }
+.invitation-countdown h3 { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 400; font-size: clamp(1.35rem, 5vw, 1.7rem); }
+.invitation-countdown .countdown-clock { margin-top: 18px; }
+.invitation-countdown .number-mask { font-family: "Italiana", Georgia, serif; font-size: clamp(1.8rem, 8vw, 2.6rem); height: 46px; }
+.invitation-countdown .countdown-label { font-size: .53rem; letter-spacing: .09em; }
+.invitation-countdown .countdown-note { color: #80674f; font-size: .72rem; margin-top: 16px; }
+.invitation-countdown .countdown-unit + .countdown-unit:before { background: #b69a6545; }
+.invitation-countdown .scroll-hint { margin-top: 22px; font-size: .65rem; }
+.date-discovered .reveal-action { min-height: 0; margin: 0; }

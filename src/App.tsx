@@ -5,7 +5,6 @@ import { AudioControl } from "./components/ui/AudioControl";
 import { CeremonyScenes } from "./components/scenes/CeremonyScenes";
 import { EnvelopeScene } from "./components/scenes/EnvelopeScene";
 import { ScratchRevealScene } from "./components/scenes/ScratchRevealScene";
-import { CountdownScene } from "./components/scenes/CountdownScene";
 import { ClosingScene } from "./components/scenes/ClosingScene";
 import "./styles/globals.css";
 function App() {
@@ -27,7 +26,6 @@ function App() {
           inert={!opened}
           style={{ visibility: opened ? "visible" : "hidden" }}
         >
-          <CountdownScene revealed={dateRevealed} />
           <JourneyScene />
           <CeremonyScenes />
           <ClosingScene />

@@ -2,8 +2,11 @@ import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { weddingData } from "../../data/weddingData";
+import { WeddingCountdown } from "../interactive/WeddingCountdown";
 import { ScratchCanvas } from "../interactive/ScratchCanvas";
 import { Ornament, Botanical } from "../ui/Ornament";
+
+type RevealState = "covered" | "scratching" | "revealing" | "revealed";
 
 export function ScratchRevealScene({
   revealed,
@@ -14,6 +17,18 @@ export function ScratchRevealScene({
 }) {
   const reduced = useReducedMotion();
   const [scratching, setScratching] = useState(false);
+  const [revealState, setRevealState] = useState<RevealState>("covered");
+  const [countdownVisible, setCountdownVisible] = useState(false);
+  useEffect(() => {
+    if (revealed) setRevealState("revealing");
+    else if (scratching) setRevealState("scratching");
+  }, [revealed, scratching]);
+  useEffect(() => {
+    if (revealState !== "revealed") return;
+    // Let the completed date composition breathe before introducing time.
+    const pause = window.setTimeout(() => setCountdownVisible(true), 750);
+    return () => window.clearTimeout(pause);
+  }, [revealState]);
   const scene = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: scene,
@@ -37,6 +52,7 @@ export function ScratchRevealScene({
       id="scratch-date"
       ref={scene}
       className={`scene scratch-scene paper ${revealed ? "date-discovered" : ""} ${scratching ? "is-scratching" : ""}`}
+      data-reveal-state={revealState}
       aria-labelledby="scratch-title"
     >
       <motion.div
@@ -102,6 +118,40 @@ export function ScratchRevealScene({
               </div>
             )}
           </div>
+          {revealed && (
+            <motion.span
+              aria-hidden="true"
+              className="reveal-sequence-clock"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: reduced ? 0 : 3.1 }}
+              onAnimationComplete={() => setRevealState("revealed")}
+            />
+          )}
+          <motion.div
+            className="invitation-countdown-space"
+            initial={false}
+            animate={{ height: countdownVisible ? "auto" : 0 }}
+            transition={{ duration: reduced ? 0 : 0.85, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {countdownVisible && (
+              <motion.div
+                id="countdown"
+                className="invitation-countdown"
+                initial={{ opacity: 0, y: reduced ? 0 : 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: reduced ? 0 : 0.9, delay: reduced ? 0 : 0.2 }}
+                aria-labelledby="countdown-title"
+              >
+                <motion.div className="countdown-divider" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: reduced ? 0 : 0.8 }} />
+                <h3 id="countdown-title">Until we say <em>I do</em></h3>
+                <WeddingCountdown />
+                <motion.a href="#journey" className="scroll-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduced ? 0 : 1.2, duration: 0.6 }}>
+                  Continue the journey <span>↓</span>
+                </motion.a>
+              </motion.div>
+            )}
+          </motion.div>
           <div className="reveal-action">
             {revealed ? (
               <>
@@ -112,9 +162,6 @@ export function ScratchRevealScene({
                     : ""}
                   .
                 </p>
-                <a href="#countdown" className="scroll-hint reveal-continue">
-                  Let the anticipation begin <span>↓</span>
-                </a>
               </>
             ) : (
               <>
