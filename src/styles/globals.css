@@ -2478,3 +2478,14 @@ p {
 .invitation-countdown .countdown-unit + .countdown-unit:before { background: #b69a6545; }
 .invitation-countdown .scroll-hint { margin-top: 22px; font-size: .65rem; }
 .date-discovered .reveal-action { min-height: 0; margin: 0; }
+/* Gesture isolation belongs to the foil, never the document. */
+.scratch-canvas { -webkit-touch-callout: none; }
+/* Carry the invitation's fine gold thread into the existing journey. */
+.scratch-scene { position: relative; }
+.scratch-scene.date-discovered:before { content: ""; position: absolute; bottom: 0; left: 50%; width: 1px; height: 32px; background: #b79a7070; pointer-events: none; }
+.journey { position: relative; }
+.journey:before { content: ""; position: absolute; top: 0; left: 50%; width: 1px; height: 55px; background: linear-gradient(#b79a7070, #b79a7020); pointer-events: none; }
+.chapter-bridge { height: clamp(70px, 12dvh, 110px); }
+.date-discovered .revealed-month { animation: month-arrive .7s var(--ease) 1s both; }
+@keyframes month-arrive { from { opacity: .2; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .date-discovered .revealed-month { animation: none; } }

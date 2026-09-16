@@ -1,6 +1,6 @@
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { weddingData } from "../../data/weddingData";
 import { WeddingCountdown } from "../interactive/WeddingCountdown";
 import { ScratchCanvas } from "../interactive/ScratchCanvas";
@@ -34,18 +34,9 @@ export function ScratchRevealScene({
     target: scene,
     offset: ["start start", "end start"],
   });
-  const sheetY = useTransform(scrollYProgress, [0, 1], [0, -48]);
-  const gardenY = useTransform(scrollYProgress, [0, 1], [0, 38]);
-  useEffect(() => {
-    if (!scratching) return;
-    const prevent = (event: Event) => event.preventDefault();
-    window.addEventListener("wheel", prevent, { passive: false });
-    window.addEventListener("touchmove", prevent, { passive: false });
-    return () => {
-      window.removeEventListener("wheel", prevent);
-      window.removeEventListener("touchmove", prevent);
-    };
-  }, [scratching]);
+  const smooth = useSpring(scrollYProgress, { stiffness: 110, damping: 24, mass: 0.3 });
+  const sheetY = useTransform(smooth, [0, 1], [0, -18]);
+  const gardenY = useTransform(smooth, [0, 1], [-10, 10]);
   const [day, month] = weddingData.wedding.dateLabel.split(" ");
   return (
     <section

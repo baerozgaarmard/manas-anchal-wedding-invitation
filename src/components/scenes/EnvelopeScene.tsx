@@ -76,11 +76,11 @@ export function EnvelopeScene({
         aria-hidden={state !== "opened"}
         initial={false}
         animate={{
-          y: lifting ? 0 : 90,
-          scale: lifting ? 1 : 0.92,
+          y: lifting ? 0 : 28,
+          scale: lifting ? 1 : 0.975,
           opacity: state === "sealed" || state === "breaking" ? 0 : 1,
         }}
-        transition={{ duration: reduced ? 0 : 1.5, ease }}
+        transition={{ duration: reduced ? 0 : 1.35, ease }}
         onAnimationComplete={() => {
           if (phase.current === "revealing") finish();
         }}

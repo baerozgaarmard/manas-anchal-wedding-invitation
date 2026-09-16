@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { weddingData, type WeddingEvent } from "../../data/weddingData";
 import { Ornament, Botanical } from "../ui/Ornament";
 import { FloatingPetals } from "../ui/FloatingPetals";
@@ -109,8 +109,9 @@ function Ceremony({ event }: { event: WeddingEvent }) {
     target: ref,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [-20, 25]);
-  const foreground = useTransform(scrollYProgress, [0, 1], [24, -28]);
+  const smooth = useSpring(scrollYProgress, { stiffness: 110, damping: 24, mass: 0.3 });
+  const y = useTransform(smooth, [0, 1], [-10, 10]);
+  const foreground = useTransform(smooth, [0, 1], [22, -22]);
   return (
     <section
       id={event.id}
@@ -145,9 +146,9 @@ function Ceremony({ event }: { event: WeddingEvent }) {
         <p className="eyebrow">{event.chapter}</p>
         <Ornament />
         <motion.div
-          initial="hidden"
+          initial={reduced ? false : "hidden"}
           whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.15 }}
         >
           <motion.h2
             id={`${event.id}-title`}
@@ -155,7 +156,7 @@ function Ceremony({ event }: { event: WeddingEvent }) {
               hidden: { clipPath: "inset(0 0 100% 0)" },
               visible: { clipPath: "inset(0 0 0% 0)" },
             }}
-            transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           >
             {event.title}
           </motion.h2>

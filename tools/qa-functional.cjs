@@ -75,7 +75,8 @@ const base = "http://127.0.0.1:5174/";
       "0",
     );
     if (width === 390) await p.screenshot({ path: "tools/scratch-after.png" });
-    await p.getByRole("link", { name: /Let the anticipation begin/ }).click();
+    await p.locator("#countdown").waitFor();
+    await p.locator("#countdown").scrollIntoViewIfNeeded();
     await p.locator(".countdown-values").waitFor();
     await p.waitForTimeout(1000);
     const a = await p.locator(".countdown-unit").last().innerText();

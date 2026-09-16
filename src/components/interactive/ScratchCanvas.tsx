@@ -113,13 +113,14 @@ export function ScratchCanvas({
           height: element.clientHeight,
         };
         if (rect.width === 0 || rect.height === 0) return;
+        const dpr = Math.min(window.devicePixelRatio || 1, 3);
+        if (context.current && geometry.current.width === rect.width && geometry.current.height === rect.height && geometry.current.dpr === dpr) return;
         const previous = document.createElement("canvas");
         previous.width = element.width;
         previous.height = element.height;
         if (context.current)
           previous.getContext("2d")?.drawImage(element, 0, 0);
         const hadDrawing = !!context.current;
-        const dpr = Math.min(window.devicePixelRatio || 1, 3);
         element.width = Math.round(rect.width * dpr);
         element.height = Math.round(rect.height * dpr);
         const ctx = element.getContext("2d");
@@ -150,14 +151,17 @@ export function ScratchCanvas({
   function finish() {
     if (completed.current) return;
     completed.current = true;
+    const pointer = activePointer.current;
     activePointer.current = null;
     lastPoint.current = null;
+    if (pointer !== null && canvas.current?.hasPointerCapture(pointer))
+      canvas.current.releasePointerCapture(pointer);
     onScratchingChange?.(false);
     onReveal();
   }
   function progress(force = false) {
     const now = performance.now();
-    if (!force && now - lastSample.current < 160) return;
+    if (!force && now - lastSample.current < 240) return;
     lastSample.current = now;
     try {
       if (!canvas.current) return;
@@ -202,21 +206,15 @@ export function ScratchCanvas({
     const ctx = context.current;
     if (!ctx || completed.current) return;
     const from = lastPoint.current ?? to;
-    const distance = Math.hypot(to.x - from.x, to.y - from.y);
-    const steps = Math.max(1, Math.ceil(distance / 6));
-    const radius = 23;
     ctx.save();
     ctx.globalCompositeOperation = "destination-out";
-    for (let i = 0; i <= steps; i++) {
-      const x = from.x + ((to.x - from.x) * i) / steps,
-        y = from.y + ((to.y - from.y) * i) / steps;
-      const brush = ctx.createRadialGradient(x, y, 0, x, y, radius);
-      brush.addColorStop(0, "rgba(0,0,0,1)");
-      brush.addColorStop(0.82, "rgba(0,0,0,1)");
-      brush.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = brush;
-      ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-    }
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.lineWidth = 44;
+    ctx.beginPath();
+    ctx.moveTo(from.x, from.y);
+    ctx.lineTo(to.x + 0.01, to.y + 0.01);
+    ctx.stroke();
     ctx.restore();
     lastPoint.current = to;
     if (dust.current)
@@ -234,7 +232,8 @@ export function ScratchCanvas({
     activePointer.current = event.pointerId;
     setTouched(true);
     onScratchingChange?.(true);
-    event.currentTarget.setPointerCapture(event.pointerId);
+    try { event.currentTarget.setPointerCapture(event.pointerId); }
+    catch { /* Uncaptured pointers are cleaned up on leave. */ }
     erase(point(event));
     progress();
   }
@@ -272,6 +271,9 @@ export function ScratchCanvas({
         onPointerMove={move}
         onPointerUp={end}
         onPointerCancel={end}
+        onPointerLeave={(event) => {
+          if (!event.currentTarget.hasPointerCapture(event.pointerId)) end(event);
+        }}
         onLostPointerCapture={end}
       />
       {!touched && !revealed && <span className="foil-reflection" />}

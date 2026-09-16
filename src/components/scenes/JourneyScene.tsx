@@ -110,7 +110,7 @@ export function JourneyScene() {
   const smooth = useSpring(scrollYProgress, {
     stiffness: 150,
     damping: 28,
-    mass: 0.8,
+    mass: 0.3,
     restDelta: 0.0001,
   });
   const progress = useTransform(smooth, (value) =>
@@ -141,8 +141,8 @@ export function JourneyScene() {
         className="journey-heading"
         initial={reduced ? false : { opacity: 0, y: 8 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.4 }}
-        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       >
         <p className="eyebrow">Four days. Countless memories.</p>
         <h2>The celebrations</h2>
