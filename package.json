@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy:vercel": "npx --yes vercel --prod --yes",
+    "publish": "npm run build && git push origin HEAD:main && npm run deploy:vercel"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# Keep the published invitation aligned with every committed change.
+npm run publish
