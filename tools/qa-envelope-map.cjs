@@ -50,8 +50,12 @@ const assert = require("node:assert/strict");
     "",
   );
   assert.equal(await p.locator(".letter-wax").count(), 0);
-  assert.equal(await p.locator("iframe").count(), 0);
-  assert.equal(await p.locator(".map-awaiting").count(), 1);
+  assert.equal(await p.locator("iframe").count(), 1);
+  assert.equal(await p.locator(".map-awaiting").count(), 0);
+  assert.match(
+    await p.locator("iframe").getAttribute("src"),
+    /2478930000041440583/,
+  );
   await p.close();
   const map = await b.newPage({
     viewport: { width: 390, height: 844 },
@@ -91,7 +95,7 @@ const assert = require("node:assert/strict");
   assert.equal(await link.getAttribute("target"), "_blank");
   assert.match(await link.getAttribute("rel"), /noopener/);
   console.log(
-    "Envelope sequence, duplicate tap guard, scroll lock/release, same-position reveal, map placeholder, configured embed interaction and directions link passed.",
+    "Envelope sequence, duplicate tap guard, scroll lock/release, same-position reveal, configured map embed interaction and directions link passed.",
   );
   await b.close();
 })().catch((e) => {

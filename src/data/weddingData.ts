@@ -42,10 +42,11 @@ export const weddingData = {
   familyDetails: "",
   closing: { message: "Join us as we begin our forever." },
   location: {
-    venue: "",
-    address: "",
-    googleMapsUrl: "",
-    embedUrl: "",
+    venue: "Sharma Farm",
+    address: "9WVF+VVJ, Bhauwala, Baronwala, Uttarakhand 248007, India",
+    googleMapsUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
+    embedUrl:
+      "https://maps.google.com/maps?cid=2478930000041440583&hl=en&z=16&output=embed",
   },
   musicUrl: "",
   events: [
