@@ -397,24 +397,6 @@ p {
 .invitation-line {
   font-size: 1.1rem;
 }
-.formal-date {
-  display: flex;
-  align-items: center;
-  gap: 17px;
-  margin: 4px 0;
-}
-.formal-date span {
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
-  max-width: 70px;
-}
-.formal-date strong {
-  font-size: 3.1rem;
-  font-weight: 400;
-  padding: 0 20px;
-  border-right: 1px solid #ad905f80;
-  border-left: 1px solid #ad905f80;
-}
 .invitation .script {
   font-size: 1.25rem;
 }
@@ -878,100 +860,6 @@ p {
 .vivah .chapter-bridge {
   background: linear-gradient(transparent, #f3e6dc);
 }
-.rsvp {
-  background-color: #f3e6dc;
-  padding: 75px 36px 55px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-.rsvp > .botanical {
-  right: -115px;
-  bottom: -150px;
-  opacity: 0.28;
-  transform: rotate(-20deg);
-}
-.rsvp > .eyebrow {
-  margin: 20px 0;
-}
-.rsvp h2 {
-  font-size: clamp(2.8rem, 10vw, 4rem);
-}
-.rsvp-form {
-  width: 100%;
-  max-width: 340px;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 23px;
-  margin: 30px 0;
-}
-.rsvp-form > label {
-  font-size: 0.95rem;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.rsvp-form input:not([type="radio"]),
-.rsvp-form textarea {
-  width: 100%;
-  border: 0;
-  border-bottom: 1px solid #a98a705c;
-  background: #fff9ef30;
-  border-radius: 0;
-  padding: 8px 0;
-  color: #563b31;
-  font-size: 1.1rem;
-  resize: vertical;
-}
-.rsvp-form input::placeholder,
-.rsvp-form textarea::placeholder {
-  color: #957e72;
-}
-.rsvp-form fieldset {
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-.rsvp-form legend {
-  font-size: 0.95rem;
-  margin-bottom: 10px;
-}
-.radio-label {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 14px;
-  gap: 6px;
-  font-size: 0.98rem;
-  min-height: 30px;
-}
-.radio-label input {
-  accent-color: #916543;
-  width: 15px;
-  height: 15px;
-}
-.rsvp-note {
-  font-size: 0.85rem;
-  font-style: italic;
-  color: #775d51;
-}
-.submit-reply {
-  align-self: center;
-}
-.rsvp-confirmation {
-  min-height: 430px;
-  max-width: 320px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 25px;
-}
-.rsvp-confirmation h3 {
-  font-size: 2rem;
-  font-weight: 400;
-}
 .closing {
   min-height: 100dvh;
   text-align: center;
@@ -1099,9 +987,6 @@ p {
     padding-top: 85px;
     padding-bottom: 80px;
   }
-  .rsvp {
-    padding: 90px 60px;
-  }
   .opening-sub {
     font-size: 1.25rem;
   }
@@ -1191,4 +1076,1299 @@ p {
   background:
     radial-gradient(ellipse at 0 100%, #667b4930 0 25%, transparent 26%),
     radial-gradient(ellipse at 100% 100%, #627a4530 0 22%, transparent 23%);
+}
+/* The date is discovered on a removable foil leaf, then opens into twilight. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.scratch-scene {
+  background-color: #eee3d4;
+  padding: 52px 22px 38px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 24px;
+  min-height: 100dvh;
+}
+.date-stationery {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 370px);
+  padding: 24px 24px 18px;
+  background: #fcf5e8;
+  box-shadow:
+    0 15px 35px #76573515,
+    1px 2px 4px #6c4c3910;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition:
+    transform 1.8s var(--ease),
+    box-shadow 1.8s var(--ease);
+}
+.stationery-rule {
+  position: absolute;
+  inset: 9px;
+  border: 1px solid #b5a07c70;
+  outline: 1px solid #b5a07c26;
+  outline-offset: 4px;
+  pointer-events: none;
+  z-index: -1;
+}
+.date-floral {
+  height: 220px;
+  width: 90px;
+  color: #8a916b;
+  opacity: 0.28;
+  z-index: -1;
+}
+.date-floral.left {
+  left: -12px;
+  top: 5px;
+  transform: rotate(-22deg);
+}
+.date-floral.right {
+  right: -12px;
+  bottom: 10px;
+  transform: rotate(155deg);
+}
+.date-couple {
+  font-family: "Italiana", Georgia, serif;
+  font-size: clamp(1.7rem, 6.5vw, 2.2rem);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  line-height: 1.15;
+  margin: 12px 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.date-couple em {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.65em;
+  line-height: 1.3;
+}
+.scratch-instruction {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(1.05rem, 4vw, 1.2rem);
+  line-height: 1.4;
+  margin-bottom: 18px;
+}
+.foil-window {
+  width: 100%;
+  max-width: 274px;
+  height: 285px;
+  position: relative;
+  isolation: isolate;
+}
+.date-beneath {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 22px;
+  color: #6d493a;
+  background: radial-gradient(ellipse, #fffaf0, #f9efdd 80%);
+  border-radius: 50% 50% 0 0/26% 26% 0 0;
+}
+.date-beneath > .eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.24em;
+}
+.revealed-day {
+  font-family: "Italiana", Georgia, serif;
+  font-size: clamp(6.6rem, 27vw, 8rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.055em;
+  padding-right: 0.055em;
+}
+.revealed-month {
+  text-transform: uppercase;
+  font-size: 1.18rem;
+  letter-spacing: 0.26em;
+  margin-bottom: 4px;
+}
+.revealed-year {
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  margin-top: 3px;
+}
+.date-beneath > .ornament {
+  margin-top: 5px;
+  width: 95px;
+}
+.scratch-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  transition:
+    opacity 1.25s ease,
+    transform 1.8s var(--ease);
+  opacity: 1;
+}
+.scratch-veil.foil-released {
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+.scratch-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: crosshair;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.foil-released .scratch-canvas {
+  touch-action: auto;
+  pointer-events: none;
+}
+.foil-fallback {
+  position: absolute;
+  inset: 0;
+  border-radius: 50% 50% 0 0/26% 26% 0 0;
+  background:
+    repeating-linear-gradient(35deg, transparent 0 18px, #87612d10 19px 20px),
+    linear-gradient(
+      125deg,
+      #b99861,
+      #ead4a4 40%,
+      #c9a76f 60%,
+      #f1deaf 78%,
+      #b99861
+    );
+  color: #71552f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.foil-fallback > span {
+  font-size: 1.7rem;
+  font-style: italic;
+}
+.foil-fallback > small {
+  font: 10px Georgia;
+  letter-spacing: 0.21em;
+}
+.scratch-gesture {
+  position: absolute;
+  left: calc(50% - 26px);
+  bottom: 36px;
+  width: 36px;
+  height: 2px;
+  background: #fff6d7;
+  box-shadow: 0 0 8px #fff5d8;
+  pointer-events: none;
+  animation: scratch-hint 2.2s var(--ease) 1s 1 both;
+}
+.reveal-action {
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 15px;
+}
+.scratch-help {
+  font-size: 0.86rem;
+  font-style: italic;
+  color: #785f4f;
+}
+.tap-reveal {
+  font-size: 0.92rem;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom-color: #96704640;
+}
+.scratch-footnote {
+  font-size: 1.1rem;
+  color: #806656;
+}
+.date-discovered .date-stationery {
+  transform: scale(0.985);
+  box-shadow: 0 7px 18px #76573510;
+}
+.date-discovered .date-beneath:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    #fffdf5a0 48%,
+    transparent 64%
+  );
+  background-size: 260% 100%;
+  animation: date-glimmer 2.4s 0.45s ease-out both;
+}
+.reveal-continue {
+  font-size: 1rem;
+  animation: unfold-copy 1s 0.8s both;
+}
+.reveal-petals {
+  position: absolute;
+  inset: -20px;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+}
+.reveal-petals i {
+  position: absolute;
+  top: 20%;
+  width: 6px;
+  height: 10px;
+  background: #c2976f;
+  border-radius: 70% 5% 70% 10%;
+  opacity: 0;
+  animation: reveal-petal 3.6s ease-out both;
+}
+.countdown-scene {
+  background: #493f59;
+  color: #fff0d9;
+  min-height: 100dvh;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 95px 26px 210px;
+}
+.countdown-scene .scene-art {
+  object-position: center bottom;
+}
+.countdown-twilight {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(
+    #493f59eb,
+    #625171d9 38%,
+    #63546c9c 66%,
+    #3f334440
+  );
+}
+.countdown-arch {
+  position: absolute;
+  inset: 25px 22px;
+  border: 1px solid #f3d8aa50;
+  border-radius: 48% 48% 0 0/15% 15% 0 0;
+  pointer-events: none;
+}
+.countdown-copy {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+.countdown-copy > .ornament {
+  color: #ead4b0;
+  margin-bottom: 24px;
+}
+.countdown-copy > .eyebrow {
+  font-size: 0.63rem;
+  letter-spacing: 0.17em;
+}
+.countdown-copy h2 {
+  font-size: clamp(3.2rem, 12vw, 5rem);
+  margin: 30px 0 24px;
+  line-height: 1.05;
+}
+.countdown-copy h2 em {
+  font-family: "Italiana", Georgia, serif;
+  font-size: 1.3em;
+  font-weight: 400;
+}
+.countdown-date {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.23em;
+}
+.countdown-clock {
+  width: 100%;
+  margin-top: 36px;
+}
+.countdown-values {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+.countdown-unit {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  padding: 0 3px;
+}
+.countdown-unit + .countdown-unit:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 15%;
+  height: 40%;
+  width: 1px;
+  background: #ead1ab45;
+}
+.number-mask {
+  position: relative;
+  overflow: hidden;
+  height: clamp(48px, 14vw, 76px);
+  font-size: clamp(2.1rem, 10vw, 4rem);
+  line-height: 1.1;
+}
+.number-mask > span {
+  display: block;
+  white-space: nowrap;
+  font-weight: 400;
+}
+.countdown-label {
+  font-family: Georgia, serif;
+  font-size: clamp(0.56rem, 2.15vw, 0.65rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.countdown-note {
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-top: 25px;
+  color: #eadac9;
+}
+.countdown-romance {
+  font-size: 1.4rem;
+  margin: 38px 0 16px;
+  line-height: 1.35;
+}
+.countdown-copy > .scroll-hint {
+  margin-top: 10px;
+}
+.countdown-botanical {
+  right: -90px;
+  bottom: -85px;
+  color: #d2c7b5;
+  opacity: 0.45;
+  height: 380px;
+  transform: rotate(-25deg);
+}
+.countdown-awake .countdown-clock {
+  animation: unfold-copy 1.4s 0.2s both;
+}
+.countdown-waiting {
+  margin-top: 35px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  min-height: 210px;
+}
+.countdown-finished {
+  font-size: clamp(2rem, 7vw, 3rem);
+  font-style: italic;
+  max-width: 300px;
+  line-height: 1.2;
+  margin: 50px 0 15px;
+}
+.invitation {
+  justify-content: center;
+}
+@keyframes scratch-hint {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  30% {
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.7;
+    transform: translateX(16px);
+  }
+}
+@keyframes date-glimmer {
+  0% {
+    background-position: 120% 0;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    background-position: -40% 0;
+    opacity: 0;
+  }
+}
+@keyframes reveal-petal {
+  0% {
+    opacity: 0;
+    transform: translate(0, -15px) rotate(0);
+  }
+  20% {
+    opacity: 0.65;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(30px, 210px) rotate(100deg);
+  }
+}
+@keyframes unfold-copy {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (min-width: 800px) {
+  .scratch-scene {
+    padding: 65px 45px;
+    gap: 28px;
+  }
+  .date-stationery {
+    width: 380px;
+    padding: 30px 35px 20px;
+  }
+  .foil-window {
+    height: 305px;
+  }
+  .countdown-scene {
+    padding-top: 130px;
+    min-height: 1000px;
+  }
+  .countdown-copy {
+    max-width: 480px;
+  }
+  .countdown-values {
+    gap: 10px;
+  }
+  .countdown-copy h2 {
+    margin-top: 42px;
+  }
+  .countdown-clock {
+    margin-top: 45px;
+  }
+  .countdown-romance {
+    margin-top: 55px;
+  }
+}
+@media (max-width: 360px) {
+  .scratch-scene {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .date-stationery {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .countdown-scene {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .countdown-label {
+    letter-spacing: 0.05em;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .date-discovered .date-stationery {
+    transform: none;
+  }
+  .reveal-petals,
+  .scratch-gesture {
+    display: none;
+  }
+  .reveal-continue,
+  .countdown-clock {
+    animation: none !important;
+  }
+}
+.countdown-values {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+/* One continuous paper object: the sealed letter opens around the scratch leaf. */
+.letter-chapter {
+  position: relative;
+  min-height: 100dvh;
+  isolation: isolate;
+  perspective: 1800px;
+  scroll-snap-align: start;
+  overflow: clip;
+  background: #efe4d1;
+}
+.letter-content {
+  position: relative;
+  z-index: 2;
+  transform-origin: center 65%;
+}
+.letter-content .scratch-scene {
+  scroll-snap-align: none;
+}
+.letter-back {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-color: #eee2cc;
+}
+.letter-border {
+  position: absolute;
+  inset: 19px;
+  border: 1px solid #bfa472;
+  outline: 1px solid #bfa47240;
+  outline-offset: 6px;
+  pointer-events: none;
+}
+.letter-bottom-ornament {
+  position: absolute;
+  bottom: 34px;
+  left: calc(50% - 57px);
+}
+.letter-botanical {
+  height: 350px;
+  opacity: 0.23;
+  color: #9e885d;
+}
+.letter-botanical.left {
+  left: -60px;
+  bottom: -45px;
+  transform: rotate(-15deg);
+}
+.letter-botanical.right {
+  right: -60px;
+  bottom: -40px;
+  transform: rotate(180deg);
+}
+.letter-front {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background-color: #f2e8d5;
+  clip-path: polygon(0 100%, 50% 57%, 100% 100%);
+  transform-origin: bottom;
+  pointer-events: none;
+}
+.letter-side {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background-color: #f5ecd9;
+  pointer-events: none;
+}
+.letter-side.left {
+  clip-path: polygon(0 22%, 53% 62%, 0 100%);
+  transform-origin: left center;
+  background-image: linear-gradient(40deg, #eadcc4, #fbf3e3);
+}
+.letter-side.right {
+  clip-path: polygon(100% 22%, 47% 62%, 100% 100%);
+  transform-origin: right center;
+  background-image: linear-gradient(-40deg, #e6d5bb, #f9f0de);
+}
+.letter-top-flap {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 63%;
+  transform-origin: center top;
+  backface-visibility: visible;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 50% 100%, 0 45%);
+  background-color: #faf2e2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: max(62px, 10dvh);
+  box-shadow: inset 0 -2px 3px #a4875250;
+  will-change: transform;
+  pointer-events: none;
+}
+.letter-top-flap:after {
+  content: "";
+  position: absolute;
+  inset: 18px 20px;
+  z-index: -1;
+  border-top: 1px solid #bda372;
+  border-left: 1px solid #bda372;
+  border-right: 1px solid #bda372;
+}
+.letter-flap-engraving {
+  position: absolute;
+  inset: 0;
+  opacity: 0.25;
+  background-image: repeating-radial-gradient(
+    ellipse at 50% 0,
+    transparent 0 45px,
+    #b5a07522 46px 47px,
+    transparent 48px 74px
+  );
+  pointer-events: none;
+}
+.letter-top-flap > .ornament {
+  margin-bottom: 25px;
+  width: 145px;
+  height: 40px;
+  color: #ab8953;
+}
+.letter-names {
+  font-family: "Italiana", Georgia, serif;
+  font-weight: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-transform: uppercase;
+  font-size: clamp(3.4rem, 14vw, 5.7rem);
+  line-height: 1.05;
+  letter-spacing: 0.065em;
+  color: #6a4841;
+}
+.letter-names em {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.45em;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.letter-wax {
+  position: absolute;
+  left: calc(50% - 47px);
+  top: calc(59% - 36px);
+  width: 94px;
+  height: 94px;
+  z-index: 7;
+  overflow: hidden;
+  isolation: isolate;
+  border: 4px solid #793932;
+  border-radius: 47% 44% 46% 43%;
+  background: radial-gradient(
+    ellipse at 28% 15%,
+    #bd7765,
+    #843f3d 58%,
+    #58272d
+  );
+  box-shadow:
+    3px 7px 11px #48242640,
+    inset 1px 3px 3px #efb58c70,
+    inset -3px -4px 5px #54252a;
+  transition: none;
+}
+.wax-monogram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #bd806755;
+  border-radius: 50%;
+  height: 100%;
+  font:
+    1.7rem "Cormorant Garamond",
+    Georgia,
+    serif;
+  color: #d7a88b;
+  text-shadow: 0 -1px 1px #4b2229;
+}
+.wax-monogram em {
+  font-size: 0.8rem;
+  padding: 0 2px;
+}
+.wax-reflection {
+  position: absolute;
+  inset: -20%;
+  transform: translateX(-100%) rotate(15deg);
+  background: linear-gradient(90deg, transparent, #f2c49c70, transparent);
+  pointer-events: none;
+}
+.letter-breaking .wax-reflection {
+  animation: wax-light 0.55s ease-in-out both;
+}
+.letter-open-hint {
+  position: absolute;
+  top: 75%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 6;
+  font-style: italic;
+  color: #8d7056;
+  font-size: 1.25rem;
+  pointer-events: none;
+}
+.letter-opening .letter-wax,
+.letter-revealing .letter-wax {
+  pointer-events: none;
+}
+.letter-opened {
+  perspective: none;
+}
+.letter-chapter .skip-link:focus {
+  z-index: 50;
+}
+.scratch-instruction:focus {
+  outline: none;
+}
+@keyframes wax-light {
+  to {
+    transform: translateX(100%) rotate(15deg);
+  }
+}
+/* The scratch invitation is set within the garden rather than on a blank stage. */
+.scratch-scene {
+  background: #e9ded0;
+  padding-top: 38px;
+  padding-bottom: 45px;
+  gap: 20px;
+  overflow: clip;
+  z-index: 0;
+}
+.scratch-scene:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 135px;
+  z-index: -1;
+  background: linear-gradient(transparent, #8b7a9290);
+  pointer-events: none;
+}
+.scratch-environment {
+  position: absolute;
+  inset: -25px 0;
+  z-index: -2;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.scratch-environment img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    transform 2s var(--ease),
+    opacity 2s var(--ease);
+  transform: scale(1.04);
+  opacity: 0.75;
+}
+.scratch-environment:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse, #f6eddfc9 25%, #eee3d350 70%);
+}
+.date-discovered .scratch-environment img {
+  transform: scale(1);
+  opacity: 0.62;
+}
+.scratch-foreground {
+  left: -115px;
+  bottom: -100px;
+  z-index: 5;
+  color: #83906a;
+  opacity: 0.38;
+  height: 390px;
+  transform: rotate(-15deg);
+  animation: scratch-leaf 15s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+.is-scratching .scratch-foreground {
+  animation-play-state: paused;
+}
+.scratch-card-drift {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+.date-stationery {
+  box-shadow:
+    0 20px 45px #60473525,
+    inset 0 0 35px #c8ac7620;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cfilter id='p'%3E%3CfeTurbulence baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath d='M0 0h180v180H0z' filter='url(%23p)' opacity='.045'/%3E%3C/svg%3E");
+  transition:
+    transform 1.8s var(--ease),
+    box-shadow 1.8s var(--ease);
+}
+.date-discovered .date-stationery {
+  transform: scale(1.025);
+  box-shadow: 0 25px 50px #76573525;
+}
+.foil-window {
+  height: 310px;
+}
+.revealed-day {
+  font-size: clamp(7.7rem, 33vw, 9rem);
+  line-height: 1;
+}
+.date-signature {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-top: 10px;
+}
+.date-beneath {
+  padding-top: 15px;
+}
+.date-discovered .date-beneath:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse, #f0d59980, transparent 70%);
+  animation: date-bloom 2.6s 0.4s both;
+}
+.date-discovered .date-beneath > .ornament {
+  animation: ornament-unfold 1.5s 0.6s both;
+}
+.date-discovered .revealed-day {
+  animation: date-focus 1.6s 0.45s both;
+}
+.date-discovered .date-beneath:after {
+  animation-delay: 1.2s;
+}
+.scratch-veil {
+  transition:
+    opacity 1.4s ease 0.4s,
+    transform 1.8s var(--ease) 0.4s;
+}
+.foil-reflection {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: 50% 50% 0 0/26% 26% 0 0;
+}
+.foil-reflection:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    #fff8df45 49%,
+    transparent 62%
+  );
+  background-size: 280% 100%;
+  animation: foil-breathe 7s ease-in-out infinite;
+}
+.foil-touched .foil-reflection {
+  display: none;
+}
+.foil-light-traces {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: #fff0bf;
+  stroke-width: 1.15;
+  opacity: 0;
+  pointer-events: none;
+}
+.foil-released .foil-light-traces {
+  animation: foil-traces 0.95s ease-out both;
+}
+.scratch-dust {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+.is-scratching .scratch-dust {
+  opacity: 1;
+}
+.scratch-dust i {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #edca84;
+  box-shadow: 0 0 3px #f9e4af80;
+  animation: foil-dust 0.85s ease-out infinite;
+}
+.scratch-dust i:nth-child(2) {
+  left: 9px;
+  top: -4px;
+  animation-delay: 0.3s;
+}
+.scratch-dust i:nth-child(3) {
+  left: -8px;
+  top: 5px;
+  animation-delay: 0.55s;
+}
+.reveal-continue {
+  animation-delay: 1.5s;
+}
+.scratch-footnote {
+  position: relative;
+  z-index: 2;
+  color: #694d48;
+}
+.countdown-scene {
+  margin-top: -1px;
+}
+.countdown-twilight {
+  background: linear-gradient(
+    #8b7a92e0,
+    #625171d9 30%,
+    #63546c9c 66%,
+    #3f334440
+  );
+}
+.countdown-arch {
+  border-top-color: #f3d8aa30;
+}
+@keyframes foil-breathe {
+  0%,
+  45% {
+    background-position: 130% 0;
+    opacity: 0;
+  }
+  60% {
+    opacity: 0.55;
+  }
+  85%,
+  100% {
+    background-position: -35% 0;
+    opacity: 0;
+  }
+}
+@keyframes foil-dust {
+  from {
+    opacity: 0.6;
+    transform: translate(0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(6px, -14px);
+  }
+}
+@keyframes foil-traces {
+  0% {
+    opacity: 0;
+    stroke-dasharray: 10 200;
+  }
+  45% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    stroke-dasharray: 220 0;
+  }
+}
+@keyframes date-bloom {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+@keyframes ornament-unfold {
+  from {
+    opacity: 0.5;
+    transform: scaleX(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+@keyframes date-focus {
+  from {
+    transform: translateY(5px);
+    letter-spacing: -0.035em;
+  }
+  to {
+    transform: translateY(0);
+    letter-spacing: -0.055em;
+  }
+}
+@keyframes scratch-leaf {
+  from {
+    transform: rotate(-15deg);
+  }
+  to {
+    transform: rotate(-12deg);
+  }
+}
+/* A calm three-part ending: the story, the venue, then the map. */
+.ending-scene {
+  position: relative;
+  background: #f5ebdb;
+  scroll-snap-align: start;
+  overflow: clip;
+}
+.ending-emotion {
+  position: relative;
+  min-height: 810px;
+  min-height: 100dvh;
+  isolation: isolate;
+  overflow: hidden;
+  text-align: center;
+}
+.ending-emotion .scene-art {
+  transform: scaleX(-1);
+}
+.ending-wash {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(#ead8ce55 45%, transparent 68%, #f5ebdb 100%);
+}
+.ending-copy {
+  padding: 140px 34px 330px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 26px;
+  color: #583b43;
+}
+.ending-copy .names {
+  font-size: clamp(3.7rem, 13vw, 5.7rem);
+}
+.ending-copy .script {
+  font-size: 1.22rem;
+  max-width: 230px;
+}
+.ending-emotion .petals i {
+  animation-duration: 36s;
+}
+.ending-location {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: #f5ebdb;
+  padding: 8px 30px 65px;
+  gap: 23px;
+  isolation: isolate;
+}
+.ending-location h3 {
+  font-weight: 400;
+  font-size: clamp(2.2rem, 8vw, 3.1rem);
+  line-height: 1.1;
+  max-width: 440px;
+}
+.venue-address {
+  max-width: 370px;
+  font-size: 1.1rem;
+}
+.map-stationery {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  padding: 8px;
+  border: 1px solid #b69a6b90;
+  background: #faf2e2;
+  box-shadow: 0 9px 25px #71573e12;
+  margin: 8px 0 0;
+}
+.map-stationery iframe {
+  display: block;
+  width: 100%;
+  height: 300px;
+  border: 0;
+  background: #e5ddca;
+  border-radius: 2px;
+}
+.map-awaiting {
+  height: 285px;
+  position: relative;
+  background: #e8e4d6;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 30px;
+  gap: 5px;
+}
+.map-awaiting svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: #b7b69e;
+  stroke-width: 1.5;
+  opacity: 0.8;
+}
+.map-awaiting .map-river {
+  stroke: #b7c5ba;
+  stroke-width: 14;
+  opacity: 0.6;
+}
+.map-awaiting circle {
+  fill: #f6efdf;
+  stroke: #a98b57;
+  stroke-width: 0.7;
+}
+.map-awaiting .map-location-pin {
+  stroke: #967648;
+  stroke-width: 1;
+  fill: #f5ead5;
+}
+.map-awaiting p,
+.map-awaiting > span {
+  position: relative;
+  z-index: 1;
+}
+.map-awaiting p {
+  font-style: italic;
+  font-size: 1.4rem;
+}
+.map-awaiting > span {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: #796a53;
+}
+.map-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #ac8a51;
+  pointer-events: none;
+}
+.map-corner.top-left {
+  top: -4px;
+  left: -4px;
+  border-bottom: 0;
+  border-right: 0;
+}
+.map-corner.bottom-right {
+  bottom: -4px;
+  right: -4px;
+  border-top: 0;
+  border-left: 0;
+}
+.map-directions {
+  font-size: 1rem;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+.ending-leaf {
+  bottom: -140px;
+  right: -110px;
+  transform: rotate(-30deg);
+  opacity: 0.2;
+  z-index: -1;
+}
+.ending-location > .ornament:last-of-type {
+  margin-top: 18px;
+}
+@media (min-width: 800px) {
+  .letter-top-flap {
+    padding-top: 90px;
+  }
+  .letter-wax {
+    width: 110px;
+    height: 110px;
+    left: calc(50% - 55px);
+  }
+  .letter-names {
+    font-size: 5.7rem;
+  }
+  .letter-chapter {
+    min-height: 1000px;
+  }
+  .letter-content .scratch-scene {
+    min-height: 1000px;
+    padding: 65px 45px;
+  }
+  .ending-emotion {
+    min-height: 1000px;
+  }
+  .ending-copy {
+    padding-top: 190px;
+  }
+  .ending-location {
+    padding-left: 65px;
+    padding-right: 65px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .date-discovered .date-stationery {
+    transform: none;
+  }
+  .foil-reflection,
+  .scratch-dust,
+  .foil-light-traces {
+    display: none;
+  }
+  .scratch-foreground {
+    animation: none;
+  }
+  .letter-content {
+    transform: none !important;
+  }
+}
+.letter-border-overlay {
+  position: absolute;
+  inset: 19px;
+  z-index: 6;
+  border: 1px solid #bda37285;
+  outline: 1px solid #bda37225;
+  outline-offset: 5px;
+  pointer-events: none;
+}
+.letter-top-flap:after {
+  border: 0;
+}
+.letter-corner {
+  position: absolute;
+  width: 60px;
+  height: 26px;
+  color: #a88b56;
+  opacity: 0.65;
+}
+.letter-corner.upper-left {
+  top: 9px;
+  left: 6px;
+  transform: rotate(-40deg);
+}
+.letter-corner.upper-right {
+  top: 9px;
+  right: 6px;
+  transform: rotate(40deg);
+}
+.letter-corner.lower-left {
+  bottom: 9px;
+  left: 6px;
+  transform: rotate(40deg);
+}
+.letter-corner.lower-right {
+  bottom: 9px;
+  right: 6px;
+  transform: rotate(-40deg);
+}
+.date-discovered .date-beneath:before {
+  z-index: 0;
+}
+.date-beneath > * {
+  position: relative;
+  z-index: 1;
+}
+.date-beneath:after {
+  z-index: 2;
 }

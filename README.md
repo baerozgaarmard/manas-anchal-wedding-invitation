@@ -1,6 +1,6 @@
 # Manas & Anchal — A Wedding Story
 
-A mobile-first React / TypeScript invitation, built with Vite, Tailwind CSS and Framer Motion.
+An illustrated mobile-first invitation, built with React, TypeScript, Vite, Tailwind CSS and Framer Motion.
 
 ## Run
 
@@ -10,26 +10,56 @@ npm run dev
 npm run build
 ```
 
-## Wedding details
+## Wedding configuration
 
-Edit `src/data/weddingData.ts`. The year, times, venues, addresses, family details, music and RSVP destination are intentionally unfilled.
+All wedding information lives in `src/data/weddingData.ts`.
 
-- `mapUrl` enables a ceremony's location link.
-- `startsAt` and `endsAt` (ISO timestamps including a time zone) enable downloadable calendar invitations. Do not configure them until the wedding year and ceremony times are confirmed.
-- `musicUrl` enables the user-controlled music toggle after entering. Supply a licensed audio file; music never autoplays.
-- `rsvpEndpoint` enables delivery via a JSON POST containing `name`, `attendance`, `guests`, and `message`. The endpoint must validate input, apply rate limiting, support the site's origin, and return a successful HTTP response only after saving the reply.
-- With no endpoint, the form explicitly prepares a session-local draft and never claims to have sent it. This is not a live RSVP collection service.
+- Confirmed wedding date: **02 November 2026**.
+- `wedding.time` is intentionally `null`. The countdown targets the beginning of the wedding day in `Asia/Kolkata`, explicitly labeled as such. This does not imply a midnight ceremony.
+- Set `wedding.time` to a confirmed local `HH:mm` ceremony time to count down to that moment instead.
+- Set `wedding.year` to `null` if it becomes unconfirmed: the interface shows an honest waiting state instead of guessing a year.
+- `todayMessage` and `pastMessage` control the finished countdown text. The wedding day is determined in the configured time zone, independent of guests' device time zones.
+- Venue, address, ceremony times and family details remain unfilled. `mapUrl` enables a location link. Confirmed `startsAt` and `endsAt` ISO timestamps enable calendar downloads.
+- `location.venue`, `location.address`, `location.googleMapsUrl`, and `location.embedUrl` configure the final venue/map chapter. Empty values show an illustrated, clearly labeled placeholder. An embed URL enables the interactive iframe; the external directions link only appears when its URL is supplied.
+- `closing.message` controls the final emotional sentence.
+- `musicUrl` enables optional user-controlled music. Supply a licensed audio file; music never autoplays.
 
-## Artwork and composition
+## Story and interaction
 
-Three original generated illustrations live in `public/images/`. Opening artwork is preloaded; later artwork is lazy loaded. The moonlit garden and sunny courtyard combine painted backgrounds with bespoke botanical, architectural and lighting layers. Replace assets at the same paths to preserve scene wiring; tune object position in `src/styles/globals.css` for different compositions.
+Full-screen sealed letter → physical opening → scratch-to-reveal date → live countdown → illustrated journey → four unchanged ceremonies → emotional ending → venue → framed Google Map.
 
-Scene flow: opening → sealed envelope → formal invitation → illustrated journey → four ceremonies → RSVP → closing. Shared ornaments, particles and optional audio are in `src/components/ui/`. Event content stays centralized. CSS owns textures and environmental motion; Framer Motion owns scroll parallax, progress and title masks.
+The first viewport is the sealed letter itself. Its explicit `sealed → breaking → opening → revealing → opened` state machine advances through Framer Motion completion callbacks. A synchronous guard prevents repeated opening; scrolling is locked until the same invitation sheet finishes emerging. No timeout chains or scroll repositioning are used. Reduced motion opens immediately.
 
-Reduced motion disables particles, strong parallax and decorative movement. Content is accessible without opening the envelope, and a keyboard skip link reaches the invitation.
+The scratch card is the actual sheet inside the envelope, not a replacement screen. The date remains hidden until this chapter. A champagne foil canvas uses Pointer Events, pointer capture, a soft 46 CSS-pixel brush and `destination-out` compositing. It samples a small offscreen surface at most every 160 ms, excluding the arch's transparent corners, and completes when 50% is erased. Remaining foil dissolves and a few petals fall. No automatic scrolling follows the reveal.
 
-## Validation
+The scratch surface captures pointer gestures; page scrolling is temporarily prevented while a stroke is active and restored on release, cancellation or completion. Resizing preserves the erased surface. Canvas failure, reduced motion and keyboard interaction are supported by the permanent tap-to-reveal alternative. The static HTML also includes a native details-based reveal when JavaScript cannot start; its date is injected from the same centralized configuration by Vite. A React error boundary preserves critical information if an interactive scene fails.
 
-Production TypeScript/Vite build. Browser checks at 390×844, 393×852, 430×932 and 1440×1000: overflow, ceremony title visibility, seal opening, RSVP draft confirmation/editing, attendance switching, console errors and reduced-motion behavior.
+Countdown rendering and its one-second interval are isolated in `WeddingCountdown`. Timers and visibility listeners are cleaned up on unmount. No guest information is collected or stored.
 
-The supplied 44-second reference was reviewed as a chronological sequence. Original composition follows its sparse text, environment changes and deliberate reveal pacing; no source artwork or wedding details were copied.
+## Artwork
+
+Three original painted illustrations live in `public/images/`. The scratch garden is preloaded; later artwork is lazy loaded. The scratch leaf uses bespoke foil engraving and paper ornament. The countdown expands into an illustrated twilight palace. Reduced motion disables parallax, particles and number transitions.
+
+## Verification
+
+- Production TypeScript/Vite build.
+- Browser QA: 390×844, 393×852, 430×932, 1440×1000; DPR 1–3.
+- Physical mouse scratching, partial erasure, completion, no forced scrolling, live seconds, no form controls, no overflow or browser errors.
+- Envelope state-order, duplicate-tap, scroll lock/release, no vertical jump and original ceremony visual checks.
+- Venue placeholder plus mocked configured map: interactive iframe and safe new-tab directions link.
+- Chrome touch emulation: cancellation, resize preservation, auto-completion, restored normal scrolling.
+- Reduced-motion keyboard reveal, unavailable-canvas fallback and JavaScript-disabled date reveal.
+- Countdown tests: Asia/Kolkata conversion, confirmed ceremony time, unknown/invalid targets, exact midnight boundary, wedding-day and post-wedding states.
+
+These browser checks use desktop Chrome and mobile emulation. Physical Android devices and iPhone Safari have not been tested.
+
+Useful checks:
+
+```sh
+node tools/test-countdown.cjs
+node tools/qa-functional.cjs
+node tools/qa-touch.cjs
+node tools/qa-envelope-map.cjs
+```
+
+Browser QA scripts currently use the workspace's bundled Playwright runtime and local preview at port 5174; adjust these paths for another machine.

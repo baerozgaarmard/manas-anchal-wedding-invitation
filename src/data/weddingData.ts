@@ -11,11 +11,42 @@ export type WeddingEvent = {
   startsAt?: string;
   endsAt?: string;
 };
+export type WeddingDateConfig = {
+  year: number | null;
+  month: number;
+  day: number;
+  dateLabel: string;
+  time: string | null;
+  timezone: string;
+  todayMessage: string;
+  pastMessage: string;
+};
+
+const wedding: WeddingDateConfig = {
+  // Set the confirmed year here. Never infer the next occurrence automatically.
+  year: 2026,
+  month: 11,
+  day: 2,
+  dateLabel: "02 November",
+  // Local HH:mm ceremony time. Null counts to the start of the wedding DAY,
+  // once the year is confirmed; midnight is never presented as a ceremony time.
+  time: null,
+  timezone: "Asia/Kolkata",
+  todayMessage: "Our forever begins today.",
+  pastMessage: "And so our forever began.",
+};
+
 export const weddingData = {
   couple: { groom: "Manas", bride: "Anchal" },
-  year: null as number | null,
+  wedding,
   familyDetails: "",
-  rsvpEndpoint: "",
+  closing: { message: "Join us as we begin our forever." },
+  location: {
+    venue: "",
+    address: "",
+    googleMapsUrl: "",
+    embedUrl: "",
+  },
   musicUrl: "",
   events: [
     {
@@ -42,7 +73,7 @@ export const weddingData = {
     {
       id: "vivah",
       title: "Vivah Sanskar",
-      date: "02 November",
+      date: wedding.dateLabel,
       chapter: "The beginning of forever",
       line: "Two hearts. Seven promises. A lifetime together.",
     },
