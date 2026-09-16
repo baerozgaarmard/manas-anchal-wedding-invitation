@@ -5,3 +5,4 @@ dist
 .sites-runtime
 tools/*.png
 tools/*.jpg
+.vercel
