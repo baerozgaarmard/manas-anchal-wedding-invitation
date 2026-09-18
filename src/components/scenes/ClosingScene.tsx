@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { weddingData } from "../../data/weddingData";
-import { Ornament, Botanical } from "../ui/Ornament";
+import { Ornament, Botanical, VerticalVenueSeparator } from "../ui/Ornament";
 
 export function ClosingScene() {
   const { locations } = weddingData;
   const { familyResidence, sharmaFarms } = locations;
+  const [activeMap, setActiveMap] = useState<string | null>(null);
 
   return (
     <section
@@ -24,10 +26,10 @@ export function ClosingScene() {
           {/* Left Column: Family Residence */}
           <motion.div
             className="venue-column"
-            initial={{ opacity: 0.85, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0.9 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="venue-meta">
               <p className="venue-tag">CEREMONY VENUE</p>
@@ -41,7 +43,10 @@ export function ClosingScene() {
               </div>
             </div>
 
-            <div className="map-stationery">
+            <div
+              className={`map-stationery ${activeMap === "family" ? "map-interactive" : ""}`}
+              onClick={() => setActiveMap("family")}
+            >
               {familyResidence.embedUrl ? (
                 <iframe
                   key="map-family-residence"
@@ -69,6 +74,12 @@ export function ClosingScene() {
                   <span>Village & Post Rudrapur</span>
                 </div>
               )}
+              {activeMap !== "family" && (
+                <div
+                  className="map-scroll-guard"
+                  title="Tap to interact with map"
+                />
+              )}
               <span className="map-corner top-left" />
               <span className="map-corner bottom-right" />
             </div>
@@ -83,16 +94,19 @@ export function ClosingScene() {
             </a>
           </motion.div>
 
+          {/* Vertical Decorative Separator Between Venue Previews */}
+          <VerticalVenueSeparator />
+
           {/* Right Column: Sharma Farms */}
           <motion.div
             className="venue-column"
-            initial={{ opacity: 0.85, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0.9 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{
-              duration: 0.8,
+              duration: 0.6,
               ease: [0.22, 1, 0.36, 1],
-              delay: 0.08,
+              delay: 0.05,
             }}
           >
             <div className="venue-meta">
@@ -107,7 +121,10 @@ export function ClosingScene() {
               </div>
             </div>
 
-            <div className="map-stationery">
+            <div
+              className={`map-stationery ${activeMap === "sharma" ? "map-interactive" : ""}`}
+              onClick={() => setActiveMap("sharma")}
+            >
               {sharmaFarms.embedUrl ? (
                 <iframe
                   key="map-sharma-farms"
@@ -134,6 +151,12 @@ export function ClosingScene() {
                   <p>{sharmaFarms.name}</p>
                   <span>Bahuwala, Dehradun</span>
                 </div>
+              )}
+              {activeMap !== "sharma" && (
+                <div
+                  className="map-scroll-guard"
+                  title="Tap to interact with map"
+                />
               )}
               <span className="map-corner top-left" />
               <span className="map-corner bottom-right" />

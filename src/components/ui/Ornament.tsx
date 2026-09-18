@@ -95,3 +95,32 @@ export function CeremonyIcon({ kind }: { kind: string }) {
     </svg>
   );
 }
+
+export function VerticalVenueSeparator({ className = "" }: { className?: string }) {
+  return (
+    <div className={`venue-separator-container ${className}`} aria-hidden="true">
+      <div className="venue-separator-line top" />
+      <div className="venue-separator-motif">
+        <svg viewBox="0 0 16 26" fill="none" className="separator-motif-svg">
+          {/* Subtle outer diamond motif */}
+          <polygon
+            points="8,1 15,13 8,25 1,13"
+            stroke="#a17c4f"
+            strokeWidth="0.85"
+            fill="#faf2e2"
+          />
+          {/* Inner delicate diamond */}
+          <polygon
+            points="8,6 13,13 8,20 3,13"
+            fill="#a17c4f"
+            opacity="0.85"
+          />
+          {/* Central pinpoint dot */}
+          <circle cx="8" cy="13" r="1.2" fill="#faf2e2" />
+        </svg>
+      </div>
+      <div className="venue-separator-line bottom" />
+    </div>
+  );
+}
+

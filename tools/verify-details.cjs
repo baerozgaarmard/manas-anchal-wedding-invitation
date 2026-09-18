@@ -220,6 +220,26 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
     const venueColCount = await venueCols.count();
     assert.equal(venueColCount, 2, 'Must contain exactly 2 venue columns');
 
+    // Verify both venue cards are side-by-side on all viewports (including mobile)
+    const colBoxes = await page.evaluate(() => {
+      const cols = Array.from(document.querySelectorAll('.venue-column'));
+      return cols.map(c => c.getBoundingClientRect());
+    });
+    assert.ok(colBoxes[0].right < colBoxes[1].left, 'Left column must be strictly to the left of right column');
+    assert.ok(
+      colBoxes[0].top < colBoxes[1].bottom && colBoxes[1].top < colBoxes[0].bottom,
+      'Both columns must overlap vertically (side-by-side layout)'
+    );
+
+    // Verify vertical decorative separator exists and sits centered between columns
+    const separatorCount = await venuesEl.locator('.venue-separator-container').count();
+    assert.equal(separatorCount, 1, 'Must contain exactly 1 vertical decorative separator');
+    const separatorMotifCount = await venuesEl.locator('.venue-separator-motif svg').count();
+    assert.equal(separatorMotifCount, 1, 'Must contain ornamental motif in separator');
+    const sepBox = await page.locator('.venue-separator-container').boundingBox();
+    assert.ok(sepBox.x >= colBoxes[0].right - 2, 'Separator must sit to the right of left card');
+    assert.ok(sepBox.x + sepBox.width <= colBoxes[1].left + 2, 'Separator must sit to the left of right card');
+
     // Left Column: Family Residence
     const familyCol = venueCols.nth(0);
     const familyText = await familyCol.innerText();
@@ -243,7 +263,7 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
     const sharmaDecor = await sharmaLink.evaluate(el => window.getComputedStyle(el).textDecorationLine);
     assert.equal(sharmaDecor, 'none', 'Open in Google Maps link must not have underline');
 
-    // Verify both map previews have valid iframes with loading="eager"
+    // Verify both map previews have valid iframes with loading="eager" and 1:1 aspect ratio
     const iframes = venuesEl.locator('iframe');
     const iframeCount = await iframes.count();
     assert.equal(iframeCount, 2, 'Must have 2 map preview iframes');
@@ -252,6 +272,14 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
       const loading = await ifr.getAttribute('loading');
       assert.equal(loading, 'eager', `Venue iframe ${i} must have loading="eager"`);
       assert.notEqual(loading, 'lazy', `Venue iframe ${i} must NOT have loading="lazy"`);
+    }
+
+    const mapAspects = await page.evaluate(() => {
+      const maps = Array.from(document.querySelectorAll('.map-stationery'));
+      return maps.map(m => m.offsetWidth / m.offsetHeight);
+    });
+    for (const aspect of mapAspects) {
+      assert.ok(Math.abs(aspect - 1) < 0.05, `Map container aspect ratio ${aspect} must be approximately 1:1`);
     }
 
     // Verify Google Maps resource hints in document head
