@@ -92,10 +92,18 @@ function EventDetails({
       )}
 
       {/* 4. Action Links */}
-      {event.mapUrl && (
+      {(event.locationId || event.mapUrl) && (
         <motion.div className="event-actions" {...anim(0.28)}>
-          <a href={event.mapUrl} target="_blank" rel="noreferrer">
-            ↗ View location
+          <a
+            href={
+              (event.locationId &&
+                weddingData.locations[event.locationId]?.googleMapsUrl) ||
+              event.mapUrl
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View location <span aria-hidden="true">↗</span>
           </a>
         </motion.div>
       )}

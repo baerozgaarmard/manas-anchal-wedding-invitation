@@ -916,13 +916,18 @@ p {
 }
 .event-actions a {
   color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration: none;
+  border-bottom: none;
   opacity: 0.92;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 .event-actions a:hover {
   opacity: 1;
+  text-decoration: none;
+  border-bottom: none;
 }
 .venue {
   font-size: 1.3rem;
@@ -2524,8 +2529,7 @@ p {
 }
 .ending-emotion {
   position: relative;
-  min-height: 810px;
-  min-height: 100dvh;
+  min-height: clamp(520px, 75dvh, 720px);
   isolation: isolate;
   overflow: hidden;
   text-align: center;
@@ -2543,6 +2547,16 @@ p {
   pointer-events: none;
   z-index: 2;
 }
+.ending-bottom-fade {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: clamp(100px, 18dvh, 160px);
+  background: linear-gradient(to bottom, transparent 0%, rgba(245, 235, 219, 0.5) 45%, #f5ebdb 100%);
+  pointer-events: none;
+  z-index: 2;
+}
 .ending-wash {
   position: absolute;
   inset: 0;
@@ -2550,11 +2564,11 @@ p {
   background: linear-gradient(#ead8ce55 45%, transparent 68%, #f5ebdb 100%);
 }
 .ending-copy {
-  padding: 140px 34px 330px;
+  padding: clamp(90px, 12dvh, 120px) 24px clamp(80px, 12dvh, 110px);
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 26px;
+  gap: 20px;
   color: #583b43;
 }
 .ending-copy .names {
@@ -2567,47 +2581,118 @@ p {
 .ending-emotion .petals i {
   animation-duration: 36s;
 }
-.ending-location {
+.ending-venues {
   position: relative;
+  background-color: #f5ebdb;
+  padding: 12px 20px 75px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background-color: #f5ebdb;
-  padding: 8px 30px 65px;
-  gap: 23px;
   isolation: isolate;
+  width: 100%;
 }
-.ending-location h3 {
+.ending-venues-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 34px;
+}
+.ending-venues-title {
+  font-family: "Italiana", Georgia, serif;
+  font-size: clamp(1.8rem, 6vw, 2.5rem);
+  letter-spacing: 0.12em;
+  color: #4a322d;
+  margin: 0;
   font-weight: 400;
-  font-size: clamp(2.2rem, 8vw, 3.1rem);
-  line-height: 1.1;
-  max-width: 440px;
 }
-.venue-address {
-  max-width: 370px;
-  font-size: 1.1rem;
+.venues-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+@media (min-width: 768px) {
+  .venues-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+    align-items: stretch;
+  }
+  .ending-venues {
+    padding: 24px 36px 85px;
+  }
+}
+.venue-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px 18px 24px;
+  background: #faf2e2;
+  border: 1px solid #b69a6b60;
+  border-radius: 2px;
+  box-shadow: 0 8px 24px #71573e0a;
+  position: relative;
+}
+.venue-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+  min-height: 90px;
+}
+.venue-tag {
+  font-family: Georgia, serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #937248;
+  margin: 0;
+  font-weight: 600;
+}
+.venue-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
+  font-weight: 500;
+  color: #3b241e;
+  margin: 2px 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.venue-address-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.venue-address-line {
+  font-size: clamp(0.88rem, 2.4vw, 0.96rem);
+  color: #5d463d;
+  margin: 0;
+  line-height: 1.4;
 }
 .map-stationery {
   position: relative;
   width: 100%;
-  max-width: 500px;
-  padding: 8px;
-  border: 1px solid #b69a6b90;
-  background: #faf2e2;
-  box-shadow: 0 9px 25px #71573e12;
-  margin: 8px 0 0;
+  margin: 6px 0 16px;
+  padding: 6px;
+  border: 1px solid #b69a6b75;
+  background: #fdfaf3;
+  box-shadow: 0 4px 16px #71573e08;
 }
 .map-stationery iframe {
   display: block;
   width: 100%;
-  height: 300px;
+  height: 230px;
   border: 0;
   background: #e5ddca;
   border-radius: 2px;
 }
 .map-awaiting {
-  height: 285px;
+  height: 230px;
   position: relative;
   background: #e8e4d6;
   overflow: hidden;
@@ -2615,8 +2700,8 @@ p {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  padding-bottom: 30px;
-  gap: 5px;
+  padding-bottom: 20px;
+  gap: 4px;
 }
 .map-awaiting svg {
   position: absolute;
@@ -2676,10 +2761,35 @@ p {
   border-top: 0;
   border-left: 0;
 }
-.map-directions {
-  font-size: 1rem;
-  gap: 8px;
-  margin-bottom: 3px;
+.map-directions,
+.stationery-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: Georgia, serif;
+  font-size: clamp(0.85rem, 2.5vw, 0.94rem);
+  font-style: italic;
+  color: #7d5c34;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  margin-top: auto;
+  padding: 6px 12px;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+.map-directions:hover,
+.stationery-action:hover {
+  color: #4a322d;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  transform: translateY(-1px);
+}
+.ending-venues-footer {
+  position: relative;
+  margin-top: 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .ending-leaf {
   bottom: -140px;

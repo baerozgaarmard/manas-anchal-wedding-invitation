@@ -4,8 +4,19 @@ export type ScheduleItem = {
   text?: string; // For text-based items e.g. "Followed by Dinner" or "Vivah Sanskar — Shubh Lagnanusar"
 };
 
+export type LocationId = "familyResidence" | "sharmaFarms";
+
+export type VenueLocation = {
+  id: LocationId;
+  name: string;
+  address: string[];
+  googleMapsUrl: string;
+  embedUrl?: string;
+};
+
 export type WeddingEvent = {
   id: string;
+  locationId: LocationId;
   title: string;
   date: string;
   shortDate: string;
@@ -54,9 +65,33 @@ export const weddingData = {
   wedding,
   familyDetails: "",
   closing: { message: "Join us as we begin our forever." },
+  locations: {
+    familyResidence: {
+      id: "familyResidence" as const,
+      name: "Family Residence",
+      address: [
+        "Village & Post Rudrapur",
+        "Vikas Nagar, Dehradun",
+      ],
+      googleMapsUrl:
+        "https://maps.app.goo.gl/s63AymCiJmfkugBp9?g_st=ic",
+      embedUrl:
+        "https://maps.google.com/maps?q=30.4469800,77.8533330&hl=en&z=16&output=embed",
+    },
+    sharmaFarms: {
+      id: "sharmaFarms" as const,
+      name: "Sharma Farms",
+      address: [
+        "Bahuwala, Dehradun",
+      ],
+      googleMapsUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
+      embedUrl:
+        "https://maps.google.com/maps?cid=2478930000041440583&hl=en&z=16&output=embed",
+    },
+  },
   location: {
-    venue: "Sharma Farm",
-    address: "9WVF+VVJ, Bhauwala, Baronwala, Uttarakhand 248007, India",
+    venue: "Sharma Farms",
+    address: "Bahuwala, Dehradun",
     googleMapsUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
     embedUrl:
       "https://maps.google.com/maps?cid=2478930000041440583&hl=en&z=16&output=embed",
@@ -65,6 +100,7 @@ export const weddingData = {
   events: [
     {
       id: "mata",
+      locationId: "familyResidence" as const,
       title: "Mata Ki Chowki",
       date: "30 October",
       shortDate: "30 OCTOBER",
@@ -87,10 +123,11 @@ export const weddingData = {
       venueAddress: ["Village & Post Rudrapur", "Vikas Nagar, Dehradun"],
       venue: "Family Residence, Rudrapur, Vikas Nagar",
       address: "Village & Post Rudrapur, Vikas Nagar, Dehradun",
-      mapUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
+      mapUrl: "https://maps.app.goo.gl/s63AymCiJmfkugBp9?g_st=ic",
     },
     {
       id: "mehendi",
+      locationId: "familyResidence" as const,
       title: "Mehandi & Cocktail",
       date: "31 October",
       shortDate: "31 OCTOBER",
@@ -111,10 +148,11 @@ export const weddingData = {
       venueAddress: ["Village & Post Rudrapur", "Vikas Nagar, Dehradun"],
       venue: "Family Residence, Rudrapur, Vikas Nagar",
       address: "Village & Post Rudrapur, Vikas Nagar, Dehradun",
-      mapUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
+      mapUrl: "https://maps.app.goo.gl/s63AymCiJmfkugBp9?g_st=ic",
     },
     {
       id: "haldi",
+      locationId: "familyResidence" as const,
       title: "Haldi Hath & Mangal Snan",
       date: "01 November",
       shortDate: "01 NOVEMBER",
@@ -141,10 +179,11 @@ export const weddingData = {
       venueAddress: ["Village & Post Rudrapur", "Dehradun"],
       venue: "Family Residence, Rudrapur",
       address: "Village & Post Rudrapur, Dehradun",
-      mapUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
+      mapUrl: "https://maps.app.goo.gl/s63AymCiJmfkugBp9?g_st=ic",
     },
     {
       id: "vivah",
+      locationId: "sharmaFarms" as const,
       title: "Vivah Sanskar",
       date: wedding.dateLabel,
       shortDate: "02 NOVEMBER",

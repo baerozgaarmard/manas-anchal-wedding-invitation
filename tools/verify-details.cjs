@@ -166,28 +166,90 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
       assert.equal(text.includes('Add to calendar'), false, `${id} must NOT contain Add to calendar`);
       assert.equal(text.includes('＋ Add to calendar'), false, `${id} must NOT contain ＋ Add to calendar`);
 
-      // Verify View location is present
+      // Verify View location is present and points to event-specific location
       const locationLink = scene.locator('.event-actions a');
       const locationCount = await locationLink.count();
       assert.equal(locationCount, 1, `${id} must have exactly 1 location link`);
       const linkText = await locationLink.innerText();
       assert.ok(linkText.includes('View location'), `${id} link must be View location`);
+      const linkHref = await locationLink.getAttribute('href');
 
       if (id === 'mata') {
+        assert.equal(linkHref, 'https://maps.app.goo.gl/s63AymCiJmfkugBp9?g_st=ic', 'Mata location link must be Family Residence');
         assert.ok(text.includes('Jyoti Prajavalan') && text.includes('3:00 PM') && text.includes('Dinner'));
         assert.equal(text.includes('3:30 PM'), false);
       } else if (id === 'mehendi') {
+        assert.equal(linkHref, 'https://maps.app.goo.gl/s63AymCiJmfkugBp9?g_st=ic', 'Mehendi location link must be Family Residence');
         assert.ok(text.includes('7:00 PM onwards') && text.includes('Followed by Dinner'));
       } else if (id === 'haldi') {
+        assert.equal(linkHref, 'https://maps.app.goo.gl/s63AymCiJmfkugBp9?g_st=ic', 'Haldi location link must be Family Residence');
         assert.ok(text.includes('Haldi Hath') && text.includes('9:00 AM') && text.includes('Mangal Snan') && text.includes('10:00 AM') && text.includes('Preetibhoj / Lunch') && text.includes('1:00 PM'));
         assert.equal(text.includes('11:00 AM'), false);
         assert.equal(text.includes('12:00 PM'), false);
       } else if (id === 'vivah') {
+        assert.equal(linkHref, 'https://maps.app.goo.gl/RHxXSteNytH2wAbE9', 'Vivah location link must be Sharma Farms');
         assert.ok(text.includes('Mandha Poojan') && text.includes('10:00 AM') && text.includes('Sehrabandi') && text.includes('4:00 PM') && text.includes('Barat Departure') && text.includes('6:00 PM') && text.includes('Dinner') && text.includes('8:00 PM') && text.includes('Vivah Sanskar') && text.includes('Shubh Lagnanusar'));
         assert.equal(text.includes('5:00 PM'), false);
         assert.ok(text.includes('BARAT ROUTE') && text.includes('SHARMA FARMS'));
       }
+
+      // Verify no underline on View location
+      const textDecor = await locationLink.evaluate(el => window.getComputedStyle(el).textDecorationLine);
+      assert.equal(textDecor, 'none', `${id} View location link must not have underline`);
     }
+
+    // Verify Merged Ending Page (#closing)
+    const closingSection = page.locator('#closing');
+    await closingSection.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(400);
+
+    // Verify Emotional Ending section
+    const emotionEl = closingSection.locator('.ending-emotion');
+    const emotionText = await emotionEl.innerText();
+    assert.ok(emotionText.toUpperCase().includes('WITH LOVE'), 'Ending emotion must contain With love');
+    assert.ok(emotionText.toUpperCase().includes('MANAS') && emotionText.toUpperCase().includes('ANCHAL'), 'Ending emotion must contain couple names');
+    assert.ok(emotionText.includes('Join us as we begin our forever'), 'Ending emotion must contain closing message');
+
+    // Verify soft ivory fade transition exists
+    const bottomFadeCount = await emotionEl.locator('.ending-bottom-fade').count();
+    assert.equal(bottomFadeCount, 1, 'Must contain .ending-bottom-fade transition');
+
+    // Verify OUR VENUES section on SAME page
+    const venuesEl = closingSection.locator('.ending-venues');
+    const venuesTitle = await venuesEl.locator('.ending-venues-title').innerText();
+    assert.equal(venuesTitle, 'OUR VENUES', 'Venues section title must be OUR VENUES');
+
+    const venueCols = venuesEl.locator('.venue-column');
+    const venueColCount = await venueCols.count();
+    assert.equal(venueColCount, 2, 'Must contain exactly 2 venue columns');
+
+    // Left Column: Family Residence
+    const familyCol = venueCols.nth(0);
+    const familyText = await familyCol.innerText();
+    assert.ok(familyText.includes('FAMILY RESIDENCE'), 'Family column must contain FAMILY RESIDENCE');
+    assert.ok(familyText.includes('Village & Post Rudrapur'), 'Family column must contain Rudrapur');
+    assert.ok(familyText.includes('Vikas Nagar, Dehradun'), 'Family column must contain Vikas Nagar');
+    const familyLink = familyCol.locator('a.map-directions');
+    const familyHref = await familyLink.getAttribute('href');
+    assert.equal(familyHref, 'https://maps.app.goo.gl/s63AymCiJmfkugBp9?g_st=ic', 'Family Residence link must match provided Google Maps URL');
+    const familyDecor = await familyLink.evaluate(el => window.getComputedStyle(el).textDecorationLine);
+    assert.equal(familyDecor, 'none', 'Open in Google Maps link must not have underline');
+
+    // Right Column: Sharma Farms
+    const sharmaCol = venueCols.nth(1);
+    const sharmaText = await sharmaCol.innerText();
+    assert.ok(sharmaText.includes('SHARMA FARMS'), 'Sharma Farms column must contain SHARMA FARMS');
+    assert.ok(sharmaText.includes('Bahuwala, Dehradun'), 'Sharma Farms column must contain Bahuwala, Dehradun');
+    const sharmaLink = sharmaCol.locator('a.map-directions');
+    const sharmaHref = await sharmaLink.getAttribute('href');
+    assert.equal(sharmaHref, 'https://maps.app.goo.gl/RHxXSteNytH2wAbE9', 'Sharma Farms link must match verified Google Maps destination');
+    const sharmaDecor = await sharmaLink.evaluate(el => window.getComputedStyle(el).textDecorationLine);
+    assert.equal(sharmaDecor, 'none', 'Open in Google Maps link must not have underline');
+
+    // Verify both map previews have valid iframes
+    const iframes = venuesEl.locator('iframe');
+    const iframeCount = await iframes.count();
+    assert.equal(iframeCount, 2, 'Must have 2 map preview iframes');
 
     // Take screenshots on 393px mobile
     if (vp.name === 'iphone14pro-393') {
@@ -223,6 +285,21 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
       await page.locator('#vivah').scrollIntoViewIfNeeded();
       await page.waitForTimeout(400);
       await page.screenshot({ path: `${ARTIFACT_DIR}/ceremony_vivah_scene.png` });
+
+      // Merged ending screenshots
+      await emotionEl.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(400);
+      await page.screenshot({ path: `${ARTIFACT_DIR}/merged_ending_emotion_mobile.png` });
+
+      await venuesEl.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(400);
+      await page.screenshot({ path: `${ARTIFACT_DIR}/merged_ending_venues_mobile.png` });
+    }
+
+    if (vp.name === 'desktop-1440') {
+      await venuesEl.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(400);
+      await page.screenshot({ path: `${ARTIFACT_DIR}/merged_ending_venues_desktop.png` });
     }
 
     assert.deepEqual(errors, [], 'There should be zero page errors');
