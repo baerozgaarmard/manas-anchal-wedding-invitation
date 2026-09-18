@@ -191,6 +191,25 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
         assert.ok(text.includes('Mandha Poojan') && text.includes('10:00 AM') && text.includes('Sehrabandi') && text.includes('4:00 PM') && text.includes('Barat Departure') && text.includes('6:00 PM') && text.includes('Dinner') && text.includes('8:00 PM') && text.includes('Vivah Sanskar') && text.includes('Shubh Lagnanusar'));
         assert.equal(text.includes('5:00 PM'), false);
         assert.ok(text.includes('BARAT ROUTE') && text.includes('SHARMA FARMS'));
+
+        // Verify Vivah information group sits comfortably in upper empty sky and does not overlap mandap
+        const vivahMetrics = await scene.evaluate(v => {
+          const vHeight = v.getBoundingClientRect().height;
+          const actions = v.querySelector('.event-actions');
+          const actionsBottom = actions ? (actions.getBoundingClientRect().bottom - v.getBoundingClientRect().top) : 0;
+          return { vHeight, actionsBottom, ratio: actionsBottom / vHeight };
+        });
+        if (vp.width <= 768) {
+          assert.ok(
+            vivahMetrics.ratio < 0.55,
+            `Vivah info group must end in upper half of mobile scene (ratio was ${vivahMetrics.ratio.toFixed(2)})`
+          );
+        } else {
+          assert.ok(
+            vivahMetrics.ratio < 0.68,
+            `Vivah info group must end in upper portion of desktop scene (ratio was ${vivahMetrics.ratio.toFixed(2)})`
+          );
+        }
       }
 
       // Verify no underline on View location

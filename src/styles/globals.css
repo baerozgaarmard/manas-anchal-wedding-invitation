@@ -1255,7 +1255,7 @@ p {
   min-height: max(880px, 110dvh);
 }
 .vivah .ceremony-copy {
-  padding-top: 170px;
+  padding-top: clamp(36px, 4.5vh, 56px);
 }
 .vivah h2 {
   font-family: "Italiana", serif;
@@ -1360,7 +1360,7 @@ p {
     padding-top: 330px;
   }
   .vivah .ceremony-copy {
-    padding-top: 230px;
+    padding-top: clamp(40px, 5vh, 65px);
   }
   .envelope-stage {
     height: 400px;
