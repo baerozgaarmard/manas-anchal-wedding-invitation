@@ -135,7 +135,7 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
     assert.ok(threadPathD && threadPathD.startsWith('M 20 0'), 'Thread path must start at M 20 0');
     const xCoords = Array.from(threadPathD.matchAll(/([0-9.]+) [0-9.]+/g)).map(m => parseFloat(m[1]));
     for (const x of xCoords) {
-      assert.ok(x >= 14 && x <= 26, `Thread path X coordinate ${x} must be smoothly bounded between 14 and 26`);
+      assert.ok(x >= 8 && x <= 32, `Thread path X coordinate ${x} must be smoothly bounded between 8 and 32 within the 40px SVG container`);
     }
 
     // Verify left/right alternation text alignment

@@ -15,23 +15,25 @@ import { useReducedMotion } from "../../hooks/useReducedMotion";
 
 function generateThreadPath(
   totalHeight: number,
-  cycles = 4,
-  amp = 3.5,
+  cycles = 8,
+  amp = 6.5,
 ): string {
   if (totalHeight <= 0) {
     return "M 20 0 L 20 1000";
   }
-  const segHeight = totalHeight / cycles;
+  const L = totalHeight / cycles;
+  const k = 4 / (3 * Math.PI); // ~0.4244 for smooth sinusoidal curve
+  const C = 4 / 3; // ~1.3333
   let d = "M 20 0";
   for (let i = 0; i < cycles; i++) {
-    const yStart = i * segHeight;
-    const yEnd = (i + 1) * segHeight;
+    const yStart = i * L;
+    const yEnd = (i + 1) * L;
     const side = i % 2 === 0 ? -1 : 1;
-    const cp1x = 20 + side * amp * 1.333;
-    const cp1y = yStart + segHeight * 0.333;
-    const cp2x = 20 + side * amp * 1.333;
-    const cp2y = yStart + segHeight * 0.667;
-    d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, 20 ${yEnd.toFixed(1)}`;
+    const cp1x = 20 + side * amp * C;
+    const cp1y = yStart + L * k;
+    const cp2x = 20 + side * amp * C;
+    const cp2y = yEnd - L * k;
+    d += ` C ${cp1x.toFixed(2)} ${cp1y.toFixed(2)}, ${cp2x.toFixed(2)} ${cp2y.toFixed(2)}, 20 ${yEnd.toFixed(2)}`;
   }
   return d;
 }
