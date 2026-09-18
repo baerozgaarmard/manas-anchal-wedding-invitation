@@ -11,6 +11,7 @@ export function ClosingScene() {
       aria-label="With love, and wedding venue"
     >
       <div className="ending-emotion">
+        <div className="ending-top-fade" aria-hidden="true" />
         <img
           className="scene-art"
           src="/images/opening-bg.webp"

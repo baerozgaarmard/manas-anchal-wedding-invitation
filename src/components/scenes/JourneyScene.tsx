@@ -15,26 +15,46 @@ import { useReducedMotion } from "../../hooks/useReducedMotion";
 
 function generateThreadPath(nodes: number[], totalHeight: number): string {
   if (nodes.length !== 4 || totalHeight <= 0) {
-    return "M20 0 Q-4 60 20 120 T20 240 T20 360 T20 480 T20 600 T20 720 T20 840 T20 960";
+    return "M 20 0 L 20 1000";
   }
   const [y0, y1, y2, y3] = nodes;
-  const m0 = (y0 + y1) / 2;
-  const m1 = (y1 + y2) / 2;
-  const m2 = (y2 + y3) / 2;
-  const m3 = (y3 + totalHeight) / 2;
+  const amp = 7.5;
+  const pts = [
+    { x: 20, y: 0 },
+    { x: 20 - amp * 0.85, y: y0 * 0.48 },
+    { x: 20, y: y0 },
+    { x: 20 + amp, y: (y0 + y1) * 0.5 },
+    { x: 20, y: y1 },
+    { x: 20 - amp, y: (y1 + y2) * 0.5 },
+    { x: 20, y: y2 },
+    { x: 20 + amp, y: (y2 + y3) * 0.5 },
+    { x: 20, y: y3 },
+    { x: 20 - amp * 0.85, y: (y3 + totalHeight) * 0.5 },
+    { x: 20, y: totalHeight },
+  ];
 
-  return [
-    `M20 0`,
-    `Q-4 ${y0 * 0.5} 20 ${y0}`,
-    `Q44 ${(y0 + m0) * 0.5} 20 ${m0}`,
-    `T20 ${y1}`,
-    `Q44 ${(y1 + m1) * 0.5} 20 ${m1}`,
-    `T20 ${y2}`,
-    `Q44 ${(y2 + m2) * 0.5} 20 ${m2}`,
-    `T20 ${y3}`,
-    `Q44 ${(y3 + m3) * 0.5} 20 ${m3}`,
-    `T20 ${totalHeight}`,
-  ].join(" ");
+  const p = (i: number) => {
+    if (i < 0) return { x: 20, y: -y0 * 0.4 };
+    if (i >= pts.length)
+      return { x: 20, y: totalHeight + (totalHeight - y3) * 0.4 };
+    return pts[i];
+  };
+
+  let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = p(i - 1);
+    const p1 = p(i);
+    const p2 = p(i + 1);
+    const p3 = p(i + 2);
+
+    const cp1x = p1.x + (p2.x - p0.x) / 6;
+    const cp1y = p1.y + (p2.y - p0.y) / 6;
+    const cp2x = p2.x - (p3.x - p1.x) / 6;
+    const cp2y = p2.y - (p3.y - p1.y) / 6;
+
+    d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
+  }
+  return d;
 }
 
 function findPathLengthAtY(
@@ -364,24 +384,12 @@ export function JourneyScene() {
   useMotionValueEvent(progress, "change", (value) =>
     visited.set(Math.max(visited.get(), value)),
   );
-  const tipX = useTransform(
-    progress,
-    (value) =>
-      path.current?.getPointAtLength(value * path.current.getTotalLength()).x ??
-      20,
-  );
-  const tipY = useTransform(
-    progress,
-    (value) =>
-      path.current?.getPointAtLength(value * path.current.getTotalLength()).y ??
-      0,
-  );
-
   return (
     <section
       id="journey"
       className={`journey paper ${reduced ? "journey-reduced" : ""}`}
     >
+      <div className="journey-top-fade" aria-hidden="true" />
       <motion.div
         className="journey-heading"
         initial={reduced ? false : { opacity: 0, y: 8 }}
@@ -410,21 +418,6 @@ export function JourneyScene() {
             stroke="#aa8551"
             style={{ pathLength: progress }}
           />
-          {!reduced && (
-            <>
-              <motion.circle
-                r="6"
-                fill="#c2a16c"
-                opacity=".14"
-                style={{ cx: tipX, cy: tipY }}
-              />
-              <motion.circle
-                r="1.8"
-                fill="#b39158"
-                style={{ cx: tipX, cy: tipY }}
-              />
-            </>
-          )}
         </svg>
         {weddingData.events.map((event, index) => (
           <JourneyStop
@@ -439,6 +432,7 @@ export function JourneyScene() {
         ))}
       </div>
       <Botanical />
+      <div className="journey-bottom-fade" aria-hidden="true" />
     </section>
   );
 }

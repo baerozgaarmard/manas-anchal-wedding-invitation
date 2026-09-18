@@ -43,6 +43,24 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
     await page.locator('#journey').scrollIntoViewIfNeeded();
     await page.waitForTimeout(600);
 
+    // 3. Verify extra dot / tip circle is completely removed from SVG
+    const svgCircleCount = await page.locator('.thread-svg circle').count();
+    assert.equal(svgCircleCount, 0, 'Must NOT contain any stray circle in thread SVG');
+
+    // 4. Verify exactly 4 ceremony nodes exist on the timeline
+    const nodeDots = await page.locator('.journey-node-dot').count();
+    assert.equal(nodeDots, 4, 'Must have exactly 4 ceremony node dots');
+
+    // 5. Verify soft fade veils exist between sections
+    const topFade = await page.locator('.journey-top-fade').count();
+    assert.equal(topFade, 1, 'Must contain journey-top-fade veil');
+    const bottomFade = await page.locator('.journey-bottom-fade').count();
+    assert.equal(bottomFade, 1, 'Must contain journey-bottom-fade veil');
+    const entryVeils = await page.locator('.chapter-entry-veil').count();
+    assert.equal(entryVeils, 4, 'Must contain chapter-entry-veil in all 4 ceremonies');
+    const endingFade = await page.locator('.ending-top-fade').count();
+    assert.equal(endingFade, 1, 'Must contain ending-top-fade veil');
+
     // Verify all 4 ceremony stops on timeline
     const stops = page.locator('.journey-stop');
     const stopCount = await stops.count();

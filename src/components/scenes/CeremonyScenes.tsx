@@ -162,6 +162,11 @@ function Ceremony({ event }: { event: WeddingEvent }) {
   });
   const y = useTransform(smooth, [0, 1], [-10, 10]);
   const foreground = useTransform(smooth, [0, 1], [22, -22]);
+  const copyOpacity = useTransform(
+    scrollYProgress,
+    [0.08, 0.22, 0.78, 0.94],
+    [reduced ? 1 : 0.5, 1, 1, reduced ? 1 : 0.5],
+  );
   return (
     <section
       id={event.id}
@@ -169,6 +174,7 @@ function Ceremony({ event }: { event: WeddingEvent }) {
       className={`scene ceremony ${event.id}`}
       aria-labelledby={`${event.id}-title`}
     >
+      <div className="chapter-entry-veil" aria-hidden="true" />
       {(event.id === "mata" || event.id === "vivah") && (
         <motion.img
           className="scene-art"
@@ -192,7 +198,7 @@ function Ceremony({ event }: { event: WeddingEvent }) {
           <div className="turmeric-bowl" aria-hidden="true" />
         </>
       )}
-      <div className="ceremony-copy">
+      <motion.div className="ceremony-copy" style={{ opacity: copyOpacity }}>
         <p className="eyebrow">{event.chapter}</p>
         <Ornament />
 
@@ -230,7 +236,7 @@ function Ceremony({ event }: { event: WeddingEvent }) {
 
         {/* Full Ceremony Event Details */}
         <EventDetails event={event} reduced={!!reduced} />
-      </div>
+      </motion.div>
       <motion.div
         className="foreground-decoration"
         style={{ y: reduced ? 0 : foreground }}

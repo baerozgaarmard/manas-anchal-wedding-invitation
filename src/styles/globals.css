@@ -430,6 +430,26 @@ p {
   transform: rotate(-30deg);
   pointer-events: none;
 }
+.journey-top-fade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, #f7efdf, transparent);
+  pointer-events: none;
+  z-index: 5;
+}
+.journey-bottom-fade {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 110px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(82, 29, 36, 0.45) 55%, #521d24 100%);
+  pointer-events: none;
+  z-index: 5;
+}
 .journey-path {
   position: relative;
   max-width: 520px;
@@ -983,13 +1003,34 @@ p {
     radial-gradient(ellipse at 90% 100%, #f6b45150, transparent 35%);
   animation: glow 4s ease-in-out infinite alternate;
 }
+.chapter-entry-veil {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  pointer-events: none;
+  z-index: 4;
+}
+.mata .chapter-entry-veil {
+  background: linear-gradient(to bottom, #521d24 0%, transparent 100%);
+}
+.mehendi .chapter-entry-veil {
+  background: linear-gradient(to bottom, #123b34 0%, transparent 100%);
+}
+.haldi .chapter-entry-veil {
+  background: linear-gradient(to bottom, #f3dfa6 0%, transparent 100%);
+}
+.vivah .chapter-entry-veil {
+  background: linear-gradient(to bottom, #d2b9a9 0%, transparent 100%);
+}
 .chapter-bridge {
   position: absolute;
   bottom: -1px;
   left: 0;
   right: 0;
-  height: 50px;
-  background: linear-gradient(transparent, #123b34);
+  height: 105px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(18, 59, 52, 0.4) 50%, #123b34 100%);
   z-index: 4;
   pointer-events: none;
 }
@@ -1102,7 +1143,8 @@ p {
     linear-gradient(#172e29, #7b7060);
 }
 .mehendi .chapter-bridge {
-  background: linear-gradient(transparent, #eedbb0);
+  height: 105px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(243, 223, 166, 0.45) 50%, #f3dfa6 100%);
 }
 .haldi {
   background: #f3dfa6;
@@ -1229,7 +1271,8 @@ p {
     radial-gradient(circle at 90% 80%, #e6a332 0 32px, transparent 33px);
 }
 .haldi .chapter-bridge {
-  background: linear-gradient(transparent, #dec6b7);
+  height: 105px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(210, 185, 169, 0.5) 50%, #d2b9a9 100%);
 }
 .vivah {
   color: #66362f;
@@ -1248,7 +1291,8 @@ p {
   color: #fae2b5;
 }
 .vivah .chapter-bridge {
-  background: linear-gradient(transparent, #f3e6dc);
+  height: 105px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(234, 216, 206, 0.55) 50%, #ead8ce 100%);
 }
 .closing {
   min-height: 100dvh;
@@ -2518,6 +2562,16 @@ p {
 }
 .ending-emotion .scene-art {
   transform: scaleX(-1);
+}
+.ending-top-fade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background: linear-gradient(to bottom, #ead8ce 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 2;
 }
 .ending-wash {
   position: absolute;
