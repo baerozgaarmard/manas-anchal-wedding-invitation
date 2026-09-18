@@ -223,35 +223,12 @@ function JourneyStop({
             ))}
           </motion.div>
 
-          {/* 4. Additional details: Invited By, Dress Code, Route, Hosts */}
-          <motion.div
-            className="journey-section-block"
-            style={{ opacity: reduced ? 1 : secondaryAnim }}
-          >
-            {event.invitedBy && (
-              <div className="journey-sub-block">
-                <p className="journey-detail-label">INVITED BY</p>
-                {event.invitedBy.map((inv, iIdx) => (
-                  <p key={iIdx} className="journey-detail-value">
-                    {inv}
-                  </p>
-                ))}
-              </div>
-            )}
-
-            {event.dressCode && (
-              <div className="journey-sub-block">
-                <p className="journey-detail-label">DRESS CODE</p>
-                <p className="journey-detail-value">{event.dressCode.label}</p>
-                {event.dressCode.note && (
-                  <p className="journey-discrepancy-note">
-                    {event.dressCode.note}
-                  </p>
-                )}
-              </div>
-            )}
-
-            {event.baratRoute && (
+          {/* 4. Barat Route (for Vivah Sanskar) */}
+          {event.baratRoute && (
+            <motion.div
+              className="journey-section-block"
+              style={{ opacity: reduced ? 1 : secondaryAnim }}
+            >
               <div className="journey-sub-block">
                 <p className="journey-detail-label">BARAT ROUTE</p>
                 <div className="journey-route-steps">
@@ -267,19 +244,8 @@ function JourneyStop({
                   ))}
                 </div>
               </div>
-            )}
-
-            {event.hostedBy && (
-              <div className="journey-sub-block">
-                <p className="journey-detail-label">HOSTED BY</p>
-                {event.hostedBy.map((host, hIdx) => (
-                  <p key={hIdx} className="journey-detail-value">
-                    {host}
-                  </p>
-                ))}
-              </div>
-            )}
-          </motion.div>
+            </motion.div>
+          )}
 
           {/* 5. Discover the celebration link */}
           <motion.a

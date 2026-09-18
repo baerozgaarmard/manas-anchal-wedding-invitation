@@ -18,12 +18,6 @@ export type WeddingEvent = {
   venueLabel?: string;
   venueTitle?: string;
   venueAddress: string[];
-  hostedBy?: string[];
-  invitedBy?: string[];
-  dressCode?: {
-    label: string;
-    note?: string;
-  };
   baratRoute?: string[];
   isMainVenueEmphasized?: boolean;
   time?: string;
@@ -95,11 +89,6 @@ export const weddingData = {
       venueLabel: "VENUE",
       venueTitle: "Family Residence",
       venueAddress: ["Village & Post Rudrapur", "Vikas Nagar, Dehradun"],
-      hostedBy: [
-        "Sangeeta – Vikas Sharma",
-        "Himani – Abhishek Sharma",
-        "Shubham · Chhavi · Gaurika",
-      ],
       venue: "Family Residence, Rudrapur, Vikas Nagar",
       address: "Village & Post Rudrapur, Vikas Nagar, Dehradun",
       mapUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
@@ -126,16 +115,6 @@ export const weddingData = {
       venueLabel: "VENUE",
       venueTitle: "Family Residence",
       venueAddress: ["Village & Post Rudrapur", "Vikas Nagar, Dehradun"],
-      invitedBy: ["Ansh & Manika"],
-      dressCode: {
-        label: "Festive Best",
-        note: "Bring your dancing shoes.",
-      },
-      hostedBy: [
-        "Mrs. Maduri – Mr. Yash Verma",
-        "Mrs. Sakshi – Mr. Rajat Chaudhary",
-        "Reyansh · Parv · Paawani",
-      ],
       venue: "Family Residence, Rudrapur, Vikas Nagar",
       address: "Village & Post Rudrapur, Vikas Nagar, Dehradun",
       mapUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",

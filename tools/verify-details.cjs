@@ -19,7 +19,7 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
 
-    await page.goto('http://localhost:5174/', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://localhost:5173/', { waitUntil: 'domcontentloaded' });
     await page.getByRole('button', { name: 'Tap the seal to open invitation' }).click();
     await page.locator('[data-envelope-state=opened]').waitFor();
 
@@ -62,10 +62,14 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
     assert.ok(mehandiText.includes('31 OCTOBER 2026'), 'Mehandi full date missing');
     assert.ok(mehandiText.includes('7:00 PM onwards'), 'Mehandi timing missing');
     assert.ok(mehandiText.includes('Followed by Dinner'), 'Mehandi dinner missing');
-    assert.ok(mehandiText.includes('Ansh & Manika'), 'Mehandi invitedBy missing');
-    assert.ok(mehandiText.includes('Festive Best'), 'Mehandi dressCode missing');
-    assert.ok(mehandiText.includes('Bring your dancing shoes'), 'Mehandi dressCode note missing');
-    assert.ok(true, 'Mehandi host missing');
+    assert.equal(mehandiText.includes('INVITED BY'), false, 'Mehandi must NOT contain INVITED BY');
+    assert.equal(mehandiText.includes('Ansh & Manika'), false, 'Mehandi must NOT contain Ansh & Manika');
+    assert.equal(mehandiText.includes('DRESS CODE'), false, 'Mehandi must NOT contain DRESS CODE');
+    assert.equal(mehandiText.includes('Bring your dancing shoes'), false, 'Mehandi must NOT contain dancing shoes');
+    assert.equal(mehandiText.includes('HOSTED BY'), false, 'Mehandi must NOT contain HOSTED BY');
+    assert.equal(mehandiText.includes('Yash Verma'), false, 'Mehandi must NOT contain Yash Verma');
+    assert.equal(mataText.includes('HOSTED BY'), false, 'Mata must NOT contain HOSTED BY');
+    assert.equal(mataText.includes('Sangeeta'), false, 'Mata must NOT contain Sangeeta');
 
     // Verify Haldi Hath & Mangal Snan
     const haldiStop = stops.nth(2);
@@ -137,7 +141,7 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
       if (id === 'mata') {
         assert.ok(text.includes('Jyoti Prajavalan') && text.includes('Hindi invitation: 3:30 PM') && true);
       } else if (id === 'mehendi') {
-        assert.ok(text.includes('7:00 PM onwards') && text.includes('Ansh & Manika') && text.includes('Festive Best'));
+        assert.ok(text.includes('7:00 PM onwards') && text.includes('Followed by Dinner')); assert.equal(text.includes('Ansh & Manika'), false); assert.equal(text.includes('Festive Best'), false);
       } else if (id === 'haldi') {
         assert.ok(text.includes('Haldi Hath') && text.includes('Hindi invitation: 10:00 AM') && text.includes('Preetibhoj / Lunch'));
       } else if (id === 'vivah') {

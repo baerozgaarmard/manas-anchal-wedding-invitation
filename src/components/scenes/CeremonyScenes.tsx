@@ -102,69 +102,33 @@ function EventDetails({
         ))}
       </motion.div>
 
-      {/* 3. Additional Details: Invited By, Dress Code, Route, Hosts */}
-      <motion.div
-        className="ceremony-section-cluster ceremony-additional-cluster"
-        {...anim(0.26)}
-      >
-        {event.invitedBy && (
-          <div className="ceremony-section-cluster">
-            <p className="ceremony-editorial-label">INVITED BY</p>
-            {event.invitedBy.map((inv, idx) => (
-              <p key={idx} className="ceremony-host-item">
-                {inv}
-              </p>
+      {/* 3. Barat Route (for Vivah Sanskar) */}
+      {event.baratRoute && (
+        <motion.div
+          className="ceremony-section-cluster ceremony-barat-route"
+          {...anim(0.24)}
+        >
+          <p className="ceremony-editorial-label">BARAT ROUTE</p>
+          <div className="ceremony-barat-sequence">
+            {event.baratRoute.map((stop, idx) => (
+              <div key={idx} className="ceremony-route-waypoint">
+                <span className="ceremony-waypoint-name">{stop}</span>
+                {idx < event.baratRoute!.length - 1 && (
+                  <span
+                    className="ceremony-waypoint-marker"
+                    aria-hidden="true"
+                  >
+                    ↓
+                  </span>
+                )}
+              </div>
             ))}
           </div>
-        )}
-
-        {event.dressCode && (
-          <div className="ceremony-section-cluster">
-            <p className="ceremony-editorial-label">DRESS CODE</p>
-            <p className="ceremony-dress-main">{event.dressCode.label}</p>
-            {event.dressCode.note && (
-              <p className="ceremony-dress-sub">{event.dressCode.note}</p>
-            )}
-          </div>
-        )}
-
-        {event.baratRoute && (
-          <div className="ceremony-barat-route">
-            <p className="ceremony-editorial-label">BARAT ROUTE</p>
-            <div className="ceremony-barat-sequence">
-              {event.baratRoute.map((stop, idx) => (
-                <div key={idx} className="ceremony-route-waypoint">
-                  <span className="ceremony-waypoint-name">{stop}</span>
-                  {idx < event.baratRoute!.length - 1 && (
-                    <span
-                      className="ceremony-waypoint-marker"
-                      aria-hidden="true"
-                    >
-                      ↓
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {event.hostedBy && (
-          <div className="ceremony-section-cluster ceremony-hosts-cluster">
-            <p className="ceremony-editorial-label">HOSTED BY</p>
-            <div className="ceremony-hosts-list">
-              {event.hostedBy.map((host, idx) => (
-                <p key={idx} className="ceremony-host-item">
-                  {host}
-                </p>
-              ))}
-            </div>
-          </div>
-        )}
-      </motion.div>
+        </motion.div>
+      )}
 
       {/* 4. Action Links */}
-      <motion.div className="event-actions" {...anim(0.34)}>
+      <motion.div className="event-actions" {...anim(0.28)}>
         {event.mapUrl && (
           <a href={event.mapUrl} target="_blank" rel="noreferrer">
             ↗ View location
