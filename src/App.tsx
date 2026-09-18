@@ -1,3 +1,4 @@
+import { useReducedMotion, setReducedMotion } from "./hooks/useReducedMotion";
 import { useState } from "react";
 import { motion, useScroll, useSpring, MotionConfig } from "framer-motion";
 import { JourneyScene } from "./components/scenes/JourneyScene";
@@ -8,12 +9,21 @@ import { ScratchRevealScene } from "./components/scenes/ScratchRevealScene";
 import { ClosingScene } from "./components/scenes/ClosingScene";
 import "./styles/globals.css";
 function App() {
+  const reduced = useReducedMotion();
   const [opened, setOpened] = useState(false);
   const [dateRevealed, setDateRevealed] = useState(false);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 70, damping: 25 });
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion={reduced ? "always" : "never"}>
+      <button
+        className="motion-control"
+        aria-label={reduced ? "Enable full animations" : "Reduce animations"}
+        aria-pressed={!reduced}
+        onClick={() => setReducedMotion(!reduced)}
+      >
+        {reduced ? "Enable animations ↗" : "Motion on"}
+      </button>
       <motion.div className="reading-thread" style={{ scaleX }} />
       <main>
         <EnvelopeScene onOpened={() => setOpened(true)}>

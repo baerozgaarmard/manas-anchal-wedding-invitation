@@ -4,7 +4,13 @@ import { weddingData, type WeddingEvent } from "../../data/weddingData";
 import { Ornament, Botanical } from "../ui/Ornament";
 import { FloatingPetals } from "../ui/FloatingPetals";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
-function EventDetails({ event }: { event: WeddingEvent }) {
+function EventDetails({
+  event,
+  reduced,
+}: {
+  event: WeddingEvent;
+  reduced: boolean;
+}) {
   function calendar() {
     if (!event.startsAt || !event.endsAt) return;
     const clean = (s: string) => s.replace(/[-:]/g, "").replace(/\.\d{3}/, "");
@@ -37,13 +43,128 @@ function EventDetails({ event }: { event: WeddingEvent }) {
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
+
+  const anim = (delay: number) => ({
+    initial: reduced ? false : { opacity: 0, y: 12 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.15 },
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const, delay },
+  });
+
   return (
-    <>
-      <p className="event-date">{event.date}</p>
-      {event.time && <p>{event.time}</p>}
-      {event.venue && <p className="venue">{event.venue}</p>}
-      {event.address && <p className="address">{event.address}</p>}
-      <div className="event-actions">
+    <div className="ceremony-editorial-details">
+      {/* 1. Primary Schedule */}
+      <motion.div
+        className="ceremony-section-cluster ceremony-schedule-cluster"
+        {...anim(0.1)}
+      >
+        <p className="ceremony-editorial-label">
+          {event.scheduleLabel || "SCHEDULE"}
+        </p>
+        <div className="ceremony-schedule-grid">
+          {event.schedule.map((item, idx) => (
+            <div key={idx} className="ceremony-schedule-entry">
+              {item.label && item.time ? (
+                <div className="ceremony-entry-line">
+                  <span className="ceremony-entry-label">{item.label}</span>
+                  <span className="ceremony-entry-time">{item.time}</span>
+                </div>
+              ) : (
+                <p className="ceremony-entry-text">
+                  {item.text || item.label || item.time}
+                </p>
+              )}
+              {item.note && (
+                <p className="ceremony-discrepancy-note">{item.note}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* 2. Venue */}
+      <motion.div
+        className="ceremony-section-cluster ceremony-venue-cluster"
+        {...anim(0.18)}
+      >
+        <p className="ceremony-editorial-label">{event.venueLabel || "VENUE"}</p>
+        <p
+          className={`ceremony-venue-headline ${
+            event.isMainVenueEmphasized ? "ceremony-venue-grand" : ""
+          }`}
+        >
+          {event.venueTitle || event.venue}
+        </p>
+        {event.venueAddress.map((addr, idx) => (
+          <p key={idx} className="ceremony-venue-addr">
+            {addr}
+          </p>
+        ))}
+      </motion.div>
+
+      {/* 3. Additional Details: Invited By, Dress Code, Route, Hosts */}
+      <motion.div
+        className="ceremony-section-cluster ceremony-additional-cluster"
+        {...anim(0.26)}
+      >
+        {event.invitedBy && (
+          <div className="ceremony-section-cluster">
+            <p className="ceremony-editorial-label">INVITED BY</p>
+            {event.invitedBy.map((inv, idx) => (
+              <p key={idx} className="ceremony-host-item">
+                {inv}
+              </p>
+            ))}
+          </div>
+        )}
+
+        {event.dressCode && (
+          <div className="ceremony-section-cluster">
+            <p className="ceremony-editorial-label">DRESS CODE</p>
+            <p className="ceremony-dress-main">{event.dressCode.label}</p>
+            {event.dressCode.note && (
+              <p className="ceremony-dress-sub">{event.dressCode.note}</p>
+            )}
+          </div>
+        )}
+
+        {event.baratRoute && (
+          <div className="ceremony-barat-route">
+            <p className="ceremony-editorial-label">BARAT ROUTE</p>
+            <div className="ceremony-barat-sequence">
+              {event.baratRoute.map((stop, idx) => (
+                <div key={idx} className="ceremony-route-waypoint">
+                  <span className="ceremony-waypoint-name">{stop}</span>
+                  {idx < event.baratRoute!.length - 1 && (
+                    <span
+                      className="ceremony-waypoint-marker"
+                      aria-hidden="true"
+                    >
+                      ↓
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {event.hostedBy && (
+          <div className="ceremony-section-cluster ceremony-hosts-cluster">
+            <p className="ceremony-editorial-label">HOSTED BY</p>
+            <div className="ceremony-hosts-list">
+              {event.hostedBy.map((host, idx) => (
+                <p key={idx} className="ceremony-host-item">
+                  {host}
+                </p>
+              ))}
+            </div>
+          </div>
+        )}
+      </motion.div>
+
+      {/* 4. Action Links */}
+      <motion.div className="event-actions" {...anim(0.34)}>
         {event.mapUrl && (
           <a href={event.mapUrl} target="_blank" rel="noreferrer">
             ↗ View location
@@ -52,8 +173,8 @@ function EventDetails({ event }: { event: WeddingEvent }) {
         {event.startsAt && event.endsAt && (
           <button onClick={calendar}>＋ Add to calendar</button>
         )}
-      </div>
-    </>
+      </motion.div>
+    </div>
   );
 }
 function Garlands() {
@@ -109,7 +230,11 @@ function Ceremony({ event }: { event: WeddingEvent }) {
     target: ref,
     offset: ["start end", "end start"],
   });
-  const smooth = useSpring(scrollYProgress, { stiffness: 110, damping: 24, mass: 0.3 });
+  const smooth = useSpring(scrollYProgress, {
+    stiffness: 180,
+    damping: 28,
+    mass: 0.15,
+  });
   const y = useTransform(smooth, [0, 1], [-10, 10]);
   const foreground = useTransform(smooth, [0, 1], [22, -22]);
   return (
@@ -145,6 +270,19 @@ function Ceremony({ event }: { event: WeddingEvent }) {
       <div className="ceremony-copy">
         <p className="eyebrow">{event.chapter}</p>
         <Ornament />
+
+        {/* Auspicious Small Date */}
+        <motion.p
+          className="ceremony-full-date"
+          initial={reduced ? false : { opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
+        >
+          {event.fullDate}
+        </motion.p>
+
+        {/* Large Ceremony Title */}
         <motion.div
           initial={reduced ? false : "hidden"}
           whileInView="visible"
@@ -161,8 +299,12 @@ function Ceremony({ event }: { event: WeddingEvent }) {
             {event.title}
           </motion.h2>
         </motion.div>
-        <EventDetails event={event} />
+
+        {/* Short atmospheric event line */}
         <p className="ceremony-line">{event.line}</p>
+
+        {/* Full Ceremony Event Details */}
+        <EventDetails event={event} reduced={!!reduced} />
       </div>
       <motion.div
         className="foreground-decoration"

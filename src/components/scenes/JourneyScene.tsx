@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
   useMotionValue,
@@ -13,56 +13,134 @@ import { Botanical, Ornament } from "../ui/Ornament";
 import { JourneyIcon } from "../ui/JourneyIcon";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 
-// Eight congruent curves. Nodes lie exactly on the path at equal arc-length
-// fractions (1/8, 3/8, 5/8, 7/8), regardless of the rendered SVG's dimensions.
-const THREAD =
-  "M20 0 Q-4 60 20 120 T20 240 T20 360 T20 480 T20 600 T20 720 T20 840 T20 960";
+function generateThreadPath(nodes: number[], totalHeight: number): string {
+  if (nodes.length !== 4 || totalHeight <= 0) {
+    return "M20 0 Q-4 60 20 120 T20 240 T20 360 T20 480 T20 600 T20 720 T20 840 T20 960";
+  }
+  const [y0, y1, y2, y3] = nodes;
+  const m0 = (y0 + y1) / 2;
+  const m1 = (y1 + y2) / 2;
+  const m2 = (y2 + y3) / 2;
+  const m3 = (y3 + totalHeight) / 2;
+
+  return [
+    `M20 0`,
+    `Q-4 ${y0 * 0.5} 20 ${y0}`,
+    `Q44 ${(y0 + m0) * 0.5} 20 ${m0}`,
+    `T20 ${y1}`,
+    `Q44 ${(y1 + m1) * 0.5} 20 ${m1}`,
+    `T20 ${y2}`,
+    `Q44 ${(y2 + m2) * 0.5} 20 ${m2}`,
+    `T20 ${y3}`,
+    `Q44 ${(y3 + m3) * 0.5} 20 ${m3}`,
+    `T20 ${totalHeight}`,
+  ].join(" ");
+}
+
+function findPathLengthAtY(
+  pathEl: SVGPathElement,
+  targetY: number,
+  totalLen: number,
+): number {
+  let low = 0;
+  let high = totalLen;
+  for (let i = 0; i < 20; i++) {
+    const mid = (low + high) / 2;
+    const pt = pathEl.getPointAtLength(mid);
+    if (pt.y < targetY) {
+      low = mid;
+    } else {
+      high = mid;
+    }
+  }
+  return (low + high) / 2;
+}
 
 function JourneyStop({
   event,
   index,
+  anchor,
   progress,
   visited,
   reduced,
 }: {
   event: WeddingEvent;
   index: number;
+  anchor: number;
   progress: MotionValue<number>;
   visited: MotionValue<number>;
   reduced: boolean;
 }) {
-  const anchor = (index + 0.5) / weddingData.events.length;
   const side = index % 2 === 0 ? 1 : -1;
-  const icon = useTransform(visited, [anchor, anchor + 0.055], [0.1, 1]);
-  const draw = useTransform(visited, [anchor, anchor + 0.085], [0.06, 1]);
-  const scale = useTransform(visited, [anchor, anchor + 0.085], [0.98, 1]);
-  const x = useTransform(visited, [anchor, anchor + 0.1], [side * 10, 0]);
+  const icon = useTransform(
+    visited,
+    [anchor - 0.008, anchor + 0.024],
+    [0.2, 1],
+  );
+  const draw = useTransform(
+    visited,
+    [anchor - 0.005, anchor + 0.035],
+    [0.1, 1],
+  );
+  const scale = useTransform(
+    visited,
+    [anchor - 0.005, anchor + 0.03],
+    [0.97, 1],
+  );
+  const x = useTransform(
+    visited,
+    [anchor - 0.008, anchor + 0.032],
+    [side * 6, 0],
+  );
   const date = useTransform(
     visited,
-    [anchor + 0.012, anchor + 0.055],
-    [0.09, 1],
+    [anchor - 0.008, anchor + 0.022],
+    [0.25, 1],
   );
   const title = useTransform(
     visited,
-    [anchor + 0.022, anchor + 0.085],
-    [0.09, 1],
+    [anchor - 0.004, anchor + 0.026],
+    [0.25, 1],
   );
-  const action = useTransform(visited, [anchor + 0.04, anchor + 0.11], [0, 1]);
+  const fullDateAnim = useTransform(
+    visited,
+    [anchor, anchor + 0.032],
+    [0.15, 1],
+  );
+  const scheduleAnim = useTransform(
+    visited,
+    [anchor + 0.006, anchor + 0.04],
+    [0.1, 1],
+  );
+  const venueAnim = useTransform(
+    visited,
+    [anchor + 0.014, anchor + 0.048],
+    [0.08, 1],
+  );
+  const secondaryAnim = useTransform(
+    visited,
+    [anchor + 0.022, anchor + 0.056],
+    [0.05, 1],
+  );
+  const action = useTransform(
+    visited,
+    [anchor + 0.03, anchor + 0.065],
+    [0, 1],
+  );
   const nodeFill = useTransform(
     visited,
-    [anchor - 0.003, anchor + 0.02],
+    [anchor - 0.006, anchor + 0.012],
     ["#f6edda", "#ac8750"],
   );
   const halo = useTransform(
     progress,
-    [anchor - 0.015, anchor + 0.025, anchor + 0.18],
-    [0, 0.18, 0],
+    [anchor - 0.012, anchor + 0.015, anchor + 0.08],
+    [0, 0.22, 0],
   );
+
   return (
-    <motion.a
+    <div
       className={`journey-stop ${index % 2 ? "journey-left" : "journey-right"}`}
-      href={`#${event.id}`}
-      aria-label={`${event.date}: ${event.title}. Discover the celebration.`}
       data-anchor={anchor}
     >
       <motion.span
@@ -71,20 +149,6 @@ function JourneyStop({
       >
         <JourneyIcon kind={event.id} draw={draw} />
       </motion.span>
-      <motion.div className="journey-copy" style={{ x: reduced ? 0 : x }}>
-        <motion.p className="eyebrow" style={{ opacity: reduced ? 1 : date }}>
-          {event.date}
-        </motion.p>
-        <motion.h3 style={{ opacity: reduced ? 1 : title }}>
-          {event.title}
-        </motion.h3>
-        <motion.span
-          className="journey-arrow"
-          style={{ opacity: reduced ? 1 : action }}
-        >
-          Discover the celebration <span aria-hidden="true">↗</span>
-        </motion.span>
-      </motion.div>
       <span className="journey-node" aria-hidden="true">
         <motion.i
           className="journey-node-halo"
@@ -95,7 +159,139 @@ function JourneyStop({
           style={{ backgroundColor: reduced ? "#ac8750" : nodeFill }}
         />
       </span>
-    </motion.a>
+      <motion.div className="journey-copy" style={{ x: reduced ? 0 : x }}>
+        <motion.p className="eyebrow" style={{ opacity: reduced ? 1 : date }}>
+          {event.shortDate || event.date}
+        </motion.p>
+        <motion.h3 style={{ opacity: reduced ? 1 : title }}>
+          <a href={`#${event.id}`}>{event.title}</a>
+        </motion.h3>
+
+        {/* Complete Event Information directly under title */}
+        <div className="journey-details">
+          {/* 1. Auspicious Full Date */}
+          <motion.p
+            className="journey-full-date"
+            style={{ opacity: reduced ? 1 : fullDateAnim }}
+          >
+            {event.fullDate}
+          </motion.p>
+
+          {/* 2. Schedule Timings & subtle discrepancy notes */}
+          <motion.div
+            className="journey-section-block"
+            style={{ opacity: reduced ? 1 : scheduleAnim }}
+          >
+            {event.schedule.map((item, sIdx) => (
+              <div key={sIdx} className="journey-schedule-item">
+                {item.label && item.time ? (
+                  <p className="journey-schedule-line">
+                    <span>{item.label} — </span>
+                    <strong>{item.time}</strong>
+                  </p>
+                ) : (
+                  <p className="journey-schedule-line">
+                    {item.text || item.label || item.time}
+                  </p>
+                )}
+                {item.note && (
+                  <p className="journey-discrepancy-note">{item.note}</p>
+                )}
+              </div>
+            ))}
+          </motion.div>
+
+          {/* 3. Venue */}
+          <motion.div
+            className="journey-section-block"
+            style={{ opacity: reduced ? 1 : venueAnim }}
+          >
+            <p className="journey-detail-label">{event.venueLabel || "VENUE"}</p>
+            {event.venueTitle && (
+              <p
+                className={`journey-venue-title ${
+                  event.isMainVenueEmphasized ? "journey-venue-highlight" : ""
+                }`}
+              >
+                {event.venueTitle}
+              </p>
+            )}
+            {event.venueAddress.map((addrLine, aIdx) => (
+              <p key={aIdx} className="journey-address-line">
+                {addrLine}
+              </p>
+            ))}
+          </motion.div>
+
+          {/* 4. Additional details: Invited By, Dress Code, Route, Hosts */}
+          <motion.div
+            className="journey-section-block"
+            style={{ opacity: reduced ? 1 : secondaryAnim }}
+          >
+            {event.invitedBy && (
+              <div className="journey-sub-block">
+                <p className="journey-detail-label">INVITED BY</p>
+                {event.invitedBy.map((inv, iIdx) => (
+                  <p key={iIdx} className="journey-detail-value">
+                    {inv}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            {event.dressCode && (
+              <div className="journey-sub-block">
+                <p className="journey-detail-label">DRESS CODE</p>
+                <p className="journey-detail-value">{event.dressCode.label}</p>
+                {event.dressCode.note && (
+                  <p className="journey-discrepancy-note">
+                    {event.dressCode.note}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {event.baratRoute && (
+              <div className="journey-sub-block">
+                <p className="journey-detail-label">BARAT ROUTE</p>
+                <div className="journey-route-steps">
+                  {event.baratRoute.map((stop, rIdx) => (
+                    <div key={rIdx} className="journey-route-node">
+                      <p className="journey-route-name">{stop}</p>
+                      {rIdx < event.baratRoute!.length - 1 && (
+                        <span className="journey-route-arrow" aria-hidden="true">
+                          ↓
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {event.hostedBy && (
+              <div className="journey-sub-block">
+                <p className="journey-detail-label">HOSTED BY</p>
+                {event.hostedBy.map((host, hIdx) => (
+                  <p key={hIdx} className="journey-detail-value">
+                    {host}
+                  </p>
+                ))}
+              </div>
+            )}
+          </motion.div>
+
+          {/* 5. Discover the celebration link */}
+          <motion.a
+            href={`#${event.id}`}
+            className="journey-arrow"
+            style={{ opacity: reduced ? 1 : action }}
+          >
+            Discover the celebration <span aria-hidden="true">↗</span>
+          </motion.a>
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -103,15 +299,100 @@ export function JourneyScene() {
   const pathArea = useRef<HTMLDivElement>(null);
   const path = useRef<SVGPathElement>(null);
   const reduced = !!useReducedMotion();
+
+  const defaultHeight = 2200;
+  const defaultNodes = [120, 640, 1160, 1680];
+  const [pathState, setPathState] = useState({
+    d: generateThreadPath(defaultNodes, defaultHeight),
+    totalHeight: defaultHeight,
+    anchors: [(0 + 0.5) / 4, (1 + 0.5) / 4, (2 + 0.5) / 4, (3 + 0.5) / 4],
+  });
+
+  useEffect(() => {
+    if (!pathArea.current) return;
+
+    const measureAndSync = () => {
+      if (!pathArea.current) return;
+      const pathRect = pathArea.current.getBoundingClientRect();
+      const stops = pathArea.current.querySelectorAll(".journey-stop");
+      if (stops.length !== 4) return;
+
+      const measuredNodes: number[] = [];
+
+      stops.forEach((stop) => {
+        const h3 = stop.querySelector("h3");
+        const nodeEl = stop.querySelector(".journey-node") as HTMLElement;
+        const iconWrap = stop.querySelector(".journey-icon-wrap") as HTMLElement;
+
+        if (h3 && nodeEl) {
+          const h3Rect = h3.getBoundingClientRect();
+          const stopRect = stop.getBoundingClientRect();
+          const padTop =
+            parseFloat(window.getComputedStyle(stop).paddingTop) || 0;
+
+          const relativeCenter =
+            h3Rect.top - stopRect.top + h3Rect.height / 2 - padTop;
+          nodeEl.style.top = `${relativeCenter}px`;
+
+          if (iconWrap) {
+            const iconH = iconWrap.offsetHeight || 76;
+            iconWrap.style.marginTop = `${Math.max(
+              0,
+              relativeCenter - iconH / 2,
+            )}px`;
+          }
+
+          const nodeY = h3Rect.top - pathRect.top + h3Rect.height / 2;
+          measuredNodes.push(nodeY);
+        }
+      });
+
+      const totalH = pathArea.current.offsetHeight;
+      if (measuredNodes.length === 4 && totalH > 0) {
+        const newD = generateThreadPath(measuredNodes, totalH);
+
+        let computedAnchors = [0.125, 0.375, 0.625, 0.875];
+        if (path.current) {
+          path.current.setAttribute("d", newD);
+          const totalLen = path.current.getTotalLength();
+          if (totalLen > 0) {
+            computedAnchors = measuredNodes.map(
+              (y) => findPathLengthAtY(path.current!, y, totalLen) / totalLen,
+            );
+          }
+        }
+
+        setPathState({
+          d: newD,
+          totalHeight: totalH,
+          anchors: computedAnchors,
+        });
+      }
+    };
+
+    measureAndSync();
+
+    const ro = new ResizeObserver(() => {
+      measureAndSync();
+    });
+    ro.observe(pathArea.current);
+
+    window.addEventListener("resize", measureAndSync);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measureAndSync);
+    };
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: pathArea,
     offset: ["start 72%", "end 72%"],
   });
   const smooth = useSpring(scrollYProgress, {
-    stiffness: 150,
-    damping: 28,
-    mass: 0.3,
-    restDelta: 0.0001,
+    stiffness: 240,
+    damping: 30,
+    mass: 0.1,
+    restDelta: 0.0005,
   });
   const progress = useTransform(smooth, (value) =>
     reduced ? 1 : Math.max(0, Math.min(1, value)),
@@ -132,6 +413,7 @@ export function JourneyScene() {
       path.current?.getPointAtLength(value * path.current.getTotalLength()).y ??
       0,
   );
+
   return (
     <section
       id="journey"
@@ -152,15 +434,16 @@ export function JourneyScene() {
       <div className="journey-path" ref={pathArea}>
         <svg
           className="thread-svg"
-          viewBox="0 0 40 960"
+          viewBox={`0 0 40 ${pathState.totalHeight}`}
+          style={{ height: `${pathState.totalHeight}px` }}
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          <path d={THREAD} stroke="#b79a7040" />
+          <path d={pathState.d} stroke="#b79a7040" />
           <motion.path
             ref={path}
             className="journey-drawn-path"
-            d={THREAD}
+            d={pathState.d}
             stroke="#aa8551"
             style={{ pathLength: progress }}
           />
@@ -185,6 +468,7 @@ export function JourneyScene() {
             key={event.id}
             event={event}
             index={index}
+            anchor={pathState.anchors[index] ?? (index + 0.5) / 4}
             progress={progress}
             visited={visited}
             reduced={reduced}
@@ -195,4 +479,5 @@ export function JourneyScene() {
     </section>
   );
 }
+
 

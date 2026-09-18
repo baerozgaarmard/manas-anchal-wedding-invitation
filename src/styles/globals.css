@@ -411,8 +411,7 @@ p {
 /* Scroll-linked wedding journey; nodes share the drawn path's exact anchors. */
 .journey {
   position: relative;
-  min-height: 1100px;
-  padding: 80px 28px 55px;
+  padding: 80px 20px 70px;
   text-align: center;
   overflow: hidden;
 }
@@ -433,37 +432,42 @@ p {
 }
 .journey-path {
   position: relative;
-  max-width: 480px;
+  max-width: 520px;
   margin: 18px auto 0;
-  --journey-row: 240px;
 }
 .thread-svg {
   position: absolute;
   inset: 0 auto 0 50%;
-  width: 36px;
+  width: 40px;
   height: 100%;
   transform: translateX(-50%);
   fill: none;
   stroke-width: 1;
   pointer-events: none;
   overflow: visible;
+  z-index: 1;
 }
 .journey-stop {
-  height: var(--journey-row);
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr);
+  align-items: start;
   text-align: left;
   isolation: isolate;
+  padding: 24px 0 52px;
 }
 .journey-copy {
   grid-column: 3;
   grid-row: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
 }
 .journey-left .journey-copy {
   grid-column: 1;
+  align-items: flex-end;
   text-align: right;
 }
 .journey-icon-wrap {
@@ -473,34 +477,188 @@ p {
   align-items: center;
   justify-content: center;
   color: #a5834b;
+  will-change: transform, opacity;
 }
 .journey-left .journey-icon-wrap {
   grid-column: 3;
 }
 .journey-illustration {
-  width: 78px;
-  height: 78px;
+  width: 76px;
+  height: 76px;
   max-width: 100%;
 }
 .journey-stop h3 {
-  font-size: clamp(1.42rem, 5.4vw, 1.8rem);
-  line-height: 1.06;
+  font-size: clamp(1.35rem, 5.2vw, 1.8rem);
+  line-height: 1.08;
   font-weight: 500;
-  margin: 10px 0 12px;
+  margin: 6px 0 10px;
   text-wrap: balance;
+  color: #3b241e;
+}
+.journey-stop h3 a {
+  color: inherit;
+  text-decoration: none;
 }
 .journey-stop .eyebrow {
   font-size: 0.66rem;
-  letter-spacing: 0.13em;
-  line-height: 1.6;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+  color: #8c6a3f;
+}
+.journey-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+}
+.journey-left .journey-details {
+  align-items: flex-end;
+}
+.journey-right .journey-details {
+  align-items: flex-start;
+}
+.journey-full-date {
+  font-family: Georgia, serif;
+  font-size: clamp(9.5px, 2.3vw, 11px);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #85653c;
+  font-weight: 500;
+  line-height: 1.35;
+  margin: 0 0 2px;
+  text-wrap: balance;
+}
+.journey-section-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.45;
+}
+.journey-left .journey-section-block {
+  align-items: flex-end;
+  text-align: right;
+}
+.journey-right .journey-section-block {
+  align-items: flex-start;
+  text-align: left;
+}
+.journey-detail-label {
+  font-family: Georgia, serif;
+  font-size: clamp(8.5px, 2.1vw, 9.5px);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #9c7a4b;
+  font-weight: 600;
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+.journey-detail-value {
+  font-size: clamp(11.5px, 2.7vw, 13px);
+  color: #3b241e;
+  line-height: 1.46;
+  margin: 0;
+}
+.journey-schedule-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-bottom: 3px;
+}
+.journey-left .journey-schedule-item {
+  align-items: flex-end;
+}
+.journey-right .journey-schedule-item {
+  align-items: flex-start;
+}
+.journey-schedule-line {
+  font-size: clamp(11.5px, 2.8vw, 13px);
+  color: #3b241e;
+  line-height: 1.45;
+  margin: 0;
+}
+.journey-discrepancy-note {
+  font-size: clamp(10px, 2.4vw, 11px);
+  font-style: italic;
+  color: #8c7158;
+  line-height: 1.35;
+  opacity: 0.9;
+  margin: 0;
+}
+.journey-venue-title {
+  font-size: clamp(11.5px, 2.8vw, 13px);
+  color: #3b241e;
+  line-height: 1.45;
+  margin: 0;
+}
+.journey-venue-highlight {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #2e1a15;
+}
+.journey-address-line {
+  font-size: clamp(11px, 2.6vw, 12.5px);
+  color: #5d463d;
+  line-height: 1.4;
+  margin: 0;
+}
+.journey-sub-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+}
+.journey-left .journey-sub-block {
+  align-items: flex-end;
+}
+.journey-right .journey-sub-block {
+  align-items: flex-start;
+}
+.journey-route-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.journey-left .journey-route-steps {
+  align-items: flex-end;
+}
+.journey-right .journey-route-steps {
+  align-items: flex-start;
+}
+.journey-route-node {
+  display: flex;
+  flex-direction: column;
+}
+.journey-left .journey-route-node {
+  align-items: flex-end;
+}
+.journey-right .journey-route-node {
+  align-items: flex-start;
+}
+.journey-route-name {
+  font-size: clamp(11px, 2.6vw, 12.5px);
+  color: #453029;
+  line-height: 1.35;
+  margin: 0;
+}
+.journey-route-arrow {
+  color: #b8955a;
+  font-size: 10px;
+  line-height: 1;
+  margin: 1px 0;
+  opacity: 0.85;
 }
 .journey-arrow {
   display: inline-block;
-  font-size: 0.84rem;
+  font-size: clamp(0.85rem, 2.7vw, 0.94rem);
   font-style: italic;
   line-height: 1.45;
   text-underline-offset: 5px;
-  text-decoration-color: #aa855155;
+  text-decoration-color: #aa855166;
+  color: #7d5c34;
+  margin-top: 6px;
+  padding: 3px 0;
+  cursor: pointer;
 }
 .journey-arrow > span {
   display: inline-block;
@@ -513,12 +671,15 @@ p {
   transform: translate(2px, -2px);
 }
 .journey-node {
+  grid-column: 2;
+  grid-row: 1;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 36px;
   width: 0;
   height: 0;
   pointer-events: none;
+  z-index: 2;
 }
 .journey-node-dot {
   position: absolute;
@@ -551,17 +712,15 @@ p {
 }
 @media (min-width: 800px) {
   .journey {
-    padding: 90px 55px 60px;
-  }
-  .journey-path {
-    --journey-row: 250px;
+    padding: 90px 45px 70px;
   }
   .journey-stop {
     grid-template-columns: minmax(0, 1fr) 60px minmax(0, 1fr);
+    padding: 28px 0 64px;
   }
   .journey-illustration {
-    width: 92px;
-    height: 92px;
+    width: 90px;
+    height: 90px;
   }
   .journey-stop h3 {
     font-size: 1.95rem;
@@ -575,59 +734,210 @@ p {
 }
 @media (max-width: 360px) {
   .journey {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
   .journey-stop {
-    grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) 36px minmax(0, 1fr);
   }
   .journey-stop h3 {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
   }
   .journey-illustration {
-    width: 68px;
-    height: 68px;
+    width: 66px;
+    height: 66px;
   }
 }
 .ceremony {
-  min-height: max(800px, 100dvh);
+  min-height: max(880px, 115dvh);
   text-align: center;
+  position: relative;
 }
 .ceremony-copy {
   position: relative;
   z-index: 2;
   width: 100%;
-  padding: 190px 42px 250px;
+  padding: clamp(48px, 6.5vh, 80px) clamp(16px, 4vw, 32px) clamp(60px, 9vh, 120px);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .ceremony-copy .ornament {
-  margin: 18px 0;
+  margin: 8px 0 10px;
+}
+.ceremony-full-date {
+  font-family: Georgia, serif;
+  font-size: clamp(10px, 2.4vw, 11.5px);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin: 1px 0 4px;
+  font-weight: 500;
+  opacity: 0.92;
 }
 .ceremony h2 {
-  font-size: clamp(3.3rem, 13vw, 5.5rem);
+  font-size: clamp(2.35rem, 9vw, 4.4rem);
   line-height: 0.98;
-  max-width: 420px;
-}
-.event-date {
-  font-size: 1rem;
-  letter-spacing: 0.19em;
-  text-transform: uppercase;
-  margin-top: 27px;
+  max-width: 400px;
+  margin: 1px 0 4px;
 }
 .ceremony-line {
-  max-width: 250px;
-  font-size: 1.1rem;
+  max-width: 300px;
+  font-size: clamp(0.86rem, 2.6vw, 1rem);
   font-style: italic;
-  margin-top: 24px;
+  margin: 4px 0 8px;
+  line-height: 1.36;
+  opacity: 0.88;
+}
+.ceremony-editorial-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  max-width: 360px;
+  width: 100%;
+  margin: 2px 0 8px;
+}
+.mehendi .ceremony-editorial-details {
+  align-items: flex-start;
+}
+.ceremony-section-cluster {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  width: 100%;
+}
+.mehendi .ceremony-section-cluster {
+  align-items: flex-start;
+}
+.ceremony-editorial-label {
+  font-family: Georgia, serif;
+  font-size: clamp(8px, 2vw, 9px);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+  margin-bottom: 2px;
+  opacity: 0.85;
+}
+.ceremony-schedule-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+.ceremony-schedule-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.ceremony-entry-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  font-size: clamp(11px, 2.6vw, 13px);
+  line-height: 1.34;
+}
+.mehendi .ceremony-entry-line {
+  justify-content: flex-start;
+}
+.ceremony-entry-label {
+  opacity: 0.9;
+}
+.ceremony-entry-time {
+  font-weight: 600;
+}
+.ceremony-entry-text {
+  font-size: clamp(11px, 2.6vw, 13px);
+  line-height: 1.34;
+  margin: 0;
+}
+.ceremony-discrepancy-note {
+  font-size: clamp(9px, 2.1vw, 10px);
+  font-style: italic;
+  opacity: 0.8;
+  line-height: 1.25;
+  margin: 0;
+}
+.ceremony-venue-headline {
+  font-size: clamp(11.5px, 2.7vw, 13px);
+  font-weight: 500;
+  margin: 0;
+}
+.ceremony-venue-grand {
+  font-size: clamp(12px, 2.9vw, 14px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ceremony-venue-addr {
+  font-size: clamp(10.5px, 2.4vw, 12px);
+  opacity: 0.88;
+  line-height: 1.3;
+  margin: 0;
+}
+.ceremony-hosts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.ceremony-host-item {
+  font-size: clamp(10px, 2.3vw, 11px);
+  opacity: 0.9;
+  line-height: 1.3;
+  margin: 0;
+}
+.ceremony-dress-main {
+  font-size: clamp(11px, 2.6vw, 12.5px);
+  font-weight: 500;
+  margin: 0;
+}
+.ceremony-dress-sub {
+  font-size: clamp(9.5px, 2.2vw, 10.5px);
+  font-style: italic;
+  opacity: 0.85;
+  margin: 0;
+}
+.ceremony-barat-sequence {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 3px 6px;
+  width: 100%;
+}
+.ceremony-route-waypoint {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+.ceremony-waypoint-name {
+  font-family: Georgia, serif;
+  font-size: clamp(9.5px, 2.2vw, 10.5px);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+  opacity: 0.9;
+}
+.ceremony-waypoint-marker {
+  color: #e0b86a;
+  font-size: 10px;
+  line-height: 1;
+  margin: 0;
+  transform: rotate(-90deg);
+  display: inline-block;
 }
 .event-actions {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   justify-content: center;
-  margin-top: 10px;
-  font-size: 0.9rem;
+  margin-top: 8px;
+  font-size: clamp(0.82rem, 2.4vw, 0.9rem);
+}
+.mehendi .event-actions {
+  justify-content: flex-start;
 }
 .event-actions:empty {
   display: none;
@@ -1101,24 +1411,24 @@ p {
     margin-top: 12px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  html {
+
+:root[data-motion="reduced"] {
     scroll-behavior: auto;
   }
-  .petals {
+:root[data-motion="reduced"] .petals {
     display: none;
   }
-  *,
-  *:before,
-  *:after {
+:root[data-motion="reduced"] *,
+:root[data-motion="reduced"] *:before,
+:root[data-motion="reduced"] *:after {
     animation: none !important;
     transition: none !important;
   }
-  .scene-art,
-  .foreground-decoration {
+:root[data-motion="reduced"] .scene-art,
+:root[data-motion="reduced"] .foreground-decoration {
     transform: none !important;
   }
-}
+
 /* The painted garden continues beneath the moonlit foliage and morning courtyard. */
 .night-garden:before {
   content: "";
@@ -1682,19 +1992,19 @@ p {
     letter-spacing: 0.05em;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .date-discovered .date-stationery {
+
+:root[data-motion="reduced"] .date-discovered .date-stationery {
     transform: none;
   }
-  .reveal-petals,
-  .scratch-gesture {
+:root[data-motion="reduced"] .reveal-petals,
+:root[data-motion="reduced"] .scratch-gesture {
     display: none;
   }
-  .reveal-continue,
-  .countdown-clock {
+:root[data-motion="reduced"] .reveal-continue,
+:root[data-motion="reduced"] .countdown-clock {
     animation: none !important;
   }
-}
+
 .countdown-values {
   font-variant-numeric: lining-nums tabular-nums;
 }
@@ -2400,22 +2710,22 @@ p {
     padding-right: 65px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .date-discovered .date-stationery {
+
+:root[data-motion="reduced"] .date-discovered .date-stationery {
     transform: none;
   }
-  .foil-reflection,
-  .scratch-dust,
-  .foil-light-traces {
+:root[data-motion="reduced"] .foil-reflection,
+:root[data-motion="reduced"] .scratch-dust,
+:root[data-motion="reduced"] .foil-light-traces {
     display: none;
   }
-  .scratch-foreground {
+:root[data-motion="reduced"] .scratch-foreground {
     animation: none;
   }
-  .letter-content {
+:root[data-motion="reduced"] .letter-content {
     transform: none !important;
   }
-}
+
 .letter-border-overlay {
   position: absolute;
   inset: 19px;
@@ -2488,4 +2798,20 @@ p {
 .chapter-bridge { height: clamp(70px, 12dvh, 110px); }
 .date-discovered .revealed-month { animation: month-arrive .7s var(--ease) 1s both; }
 @keyframes month-arrive { from { opacity: .2; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-@media (prefers-reduced-motion: reduce) { .date-discovered .revealed-month { animation: none; } }
+
+:root[data-motion="reduced"] .date-discovered .revealed-month { animation: none; } 
+
+.motion-control {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  z-index: 110;
+  padding: 8px 11px;
+  color: #604735;
+  background: #fcf5e8ed;
+  border: 1px solid #b69a6555;
+  font: 11px Georgia, serif;
+  letter-spacing: .04em;
+  cursor: pointer;
+  touch-action: manipulation;
+}
