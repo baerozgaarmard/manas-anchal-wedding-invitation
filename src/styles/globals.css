@@ -2514,7 +2514,7 @@ p {
 .ending-venues {
   position: relative;
   background-color: #f5ebdb;
-  padding: 80px 20px 85px;
+  padding: clamp(64px, 8vw, 90px) clamp(16px, 3.5vw, 32px) clamp(70px, 9vw, 95px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2524,21 +2524,16 @@ p {
   min-height: 100dvh;
   box-sizing: border-box;
 }
-@media (min-width: 768px) {
-  .ending-venues {
-    padding: 100px 36px 95px;
-  }
-}
 .ending-venues-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 34px;
+  gap: clamp(6px, 1.2vw, 10px);
+  margin-bottom: clamp(24px, 3.5vw, 34px);
 }
 .ending-venues-title {
   font-family: "Italiana", Georgia, serif;
-  font-size: clamp(1.8rem, 6vw, 2.5rem);
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
   letter-spacing: 0.12em;
   color: #4a322d;
   margin: 0;
@@ -2547,7 +2542,7 @@ p {
 .venues-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 32px;
+  gap: clamp(20px, 3.5vw, 28px);
   width: 100%;
   max-width: 960px;
   margin: 0 auto;
@@ -2555,11 +2550,8 @@ p {
 @media (min-width: 768px) {
   .venues-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 32px;
-    align-items: stretch;
-  }
-  .ending-venues {
-    padding: 24px 36px 85px;
+    gap: clamp(18px, 2.5vw, 26px);
+    align-items: start;
   }
 }
 .venue-column {
@@ -2567,24 +2559,27 @@ p {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 24px 18px 24px;
+  padding: clamp(18px, 2.8vw, 24px) clamp(14px, 2vw, 20px);
   background: #faf2e2;
   border: 1px solid #b69a6b60;
   border-radius: 2px;
   box-shadow: 0 8px 24px #71573e0a;
   position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  gap: clamp(10px, 1.6vw, 14px);
 }
 .venue-meta {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  margin-bottom: 12px;
-  min-height: 90px;
+  gap: clamp(3px, 0.6vw, 5px);
+  margin: 0;
+  width: 100%;
 }
 .venue-tag {
   font-family: Georgia, serif;
-  font-size: 0.65rem;
+  font-size: clamp(0.62rem, 0.9vw, 0.66rem);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #937248;
@@ -2593,12 +2588,13 @@ p {
 }
 .venue-name {
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(1.4rem, 4vw, 1.8rem);
+  font-size: clamp(1.22rem, 1.8vw, 1.45rem);
   font-weight: 500;
   color: #3b241e;
-  margin: 2px 0;
-  letter-spacing: 0.05em;
+  margin: 0;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  line-height: 1.25;
 }
 .venue-address-lines {
   display: flex;
@@ -2606,15 +2602,16 @@ p {
   gap: 2px;
 }
 .venue-address-line {
-  font-size: clamp(0.88rem, 2.4vw, 0.96rem);
+  font-size: clamp(0.85rem, 1.5vw, 0.92rem);
   color: #5d463d;
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 .map-stationery {
   position: relative;
   width: 100%;
-  margin: 6px 0 16px;
+  box-sizing: border-box;
+  margin: 0;
   padding: 6px;
   border: 1px solid #b69a6b75;
   background: #fdfaf3;
@@ -2623,13 +2620,16 @@ p {
 .map-stationery iframe {
   display: block;
   width: 100%;
-  height: 230px;
+  height: auto;
+  aspect-ratio: 16 / 10;
   border: 0;
   background: #e5ddca;
   border-radius: 2px;
 }
 .map-awaiting {
-  height: 230px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
   position: relative;
   background: #e8e4d6;
   overflow: hidden;
@@ -2705,13 +2705,13 @@ p {
   justify-content: center;
   gap: 6px;
   font-family: Georgia, serif;
-  font-size: clamp(0.85rem, 2.5vw, 0.94rem);
+  font-size: clamp(0.85rem, 1.8vw, 0.94rem);
   font-style: italic;
   color: #7d5c34;
   text-decoration: none !important;
   border-bottom: none !important;
-  margin-top: auto;
-  padding: 6px 12px;
+  margin: 0;
+  padding: 4px 10px;
   transition: color 0.25s ease, transform 0.25s ease;
 }
 .map-directions:hover,
@@ -2723,7 +2723,7 @@ p {
 }
 .ending-venues-footer {
   position: relative;
-  margin-top: 34px;
+  margin-top: clamp(28px, 4vw, 36px);
   display: flex;
   flex-direction: column;
   align-items: center;
