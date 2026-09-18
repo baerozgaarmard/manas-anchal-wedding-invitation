@@ -1,7 +1,6 @@
 export type ScheduleItem = {
   label?: string;
   time?: string;
-  note?: string; // Subtle secondary discrepancy note e.g. "Hindi invitation: 3:30 PM"
   text?: string; // For text-based items e.g. "Followed by Dinner" or "Vivah Sanskar — Shubh Lagnanusar"
 };
 
@@ -24,8 +23,6 @@ export type WeddingEvent = {
   venue?: string;
   address?: string;
   mapUrl?: string;
-  startsAt?: string;
-  endsAt?: string;
 };
 export type WeddingDateConfig = {
   year: number | null;
@@ -79,7 +76,6 @@ export const weddingData = {
         {
           label: "Jyoti Prajavalan",
           time: "3:00 PM",
-          note: "Hindi invitation: 3:30 PM",
         },
         {
           label: "Dinner",
@@ -92,8 +88,6 @@ export const weddingData = {
       venue: "Family Residence, Rudrapur, Vikas Nagar",
       address: "Village & Post Rudrapur, Vikas Nagar, Dehradun",
       mapUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
-      startsAt: "2026-10-30T15:00:00+05:30",
-      endsAt: "2026-10-30T22:00:00+05:30",
     },
     {
       id: "mehendi",
@@ -118,8 +112,6 @@ export const weddingData = {
       venue: "Family Residence, Rudrapur, Vikas Nagar",
       address: "Village & Post Rudrapur, Vikas Nagar, Dehradun",
       mapUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
-      startsAt: "2026-10-31T19:00:00+05:30",
-      endsAt: "2026-10-31T23:59:00+05:30",
     },
     {
       id: "haldi",
@@ -134,17 +126,14 @@ export const weddingData = {
         {
           label: "Haldi Hath",
           time: "9:00 AM",
-          note: "Hindi invitation: 10:00 AM",
         },
         {
           label: "Mangal Snan",
           time: "10:00 AM",
-          note: "Hindi invitation: 11:00 AM",
         },
         {
           label: "Preetibhoj / Lunch",
           time: "1:00 PM",
-          note: "Hindi invitation: 12:00 PM",
         },
       ],
       venueLabel: "VENUE",
@@ -153,8 +142,6 @@ export const weddingData = {
       venue: "Family Residence, Rudrapur",
       address: "Village & Post Rudrapur, Dehradun",
       mapUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
-      startsAt: "2026-11-01T09:00:00+05:30",
-      endsAt: "2026-11-01T15:00:00+05:30",
     },
     {
       id: "vivah",
@@ -177,7 +164,6 @@ export const weddingData = {
         {
           label: "Barat Departure",
           time: "6:00 PM",
-          note: "Hindi invitation: 5:00 PM",
         },
         {
           label: "Dinner",
@@ -200,8 +186,6 @@ export const weddingData = {
       venue: "SHARMA FARMS, Bahuwala",
       address: "Bahuwala, Dehradun",
       mapUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
-      startsAt: "2026-11-02T10:00:00+05:30",
-      endsAt: "2026-11-03T02:00:00+05:30",
     },
   ] as WeddingEvent[],
 };

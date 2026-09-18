@@ -29,7 +29,13 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
       document.documentElement.style.scrollSnapType = 'none';
     });
 
-    // Check horizontal overflow
+    // 1. Verify "Motion on" button is completely removed
+    const motionControlCount = await page.locator('.motion-control').count();
+    assert.equal(motionControlCount, 0, 'Must NOT contain .motion-control element');
+    const motionOnButtons = await page.getByRole('button', { name: /motion/i }).count();
+    assert.equal(motionOnButtons, 0, 'Must NOT contain any motion toggle button');
+
+    // 2. Check horizontal overflow
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
     assert.equal(overflow, false, `Page must not horizontally overflow on ${vp.name}`);
 
@@ -47,12 +53,12 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
     const mataText = await mataStop.innerText();
     assert.ok(mataText.includes('Mata Ki Chowki'), 'Mata title missing');
     assert.ok(mataText.includes('30 OCTOBER 2026'), 'Mata full date missing');
-    assert.ok(true, 'Mata timing missing');
-    assert.ok(mataText.includes('Hindi invitation: 3:30 PM'), 'Mata Hindi note missing');
-    assert.ok(true, 'Mata dinner missing');
+    assert.ok(mataText.includes('Jyoti Prajavalan — 3:00 PM'), 'Mata Jyoti timing missing');
+    assert.equal(mataText.includes('Hindi invitation'), false, 'Mata must NOT contain Hindi note');
+    assert.equal(mataText.includes('3:30 PM'), false, 'Mata must NOT contain 3:30 PM');
+    assert.ok(mataText.includes('Dinner — 7:00 PM onwards'), 'Mata dinner missing');
     assert.ok(mataText.includes('Family Residence'), 'Mata venue missing');
     assert.ok(mataText.includes('Village & Post Rudrapur'), 'Mata address missing');
-    assert.ok(true, 'Mata host missing');
     assert.ok(mataText.includes('Discover the celebration'), 'Mata action missing');
 
     // Verify Mehandi & Cocktail
@@ -76,24 +82,25 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
     const haldiText = await haldiStop.innerText();
     assert.ok(haldiText.includes('Haldi Hath & Mangal Snan'), 'Haldi title missing');
     assert.ok(haldiText.includes('01 NOVEMBER 2026'), 'Haldi full date missing');
-    assert.ok(true, 'Haldi Hath timing missing');
-    assert.ok(haldiText.includes('Hindi invitation: 10:00 AM'), 'Haldi Hath note missing');
-    assert.ok(true, 'Mangal Snan timing missing');
-    assert.ok(haldiText.includes('Hindi invitation: 11:00 AM'), 'Mangal Snan note missing');
-    assert.ok(true, 'Lunch timing missing');
-    assert.ok(haldiText.includes('Hindi invitation: 12:00 PM'), 'Lunch note missing');
+    assert.ok(haldiText.includes('Haldi Hath — 9:00 AM'), 'Haldi Hath timing missing');
+    assert.equal(haldiText.includes('Hindi invitation'), false, 'Haldi Hath note must be absent');
+    assert.ok(haldiText.includes('Mangal Snan — 10:00 AM'), 'Mangal Snan timing missing');
+    assert.equal(haldiText.includes('11:00 AM'), false, 'Mangal Snan note must be absent');
+    assert.ok(haldiText.includes('Preetibhoj / Lunch — 1:00 PM'), 'Lunch timing missing');
+    assert.equal(haldiText.includes('12:00 PM'), false, 'Lunch note must be absent');
 
     // Verify Vivah Sanskar
     const vivahStop = stops.nth(3);
     const vivahText = await vivahStop.innerText();
     assert.ok(vivahText.includes('Vivah Sanskar'), 'Vivah title missing');
     assert.ok(vivahText.includes('02 NOVEMBER 2026'), 'Vivah full date missing');
-    assert.ok(true, 'Mandha Poojan missing');
-    assert.ok(true, 'Sehrabandi missing');
-    assert.ok(true, 'Barat departure missing');
-    assert.ok(vivahText.includes('Hindi invitation: 5:00 PM'), 'Barat departure note missing');
-    assert.ok(true, 'Dinner missing');
-    assert.ok(true, 'Lagnanusar missing');
+    assert.ok(vivahText.includes('Mandha Poojan — 10:00 AM'), 'Mandha Poojan missing');
+    assert.ok(vivahText.includes('Sehrabandi — 4:00 PM'), 'Sehrabandi missing');
+    assert.ok(vivahText.includes('Barat Departure — 6:00 PM'), 'Barat departure missing');
+    assert.equal(vivahText.includes('Hindi invitation'), false, 'Barat departure note missing');
+    assert.equal(vivahText.includes('5:00 PM'), false, 'Vivah must NOT contain 5:00 PM');
+    assert.ok(vivahText.includes('Dinner — 8:00 PM'), 'Dinner missing');
+    assert.ok(vivahText.includes('Vivah Sanskar — Shubh Lagnanusar'), 'Lagnanusar missing');
     assert.ok(vivahText.includes('BARAT ROUTE'), 'Barat route label missing');
     assert.ok(vivahText.includes('Family Residence, Rudrapur'), 'Barat route origin missing');
     assert.ok(vivahText.includes('Opp. S.G.R.R. Inter College, Bhauwala'), 'Barat route stop missing');
@@ -138,14 +145,35 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
       const scene = page.locator(`#${id}`);
       const text = await scene.innerText();
       assert.ok(text.length > 50, `Ceremony scene #${id} must contain content`);
+
+      // Verify no Hindi invitation notes
+      assert.equal(text.includes('Hindi invitation'), false, `${id} must NOT contain Hindi invitation note`);
+
+      // Verify no Add to calendar
+      assert.equal(text.includes('calendar'), false, `${id} must NOT contain calendar`);
+      assert.equal(text.includes('Add to calendar'), false, `${id} must NOT contain Add to calendar`);
+      assert.equal(text.includes('＋ Add to calendar'), false, `${id} must NOT contain ＋ Add to calendar`);
+
+      // Verify View location is present
+      const locationLink = scene.locator('.event-actions a');
+      const locationCount = await locationLink.count();
+      assert.equal(locationCount, 1, `${id} must have exactly 1 location link`);
+      const linkText = await locationLink.innerText();
+      assert.ok(linkText.includes('View location'), `${id} link must be View location`);
+
       if (id === 'mata') {
-        assert.ok(text.includes('Jyoti Prajavalan') && text.includes('Hindi invitation: 3:30 PM') && true);
+        assert.ok(text.includes('Jyoti Prajavalan') && text.includes('3:00 PM') && text.includes('Dinner'));
+        assert.equal(text.includes('3:30 PM'), false);
       } else if (id === 'mehendi') {
-        assert.ok(text.includes('7:00 PM onwards') && text.includes('Followed by Dinner')); assert.equal(text.includes('Ansh & Manika'), false); assert.equal(text.includes('Festive Best'), false);
+        assert.ok(text.includes('7:00 PM onwards') && text.includes('Followed by Dinner'));
       } else if (id === 'haldi') {
-        assert.ok(text.includes('Haldi Hath') && text.includes('Hindi invitation: 10:00 AM') && text.includes('Preetibhoj / Lunch'));
+        assert.ok(text.includes('Haldi Hath') && text.includes('9:00 AM') && text.includes('Mangal Snan') && text.includes('10:00 AM') && text.includes('Preetibhoj / Lunch') && text.includes('1:00 PM'));
+        assert.equal(text.includes('11:00 AM'), false);
+        assert.equal(text.includes('12:00 PM'), false);
       } else if (id === 'vivah') {
-        assert.ok(text.includes('Mandha Poojan') && text.includes('BARAT ROUTE') && text.includes('SHARMA FARMS'));
+        assert.ok(text.includes('Mandha Poojan') && text.includes('10:00 AM') && text.includes('Sehrabandi') && text.includes('4:00 PM') && text.includes('Barat Departure') && text.includes('6:00 PM') && text.includes('Dinner') && text.includes('8:00 PM') && text.includes('Vivah Sanskar') && text.includes('Shubh Lagnanusar'));
+        assert.equal(text.includes('5:00 PM'), false);
+        assert.ok(text.includes('BARAT ROUTE') && text.includes('SHARMA FARMS'));
       }
     }
 

@@ -177,7 +177,7 @@ function JourneyStop({
             {event.fullDate}
           </motion.p>
 
-          {/* 2. Schedule Timings & subtle discrepancy notes */}
+          {/* 2. Schedule Timings */}
           <motion.div
             className="journey-section-block"
             style={{ opacity: reduced ? 1 : scheduleAnim }}
@@ -193,9 +193,6 @@ function JourneyStop({
                   <p className="journey-schedule-line">
                     {item.text || item.label || item.time}
                   </p>
-                )}
-                {item.note && (
-                  <p className="journey-discrepancy-note">{item.note}</p>
                 )}
               </div>
             ))}

@@ -11,39 +11,6 @@ function EventDetails({
   event: WeddingEvent;
   reduced: boolean;
 }) {
-  function calendar() {
-    if (!event.startsAt || !event.endsAt) return;
-    const clean = (s: string) => s.replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-    const escape = (s: string) =>
-      s
-        .replace(/\\/g, "\\\\")
-        .replace(/\n/g, "\\n")
-        .replace(/,/g, "\\,")
-        .replace(/;/g, "\\;");
-    const content = [
-      "BEGIN:VCALENDAR",
-      "VERSION:2.0",
-      "PRODID:-//Manas Anchal//Wedding//EN",
-      "BEGIN:VEVENT",
-      `UID:${event.id}-${event.startsAt}@manas-anchal`,
-      `DTSTAMP:${clean(new Date().toISOString())}`,
-      `DTSTART:${clean(event.startsAt)}`,
-      `DTEND:${clean(event.endsAt)}`,
-      `SUMMARY:${escape(event.title)}`,
-      `LOCATION:${escape(event.address || event.venue || "")}`,
-      "END:VEVENT",
-      "END:VCALENDAR",
-    ].join("\r\n");
-    const url = URL.createObjectURL(
-      new Blob([content], { type: "text/calendar" }),
-    );
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${event.id}.ics`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
-
   const anim = (delay: number) => ({
     initial: reduced ? false : { opacity: 0, y: 12 },
     whileInView: { opacity: 1, y: 0 },
@@ -73,9 +40,6 @@ function EventDetails({
                 <p className="ceremony-entry-text">
                   {item.text || item.label || item.time}
                 </p>
-              )}
-              {item.note && (
-                <p className="ceremony-discrepancy-note">{item.note}</p>
               )}
             </div>
           ))}
@@ -128,16 +92,13 @@ function EventDetails({
       )}
 
       {/* 4. Action Links */}
-      <motion.div className="event-actions" {...anim(0.28)}>
-        {event.mapUrl && (
+      {event.mapUrl && (
+        <motion.div className="event-actions" {...anim(0.28)}>
           <a href={event.mapUrl} target="_blank" rel="noreferrer">
             ↗ View location
           </a>
-        )}
-        {event.startsAt && event.endsAt && (
-          <button onClick={calendar}>＋ Add to calendar</button>
-        )}
-      </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }
