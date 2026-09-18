@@ -20,6 +20,61 @@ function foilPath(width: number, height: number) {
   return path;
 }
 
+interface SparkleParticle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  maxSize: number;
+  life: number;
+  maxLife: number;
+  type: "dust" | "star";
+  color: string;
+  twinkleSpeed: number;
+  twinklePhase: number;
+  rotation: number;
+  rotSpeed: number;
+}
+
+function drawStar(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  r: number,
+  alpha: number,
+  color: string,
+  rotation: number,
+) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rotation);
+  ctx.globalAlpha = alpha;
+
+  ctx.shadowColor = "rgba(160, 110, 35, 0.5)";
+  ctx.shadowBlur = 3.5;
+
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  const validR = Math.max(0.5, r);
+  const inner = Math.max(0.2, validR * 0.22);
+  for (let i = 0; i < 4; i++) {
+    const arm = (i * Math.PI) / 2;
+    const dip = arm + Math.PI / 4;
+    if (i === 0) ctx.moveTo(Math.cos(arm) * validR, Math.sin(arm) * validR);
+    else ctx.lineTo(Math.cos(arm) * validR, Math.sin(arm) * validR);
+    ctx.lineTo(Math.cos(dip) * inner, Math.sin(dip) * inner);
+  }
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
+  ctx.arc(0, 0, Math.max(0.4, inner * 0.8), 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
 function paintFoil(ctx: CanvasRenderingContext2D, w: number, h: number) {
   const path = foilPath(w, h);
   ctx.save();
@@ -88,6 +143,7 @@ export function ScratchCanvas({
 }: Props) {
   const dust = useRef<HTMLSpanElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
+  const sparkleCanvas = useRef<HTMLCanvasElement>(null);
   const context = useRef<CanvasRenderingContext2D | null>(null);
   const geometry = useRef({ width: 0, height: 0, dpr: 1 });
   const lastPoint = useRef<Point | null>(null);
@@ -99,6 +155,193 @@ export function ScratchCanvas({
   const [touched, setTouched] = useState(false);
   const reduced = useReducedMotion();
   completed.current = revealed;
+
+  const particles = useRef<SparkleParticle[]>([]);
+  const animFrameId = useRef<number>(0);
+  const lastTime = useRef<number>(0);
+  const lastSpawn = useRef<number>(0);
+  const revealSparklesTriggered = useRef<boolean>(false);
+
+  const startParticleLoop = () => {
+    if (animFrameId.current || reduced) return;
+    lastTime.current = performance.now();
+    const tick = (now: number) => {
+      const dt = Math.max(0, Math.min(now - lastTime.current, 50));
+      lastTime.current = now;
+      renderSparkles(dt);
+      if (particles.current.length > 0) {
+        animFrameId.current = requestAnimationFrame(tick);
+      } else {
+        animFrameId.current = 0;
+        const sCtx = sparkleCanvas.current?.getContext("2d");
+        if (sCtx) sCtx.clearRect(0, 0, geometry.current.width, geometry.current.height);
+      }
+    };
+    animFrameId.current = requestAnimationFrame(tick);
+  };
+
+  function renderSparkles(dt: number) {
+    const el = sparkleCanvas.current;
+    if (!el) return;
+    const ctx = el.getContext("2d");
+    if (!ctx) return;
+
+    const { width, height } = geometry.current;
+    ctx.clearRect(0, 0, width, height);
+
+    const arr = particles.current;
+    for (let i = arr.length - 1; i >= 0; i--) {
+      const p = arr[i];
+      p.life -= dt;
+      if (p.life <= 0) {
+        arr.splice(i, 1);
+        continue;
+      }
+
+      const progress = Math.max(0, Math.min(1, 1 - p.life / p.maxLife));
+      let alpha = 1;
+      if (progress < 0.25) alpha = progress / 0.25;
+      else if (progress > 0.6) alpha = (1 - progress) / 0.4;
+
+      p.twinklePhase += p.twinkleSpeed * (dt / 1000);
+      const twinkle = 0.78 + 0.22 * Math.sin(p.twinklePhase);
+      alpha = Math.max(0, Math.min(1, alpha * twinkle));
+
+      p.x += p.vx * (dt / 16.67);
+      p.y += p.vy * (dt / 16.67);
+      p.vx *= 0.97;
+      p.vy *= 0.97;
+      p.rotation += p.rotSpeed * (dt / 16.67);
+
+      const sizeScale = Math.max(0.05, progress < 0.2 ? progress / 0.2 : 1);
+      const currentSize = Math.max(0.5, p.maxSize * sizeScale);
+
+      if (p.type === "star") {
+        drawStar(ctx, p.x, p.y, currentSize, alpha * 0.92, p.color, p.rotation);
+      } else {
+        ctx.save();
+        ctx.globalAlpha = alpha * 0.8;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(0.3, currentSize * 0.65), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+  }
+
+  function addScratchSparkles(x: number, y: number) {
+    if (reduced || completed.current) return;
+    const now = performance.now();
+    if (now - lastSpawn.current < 25) return;
+    lastSpawn.current = now;
+
+    if (particles.current.length > 24) return;
+
+    const count = Math.random() < 0.65 ? 2 : 1;
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 10 + Math.random() * 16;
+      const px = x + Math.cos(angle) * dist;
+      const py = y + Math.sin(angle) * dist;
+
+      const isStar = Math.random() < 0.38;
+      const colors = isStar
+        ? ["#ffffff", "#fce5a3", "#e6b350", "#d49a3e"]
+        : ["#fae2b5", "#f0cb77", "#d9a140", "#bf832b"];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const life = isStar ? 450 + Math.random() * 260 : 340 + Math.random() * 200;
+
+      particles.current.push({
+        x: px,
+        y: py,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: 0.12 + Math.random() * 0.38,
+        maxSize: isStar ? 3.6 + Math.random() * 1.8 : 1.2 + Math.random() * 1.2,
+        life,
+        maxLife: life,
+        type: isStar ? "star" : "dust",
+        color,
+        twinkleSpeed: 8 + Math.random() * 6,
+        twinklePhase: Math.random() * Math.PI * 2,
+        rotation: Math.random() * Math.PI,
+        rotSpeed: (Math.random() - 0.5) * 0.05,
+      });
+    }
+    startParticleLoop();
+  }
+
+  function triggerRevealSparkles() {
+    if (revealSparklesTriggered.current || reduced) return;
+    revealSparklesTriggered.current = true;
+
+    const { width, height } = geometry.current;
+    const cx = width > 0 ? width / 2 : 137;
+    const cy = height > 0 ? height / 2 + 8 : 160;
+
+    const count = 32;
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = Math.random() * 70;
+      const px = cx + Math.cos(angle) * (dist * 0.85);
+      const py = cy + Math.sin(angle) * (dist * 0.95);
+
+      const speed = 0.25 + Math.random() * 0.95;
+      const isStar = Math.random() < 0.5;
+      const colors = isStar
+        ? ["#c8963e", "#dca842", "#b58130", "#e2b34a", "#fff8db"]
+        : ["#d4a355", "#c49344", "#e8ba5d", "#fae2b5"];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const life = isStar ? 1000 + Math.random() * 750 : 700 + Math.random() * 550;
+
+      particles.current.push({
+        x: px,
+        y: py,
+        vx: Math.cos(angle) * speed * 0.45,
+        vy: Math.sin(angle) * speed * 0.45 - 0.2,
+        maxSize: isStar ? 4.8 + Math.random() * 2.2 : 1.4 + Math.random() * 1.4,
+        life,
+        maxLife: life,
+        type: isStar ? "star" : "dust",
+        color,
+        twinkleSpeed: 5 + Math.random() * 5,
+        twinklePhase: Math.random() * Math.PI * 2,
+        rotation: Math.random() * Math.PI,
+        rotSpeed: (Math.random() - 0.5) * 0.03,
+      });
+    }
+
+    for (let i = 0; i < 6; i++) {
+      const angle = (i / 6) * Math.PI * 2 + 0.2;
+      const px = cx + Math.cos(angle) * (62 + Math.random() * 20);
+      const py = cy + Math.sin(angle) * (54 + Math.random() * 24);
+      const life = 1500 + Math.random() * 600;
+
+      particles.current.push({
+        x: px,
+        y: py,
+        vx: (Math.random() - 0.5) * 0.12,
+        vy: -0.04 + (Math.random() - 0.5) * 0.08,
+        maxSize: 5.5 + Math.random() * 1.8,
+        life,
+        maxLife: life,
+        type: "star",
+        color: i % 2 === 0 ? "#c8963e" : "#dca842",
+        twinkleSpeed: 3.5 + Math.random() * 2.5,
+        twinklePhase: Math.random() * Math.PI * 2,
+        rotation: Math.random() * Math.PI,
+        rotSpeed: (Math.random() - 0.5) * 0.02,
+      });
+    }
+
+    startParticleLoop();
+  }
+
+  useEffect(() => {
+    if (revealed && !revealSparklesTriggered.current && !reduced) {
+      triggerRevealSparkles();
+    }
+  }, [revealed, reduced]);
 
   useEffect(() => {
     if (reduced || !window.PointerEvent) return;
@@ -130,6 +373,14 @@ export function ScratchCanvas({
         if (hadDrawing) ctx.drawImage(previous, 0, 0, rect.width, rect.height);
         else paintFoil(ctx, rect.width, rect.height);
         context.current = ctx;
+
+        if (sparkleCanvas.current) {
+          sparkleCanvas.current.width = Math.round(rect.width * dpr);
+          sparkleCanvas.current.height = Math.round(rect.height * dpr);
+          const sCtx = sparkleCanvas.current.getContext("2d");
+          if (sCtx) sCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
         setReady(true);
       } catch {
         context.current = null;
@@ -145,6 +396,7 @@ export function ScratchCanvas({
       observer?.disconnect();
       window.removeEventListener("resize", resize);
       context.current = null;
+      if (animFrameId.current) cancelAnimationFrame(animFrameId.current);
     };
   }, [reduced]);
 
@@ -157,6 +409,7 @@ export function ScratchCanvas({
     if (pointer !== null && canvas.current?.hasPointerCapture(pointer))
       canvas.current.releasePointerCapture(pointer);
     onScratchingChange?.(false);
+    triggerRevealSparkles();
     onReveal();
   }
   function progress(force = false) {
@@ -217,6 +470,7 @@ export function ScratchCanvas({
     ctx.stroke();
     ctx.restore();
     lastPoint.current = to;
+    addScratchSparkles(to.x, to.y);
     if (dust.current)
       dust.current.style.transform = `translate(${to.x}px, ${to.y}px)`;
   }
@@ -253,46 +507,53 @@ export function ScratchCanvas({
     progress(true);
   }
   return (
-    <div
-      className={`scratch-veil ${revealed ? "foil-released" : ""} ${touched ? "foil-touched" : ""}`}
-      aria-hidden="true"
-    >
-      {(!ready || reduced) && (
-        <div className="foil-fallback">
-          <span>Our forever</span>
-          <small>WAITS WITHIN</small>
-        </div>
-      )}
-      <canvas
-        ref={canvas}
-        className="scratch-canvas"
-        style={{ visibility: ready && !reduced ? "visible" : "hidden" }}
-        onPointerDown={down}
-        onPointerMove={move}
-        onPointerUp={end}
-        onPointerCancel={end}
-        onPointerLeave={(event) => {
-          if (!event.currentTarget.hasPointerCapture(event.pointerId)) end(event);
-        }}
-        onLostPointerCapture={end}
-      />
-      {!touched && !revealed && <span className="foil-reflection" />}
-      <span className="scratch-dust" ref={dust}>
-        <i />
-        <i />
-        <i />
-      </span>
-      <svg
-        className="foil-light-traces"
-        viewBox="0 0 274 310"
-        preserveAspectRatio="none"
+    <>
+      <div
+        className={`scratch-veil ${revealed ? "foil-released" : ""} ${touched ? "foil-touched" : ""}`}
+        aria-hidden="true"
       >
-        <path d="M137 45Q85 95 137 155Q190 210 137 275M137 155Q60 90 28 150M137 155Q204 95 246 148M137 155Q80 214 58 259M137 155Q205 205 222 254" />
-        <path d="M137 125c-32-40-52 0 0 35 52-35 32-75 0-35Z" />
-      </svg>
-      {!touched && !revealed && ready && !reduced && (
-        <span className="scratch-gesture" />
-      )}
-    </div>
+        {(!ready || reduced) && (
+          <div className="foil-fallback">
+            <span>Our forever</span>
+            <small>WAITS WITHIN</small>
+          </div>
+        )}
+        <canvas
+          ref={canvas}
+          className="scratch-canvas"
+          style={{ visibility: ready && !reduced ? "visible" : "hidden" }}
+          onPointerDown={down}
+          onPointerMove={move}
+          onPointerUp={end}
+          onPointerCancel={end}
+          onPointerLeave={(event) => {
+            if (!event.currentTarget.hasPointerCapture(event.pointerId)) end(event);
+          }}
+          onLostPointerCapture={end}
+        />
+        {!touched && !revealed && <span className="foil-reflection" />}
+        <span className="scratch-dust" ref={dust}>
+          <i />
+          <i />
+          <i />
+        </span>
+        <svg
+          className="foil-light-traces"
+          viewBox="0 0 274 310"
+          preserveAspectRatio="none"
+        >
+          <path d="M137 45Q85 95 137 155Q190 210 137 275M137 155Q60 90 28 150M137 155Q204 95 246 148M137 155Q80 214 58 259M137 155Q205 205 222 254" />
+          <path d="M137 125c-32-40-52 0 0 35 52-35 32-75 0-35Z" />
+        </svg>
+        {!touched && !revealed && ready && !reduced && (
+          <span className="scratch-gesture" />
+        )}
+      </div>
+      <canvas
+        ref={sparkleCanvas}
+        className="scratch-sparkle-canvas"
+        aria-hidden="true"
+      />
+    </>
   );
 }

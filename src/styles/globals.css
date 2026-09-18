@@ -1256,6 +1256,14 @@ p {
 }
 .vivah .ceremony-copy {
   padding-top: clamp(36px, 4.5vh, 56px);
+  position: relative;
+  z-index: 5;
+}
+.vivah .ceremony-copy .eyebrow {
+  color: #552a24;
+  font-weight: 500;
+  opacity: 0.92;
+  letter-spacing: 0.22em;
 }
 .vivah h2 {
   font-family: "Italiana", serif;
@@ -1622,6 +1630,14 @@ p {
   touch-action: auto;
   pointer-events: none;
 }
+.scratch-sparkle-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
 .foil-fallback {
   position: absolute;
   inset: 0;
@@ -1695,13 +1711,17 @@ p {
   inset: 0;
   pointer-events: none;
   background: linear-gradient(
-    115deg,
-    transparent 30%,
-    #fffdf5a0 48%,
-    transparent 64%
+    118deg,
+    transparent 18%,
+    rgba(255, 252, 240, 0.08) 32%,
+    rgba(250, 230, 185, 0.48) 44%,
+    rgba(255, 255, 255, 0.82) 50%,
+    rgba(250, 230, 185, 0.48) 56%,
+    rgba(255, 252, 240, 0.08) 68%,
+    transparent 82%
   );
-  background-size: 260% 100%;
-  animation: date-glimmer 2.4s 0.45s ease-out both;
+  background-size: 270% 100%;
+  animation: date-glimmer 2.2s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .reveal-continue {
   font-size: 1rem;
@@ -1976,7 +1996,8 @@ p {
     transform: none;
   }
 :root[data-motion="reduced"] .reveal-petals,
-:root[data-motion="reduced"] .scratch-gesture {
+:root[data-motion="reduced"] .scratch-gesture,
+:root[data-motion="reduced"] .scratch-sparkle-canvas {
     display: none;
   }
 :root[data-motion="reduced"] .reveal-continue,
