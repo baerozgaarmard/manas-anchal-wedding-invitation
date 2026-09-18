@@ -44,9 +44,10 @@ export function ClosingScene() {
             <div className="map-stationery">
               {familyResidence.embedUrl ? (
                 <iframe
+                  key="map-family-residence"
                   src={familyResidence.embedUrl}
                   title={`Wedding venue: ${familyResidence.name}`}
-                  loading="lazy"
+                  loading="eager"
                   referrerPolicy="no-referrer-when-downgrade"
                   allowFullScreen
                 />
@@ -109,9 +110,10 @@ export function ClosingScene() {
             <div className="map-stationery">
               {sharmaFarms.embedUrl ? (
                 <iframe
+                  key="map-sharma-farms"
                   src={sharmaFarms.embedUrl}
                   title={`Wedding venue: ${sharmaFarms.name}`}
-                  loading="lazy"
+                  loading="eager"
                   referrerPolicy="no-referrer-when-downgrade"
                   allowFullScreen
                 />

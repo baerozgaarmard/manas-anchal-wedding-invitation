@@ -243,10 +243,26 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
     const sharmaDecor = await sharmaLink.evaluate(el => window.getComputedStyle(el).textDecorationLine);
     assert.equal(sharmaDecor, 'none', 'Open in Google Maps link must not have underline');
 
-    // Verify both map previews have valid iframes
+    // Verify both map previews have valid iframes with loading="eager"
     const iframes = venuesEl.locator('iframe');
     const iframeCount = await iframes.count();
     assert.equal(iframeCount, 2, 'Must have 2 map preview iframes');
+    for (let i = 0; i < 2; i++) {
+      const ifr = iframes.nth(i);
+      const loading = await ifr.getAttribute('loading');
+      assert.equal(loading, 'eager', `Venue iframe ${i} must have loading="eager"`);
+      assert.notEqual(loading, 'lazy', `Venue iframe ${i} must NOT have loading="lazy"`);
+    }
+
+    // Verify Google Maps resource hints in document head
+    const preconnectMaps = await page.locator('head link[rel="preconnect"][href="https://maps.google.com"]').count();
+    assert.equal(preconnectMaps, 1, 'Must have preconnect for maps.google.com');
+    const dnsMaps = await page.locator('head link[rel="dns-prefetch"][href="https://maps.google.com"]').count();
+    assert.equal(dnsMaps, 1, 'Must have dns-prefetch for maps.google.com');
+    const preconnectGstatic = await page.locator('head link[rel="preconnect"][href="https://maps.gstatic.com"]').count();
+    assert.equal(preconnectGstatic, 1, 'Must have preconnect for maps.gstatic.com');
+    const preconnectGoogle = await page.locator('head link[rel="preconnect"][href="https://www.google.com"]').count();
+    assert.equal(preconnectGoogle, 1, 'Must have preconnect for www.google.com');
 
     // Take screenshots on 393px mobile
     if (vp.name === 'iphone14pro-393') {
