@@ -681,36 +681,6 @@ p {
 .journey-stop:hover .journey-arrow > span {
   transform: translate(2px, -2px);
 }
-.journey-node {
-  grid-column: 2;
-  grid-row: 1;
-  position: absolute;
-  left: 50%;
-  top: 36px;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-  z-index: 2;
-}
-.journey-node-dot {
-  position: absolute;
-  left: -3px;
-  top: -3px;
-  width: 6px;
-  height: 6px;
-  border: 1px solid #ac8750;
-  border-radius: 50%;
-}
-.journey-node-halo {
-  position: absolute;
-  left: -11px;
-  top: -11px;
-  width: 22px;
-  height: 22px;
-  border: 1px solid #b99760;
-  border-radius: 50%;
-  background: #cdb78e;
-}
 .journey-stop:focus-visible .journey-copy > * {
   opacity: 1 !important;
 }

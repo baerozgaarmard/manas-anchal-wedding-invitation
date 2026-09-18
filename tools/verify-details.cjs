@@ -47,9 +47,13 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
     const svgCircleCount = await page.locator('.thread-svg circle').count();
     assert.equal(svgCircleCount, 0, 'Must NOT contain any stray circle in thread SVG');
 
-    // 4. Verify exactly 4 ceremony nodes exist on the timeline
+    // 4. Verify unwanted dots are completely removed from the timeline
     const nodeDots = await page.locator('.journey-node-dot').count();
-    assert.equal(nodeDots, 4, 'Must have exactly 4 ceremony node dots');
+    assert.equal(nodeDots, 0, 'Must NOT have any journey node dots');
+    const nodeHalos = await page.locator('.journey-node-halo').count();
+    assert.equal(nodeHalos, 0, 'Must NOT have any journey node halos');
+    const strayNodes = await page.locator('.journey-node').count();
+    assert.equal(strayNodes, 0, 'Must NOT have any .journey-node elements');
 
     // 5. Verify soft fade veils exist between sections
     const topFade = await page.locator('.journey-top-fade').count();
@@ -126,22 +130,12 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
     assert.ok(vivahText.includes('MAIN VENUE'), 'Main venue label missing');
     assert.ok(vivahText.includes('SHARMA FARMS'), 'Main venue name missing');
 
-    // Verify alignment of node and heading h3
-    const alignmentCheck = await page.evaluate(() => {
-      const stops = Array.from(document.querySelectorAll('.journey-stop'));
-      return stops.map((stop, i) => {
-        const h3 = stop.querySelector('h3');
-        const node = stop.querySelector('.journey-node-dot');
-        const h3Rect = h3.getBoundingClientRect();
-        const nodeRect = node.getBoundingClientRect();
-        const h3MidY = h3Rect.top + h3Rect.height / 2;
-        const nodeMidY = nodeRect.top + nodeRect.height / 2;
-        return { index: i, diffY: Math.abs(h3MidY - nodeMidY) };
-      });
-    });
-    console.log('Node to heading vertical alignment diffs (px):', alignmentCheck);
-    for (const a of alignmentCheck) {
-      assert.ok(a.diffY <= 4, `Node and heading must be vertically aligned within 4px (was ${a.diffY}px)`);
+    // Verify thread SVG path is smooth and tightly bounded (no bulging)
+    const threadPathD = await page.locator('.thread-svg path').first().getAttribute('d');
+    assert.ok(threadPathD && threadPathD.startsWith('M 20 0'), 'Thread path must start at M 20 0');
+    const xCoords = Array.from(threadPathD.matchAll(/([0-9.]+) [0-9.]+/g)).map(m => parseFloat(m[1]));
+    for (const x of xCoords) {
+      assert.ok(x >= 14 && x <= 26, `Thread path X coordinate ${x} must be smoothly bounded between 14 and 26`);
     }
 
     // Verify left/right alternation text alignment

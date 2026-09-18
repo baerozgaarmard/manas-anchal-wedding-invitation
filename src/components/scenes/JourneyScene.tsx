@@ -13,46 +13,25 @@ import { Botanical, Ornament } from "../ui/Ornament";
 import { JourneyIcon } from "../ui/JourneyIcon";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 
-function generateThreadPath(nodes: number[], totalHeight: number): string {
-  if (nodes.length !== 4 || totalHeight <= 0) {
+function generateThreadPath(
+  totalHeight: number,
+  cycles = 4,
+  amp = 3.5,
+): string {
+  if (totalHeight <= 0) {
     return "M 20 0 L 20 1000";
   }
-  const [y0, y1, y2, y3] = nodes;
-  const amp = 7.5;
-  const pts = [
-    { x: 20, y: 0 },
-    { x: 20 - amp * 0.85, y: y0 * 0.48 },
-    { x: 20, y: y0 },
-    { x: 20 + amp, y: (y0 + y1) * 0.5 },
-    { x: 20, y: y1 },
-    { x: 20 - amp, y: (y1 + y2) * 0.5 },
-    { x: 20, y: y2 },
-    { x: 20 + amp, y: (y2 + y3) * 0.5 },
-    { x: 20, y: y3 },
-    { x: 20 - amp * 0.85, y: (y3 + totalHeight) * 0.5 },
-    { x: 20, y: totalHeight },
-  ];
-
-  const p = (i: number) => {
-    if (i < 0) return { x: 20, y: -y0 * 0.4 };
-    if (i >= pts.length)
-      return { x: 20, y: totalHeight + (totalHeight - y3) * 0.4 };
-    return pts[i];
-  };
-
-  let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = p(i - 1);
-    const p1 = p(i);
-    const p2 = p(i + 1);
-    const p3 = p(i + 2);
-
-    const cp1x = p1.x + (p2.x - p0.x) / 6;
-    const cp1y = p1.y + (p2.y - p0.y) / 6;
-    const cp2x = p2.x - (p3.x - p1.x) / 6;
-    const cp2y = p2.y - (p3.y - p1.y) / 6;
-
-    d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
+  const segHeight = totalHeight / cycles;
+  let d = "M 20 0";
+  for (let i = 0; i < cycles; i++) {
+    const yStart = i * segHeight;
+    const yEnd = (i + 1) * segHeight;
+    const side = i % 2 === 0 ? -1 : 1;
+    const cp1x = 20 + side * amp * 1.333;
+    const cp1y = yStart + segHeight * 0.333;
+    const cp2x = 20 + side * amp * 1.333;
+    const cp2y = yStart + segHeight * 0.667;
+    d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, 20 ${yEnd.toFixed(1)}`;
   }
   return d;
 }
@@ -80,14 +59,12 @@ function JourneyStop({
   event,
   index,
   anchor,
-  progress,
   visited,
   reduced,
 }: {
   event: WeddingEvent;
   index: number;
   anchor: number;
-  progress: MotionValue<number>;
   visited: MotionValue<number>;
   reduced: boolean;
 }) {
@@ -147,16 +124,6 @@ function JourneyStop({
     [anchor + 0.03, anchor + 0.065],
     [0, 1],
   );
-  const nodeFill = useTransform(
-    visited,
-    [anchor - 0.006, anchor + 0.012],
-    ["#f6edda", "#ac8750"],
-  );
-  const halo = useTransform(
-    progress,
-    [anchor - 0.012, anchor + 0.015, anchor + 0.08],
-    [0, 0.22, 0],
-  );
 
   return (
     <div
@@ -169,16 +136,6 @@ function JourneyStop({
       >
         <JourneyIcon kind={event.id} draw={draw} />
       </motion.span>
-      <span className="journey-node" aria-hidden="true">
-        <motion.i
-          className="journey-node-halo"
-          style={{ opacity: reduced ? 0 : halo }}
-        />
-        <motion.i
-          className="journey-node-dot"
-          style={{ backgroundColor: reduced ? "#ac8750" : nodeFill }}
-        />
-      </span>
       <motion.div className="journey-copy" style={{ x: reduced ? 0 : x }}>
         <motion.p className="eyebrow" style={{ opacity: reduced ? 1 : date }}>
           {event.shortDate || event.date}
@@ -284,9 +241,8 @@ export function JourneyScene() {
   const reduced = !!useReducedMotion();
 
   const defaultHeight = 2200;
-  const defaultNodes = [120, 640, 1160, 1680];
   const [pathState, setPathState] = useState({
-    d: generateThreadPath(defaultNodes, defaultHeight),
+    d: generateThreadPath(defaultHeight),
     totalHeight: defaultHeight,
     anchors: [(0 + 0.5) / 4, (1 + 0.5) / 4, (2 + 0.5) / 4, (3 + 0.5) / 4],
   });
@@ -304,10 +260,9 @@ export function JourneyScene() {
 
       stops.forEach((stop) => {
         const h3 = stop.querySelector("h3");
-        const nodeEl = stop.querySelector(".journey-node") as HTMLElement;
         const iconWrap = stop.querySelector(".journey-icon-wrap") as HTMLElement;
 
-        if (h3 && nodeEl) {
+        if (h3) {
           const h3Rect = h3.getBoundingClientRect();
           const stopRect = stop.getBoundingClientRect();
           const padTop =
@@ -315,7 +270,6 @@ export function JourneyScene() {
 
           const relativeCenter =
             h3Rect.top - stopRect.top + h3Rect.height / 2 - padTop;
-          nodeEl.style.top = `${relativeCenter}px`;
 
           if (iconWrap) {
             const iconH = iconWrap.offsetHeight || 76;
@@ -332,7 +286,7 @@ export function JourneyScene() {
 
       const totalH = pathArea.current.offsetHeight;
       if (measuredNodes.length === 4 && totalH > 0) {
-        const newD = generateThreadPath(measuredNodes, totalH);
+        const newD = generateThreadPath(totalH);
 
         let computedAnchors = [0.125, 0.375, 0.625, 0.875];
         if (path.current) {
@@ -425,7 +379,6 @@ export function JourneyScene() {
             event={event}
             index={index}
             anchor={pathState.anchors[index] ?? (index + 0.5) / 4}
-            progress={progress}
             visited={visited}
             reduced={reduced}
           />
