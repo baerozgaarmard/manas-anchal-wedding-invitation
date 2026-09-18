@@ -1267,34 +1267,7 @@ p {
 }
 .vivah .chapter-bridge {
   height: 105px;
-  background: linear-gradient(to bottom, transparent 0%, rgba(234, 216, 206, 0.55) 50%, #ead8ce 100%);
-}
-.closing {
-  min-height: 100dvh;
-  text-align: center;
-  color: #543841;
-}
-.closing .scene-art {
-  transform: scaleX(-1);
-}
-.closing-wash {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(#eac8c350, transparent 70%);
-  z-index: -2;
-}
-.closing-copy {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 150px 35px 280px;
-  gap: 25px;
-}
-.closing .names {
-  font-size: clamp(3rem, 12vw, 5rem);
-}
-.closing .stationery-action {
-  font-size: 0.95rem;
+  background: linear-gradient(to bottom, transparent 0%, rgba(245, 235, 219, 0.55) 50%, #f5ebdb 100%);
 }
 .audio-control {
   position: fixed;
@@ -2520,22 +2493,13 @@ p {
     transform: rotate(-12deg);
   }
 }
-/* A calm three-part ending: the story, the venue, then the map. */
+/* Location Page: OUR VENUES */
 .ending-scene {
   position: relative;
   background: #f5ebdb;
   scroll-snap-align: start;
   overflow: clip;
-}
-.ending-emotion {
-  position: relative;
-  min-height: clamp(520px, 75dvh, 720px);
-  isolation: isolate;
-  overflow: hidden;
-  text-align: center;
-}
-.ending-emotion .scene-art {
-  transform: scaleX(-1);
+  min-height: 100dvh;
 }
 .ending-top-fade {
   position: absolute;
@@ -2543,54 +2507,27 @@ p {
   left: 0;
   right: 0;
   height: 90px;
-  background: linear-gradient(to bottom, #ead8ce 0%, transparent 100%);
+  background: linear-gradient(to bottom, rgba(210, 185, 169, 0.4) 0%, transparent 100%);
   pointer-events: none;
   z-index: 2;
-}
-.ending-bottom-fade {
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: clamp(100px, 18dvh, 160px);
-  background: linear-gradient(to bottom, transparent 0%, rgba(245, 235, 219, 0.5) 45%, #f5ebdb 100%);
-  pointer-events: none;
-  z-index: 2;
-}
-.ending-wash {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background: linear-gradient(#ead8ce55 45%, transparent 68%, #f5ebdb 100%);
-}
-.ending-copy {
-  padding: clamp(90px, 12dvh, 120px) 24px clamp(80px, 12dvh, 110px);
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 20px;
-  color: #583b43;
-}
-.ending-copy .names {
-  font-size: clamp(3.7rem, 13vw, 5.7rem);
-}
-.ending-copy .script {
-  font-size: 1.22rem;
-  max-width: 230px;
-}
-.ending-emotion .petals i {
-  animation-duration: 36s;
 }
 .ending-venues {
   position: relative;
   background-color: #f5ebdb;
-  padding: 12px 20px 75px;
+  padding: 80px 20px 85px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   isolation: isolate;
   width: 100%;
+  min-height: 100dvh;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  .ending-venues {
+    padding: 100px 36px 95px;
+  }
 }
 .ending-venues-header {
   display: flex;

@@ -198,23 +198,20 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
       assert.equal(textDecor, 'none', `${id} View location link must not have underline`);
     }
 
-    // Verify Merged Ending Page (#closing)
+    // Verify Final Page (#closing) ends directly on OUR VENUES
     const closingSection = page.locator('#closing');
     await closingSection.scrollIntoViewIfNeeded();
     await page.waitForTimeout(400);
 
-    // Verify Emotional Ending section
-    const emotionEl = closingSection.locator('.ending-emotion');
-    const emotionText = await emotionEl.innerText();
-    assert.ok(emotionText.toUpperCase().includes('WITH LOVE'), 'Ending emotion must contain With love');
-    assert.ok(emotionText.toUpperCase().includes('MANAS') && emotionText.toUpperCase().includes('ANCHAL'), 'Ending emotion must contain couple names');
-    assert.ok(emotionText.includes('Join us as we begin our forever'), 'Ending emotion must contain closing message');
+    // Verify Emotional Ending section is COMPLETELY REMOVED
+    const emotionCount = await closingSection.locator('.ending-emotion').count();
+    assert.equal(emotionCount, 0, 'Must NOT contain .ending-emotion section');
+    const closingText = await closingSection.innerText();
+    assert.equal(closingText.toUpperCase().includes('WITH LOVE'), false, 'Must NOT contain With love');
+    assert.equal(closingText.toUpperCase().includes('MANAS & ANCHAL'), false, 'Must NOT contain couple names in closing');
+    assert.equal(closingText.includes('Join us as we begin our forever'), false, 'Must NOT contain ending message');
 
-    // Verify soft ivory fade transition exists
-    const bottomFadeCount = await emotionEl.locator('.ending-bottom-fade').count();
-    assert.equal(bottomFadeCount, 1, 'Must contain .ending-bottom-fade transition');
-
-    // Verify OUR VENUES section on SAME page
+    // Verify OUR VENUES is the direct final section
     const venuesEl = closingSection.locator('.ending-venues');
     const venuesTitle = await venuesEl.locator('.ending-venues-title').innerText();
     assert.equal(venuesTitle, 'OUR VENUES', 'Venues section title must be OUR VENUES');
@@ -286,20 +283,16 @@ const ARTIFACT_DIR = 'C:/Users/Ayush/.gemini/antigravity/brain/492dff2e-f471-45d
       await page.waitForTimeout(400);
       await page.screenshot({ path: `${ARTIFACT_DIR}/ceremony_vivah_scene.png` });
 
-      // Merged ending screenshots
-      await emotionEl.scrollIntoViewIfNeeded();
-      await page.waitForTimeout(400);
-      await page.screenshot({ path: `${ARTIFACT_DIR}/merged_ending_emotion_mobile.png` });
-
+      // Final venues page mobile screenshot
       await venuesEl.scrollIntoViewIfNeeded();
       await page.waitForTimeout(400);
-      await page.screenshot({ path: `${ARTIFACT_DIR}/merged_ending_venues_mobile.png` });
+      await page.screenshot({ path: `${ARTIFACT_DIR}/final_venues_page_mobile.png` });
     }
 
     if (vp.name === 'desktop-1440') {
       await venuesEl.scrollIntoViewIfNeeded();
       await page.waitForTimeout(400);
-      await page.screenshot({ path: `${ARTIFACT_DIR}/merged_ending_venues_desktop.png` });
+      await page.screenshot({ path: `${ARTIFACT_DIR}/final_venues_page_desktop.png` });
     }
 
     assert.deepEqual(errors, [], 'There should be zero page errors');

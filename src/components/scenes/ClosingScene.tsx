@@ -1,49 +1,23 @@
 import { motion } from "framer-motion";
 import { weddingData } from "../../data/weddingData";
 import { Ornament, Botanical } from "../ui/Ornament";
-import { FloatingPetals } from "../ui/FloatingPetals";
 
 export function ClosingScene() {
-  const { locations, closing, couple } = weddingData;
+  const { locations } = weddingData;
   const { familyResidence, sharmaFarms } = locations;
 
   return (
     <section
       id="closing"
       className="ending-scene"
-      aria-label="With love, and our wedding venues"
+      aria-label="Our wedding venues"
     >
-      {/* 1. Emotional Ending Artwork & Typography */}
-      <div className="ending-emotion">
-        <div className="ending-top-fade" aria-hidden="true" />
-        <img
-          className="scene-art"
-          src="/images/opening-bg.webp"
-          alt=""
-          loading="lazy"
-        />
-        <div className="ending-wash" />
-        <div className="ending-copy">
-          <Ornament />
-          <p className="eyebrow">With love</p>
-          <h2 className="names">
-            <span>{couple.groom}</span>
-            <em>&</em>
-            <span>{couple.bride}</span>
-          </h2>
-          <p className="script">{closing.message}</p>
-          {weddingData.familyDetails && <p>{weddingData.familyDetails}</p>}
-        </div>
-        <FloatingPetals />
-        <div className="ending-bottom-fade" aria-hidden="true" />
-      </div>
-
-      {/* 2. Seamlessly continues on the SAME page into: OUR VENUES */}
+      <div className="ending-top-fade" aria-hidden="true" />
       <div className="ending-venues paper">
         <div className="ending-venues-header">
           <Ornament />
           <p className="eyebrow">Locations</p>
-          <h3 className="ending-venues-title">OUR VENUES</h3>
+          <h2 className="ending-venues-title">OUR VENUES</h2>
         </div>
 
         <div className="venues-grid">
