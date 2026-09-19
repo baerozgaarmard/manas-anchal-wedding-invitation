@@ -126,7 +126,7 @@ function Garlands() {
     </div>
   );
 }
-function Garden() {
+export function Garden() {
   return (
     <div className="night-garden" aria-hidden="true">
       <div className="moon" />
@@ -183,16 +183,15 @@ function Ceremony({ event }: { event: WeddingEvent }) {
       aria-labelledby={`${event.id}-title`}
     >
       <div className="chapter-entry-veil" aria-hidden="true" />
-      {(event.id === "mata" || event.id === "vivah") && (
+      {(event.id === "mata" || event.id === "mehendi" || event.id === "vivah") && (
         <motion.img
           className="scene-art"
-          style={{ y: reduced ? 0 : y }}
-          src={`/images/${event.id}-bg.webp`}
+          style={{ y: reduced || event.id === "mata" ? 0 : y }}
+          src={event.id === "mata" ? "/images/mata-portraits.webp" : event.id === "mehendi" ? "/images/mehendi-garden.webp" : `/images/${event.id}-bg.webp`}
           alt=""
           loading="lazy"
         />
       )}
-      {event.id === "mehendi" && <Garden />}
       {event.id === "haldi" && (
         <>
           <div className="sun-disc" />
