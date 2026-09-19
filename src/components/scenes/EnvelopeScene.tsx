@@ -19,6 +19,7 @@ export function EnvelopeScene({
   const [state, setState] = useState<EnvelopeState>("sealed");
   const phase = useRef<EnvelopeState>("sealed");
   const reduced = useReducedMotion();
+  const opened = state === "opened";
   function advance(from: EnvelopeState, to: EnvelopeState) {
     if (phase.current !== from) return;
     phase.current = to;
@@ -39,7 +40,7 @@ export function EnvelopeScene({
     advance("sealed", "breaking");
   }
   useEffect(() => {
-    if (state === "opened") return;
+    if (opened) return;
     const html = document.documentElement,
       body = document.body;
     const previousHtml = html.style.overflow,
@@ -53,7 +54,7 @@ export function EnvelopeScene({
       body.style.overflow = previousBody;
       document.removeEventListener("touchmove", prevent);
     };
-  }, [state === "opened"]);
+  }, [opened]);
   useEffect(() => {
     if (state === "opened")
       document.getElementById("scratch-title")?.focus({ preventScroll: true });
@@ -76,14 +77,17 @@ export function EnvelopeScene({
         inert={state !== "opened"}
         aria-hidden={state !== "opened"}
         initial={false}
-        animate={{
-          y: lifting ? 0 : 28,
-          scale: lifting ? 1 : 0.975,
-          opacity: state === "sealed" || state === "breaking" ? 0 : 1,
+        animate={state}
+        variants={{
+          sealed: { y: 22, scale: 0.985, opacity: 0 },
+          breaking: { y: 22, scale: 0.985, opacity: 0 },
+          opening: { y: 22, scale: 0.985, opacity: 1 },
+          revealing: { y: 0, scale: 1, opacity: 1 },
+          opened: { y: 0, scale: 1, opacity: 1 },
         }}
-        transition={{ duration: reduced ? 0 : 1.35, ease }}
-        onAnimationComplete={() => {
-          if (phase.current === "revealing") finish();
+        transition={{ duration: reduced ? 0 : 0.95, ease }}
+        onAnimationComplete={(definition) => {
+          if (definition === "revealing" && phase.current === "revealing") finish();
         }}
       >
         {children}
@@ -94,7 +98,7 @@ export function EnvelopeScene({
           <motion.div
             className="letter-back paper"
             animate={{ y: lifting ? "110%" : "0%" }}
-            transition={{ duration: 1.4, ease }}
+            transition={{ duration: 0.9, ease }}
             aria-hidden="true"
           >
             <div className="letter-border" />
@@ -105,7 +109,7 @@ export function EnvelopeScene({
           <motion.div
             className="letter-front paper"
             animate={{ y: lifting ? "110%" : "0%", rotateX: flapOpen ? 8 : 0 }}
-            transition={{ duration: 1.35, ease }}
+            transition={{ duration: 0.9, ease }}
             aria-hidden="true"
           />
           <motion.div
@@ -114,7 +118,7 @@ export function EnvelopeScene({
               x: lifting ? "-110%" : flapOpen ? "-3%" : "0%",
               rotate: flapOpen ? -3 : 0,
             }}
-            transition={{ duration: 1.35, ease }}
+            transition={{ duration: 0.9, ease }}
             aria-hidden="true"
           />
           <motion.div
@@ -123,16 +127,18 @@ export function EnvelopeScene({
               x: lifting ? "110%" : flapOpen ? "3%" : "0%",
               rotate: flapOpen ? 3 : 0,
             }}
-            transition={{ duration: 1.35, ease }}
+            transition={{ duration: 0.9, ease }}
             aria-hidden="true"
           />
           <motion.div
             className="letter-top-flap paper"
-            style={{ zIndex: lifting ? 1 : 5 }}
-            animate={{ rotateX: flapOpen ? -172 : 0 }}
-            transition={{ duration: 1.25, ease }}
-            onAnimationComplete={() => {
-              if (phase.current === "opening") advance("opening", "revealing");
+            style={{ zIndex: 5 }}
+            initial={false}
+            animate={flapOpen ? "open" : "closed"}
+            variants={{ open: { rotateX: -172 }, closed: { rotateX: 0 } }}
+            transition={{ duration: 0.72, ease: [0.3, 0.65, 0.25, 1] }}
+            onAnimationComplete={(definition) => {
+              if (definition === "open" && phase.current === "opening") advance("opening", "revealing");
             }}
           >
             <div className="letter-flap-engraving" />
@@ -148,20 +154,23 @@ export function EnvelopeScene({
             aria-label="Tap the seal to open invitation"
             disabled={state !== "sealed"}
             onClick={open}
-            animate={
-              state === "breaking"
-                ? { scale: [1, 0.94, 1], y: [0, 0, 28], opacity: [1, 1, 0] }
-                : { scale: 1, y: 0, opacity: state === "sealed" ? 1 : 0 }
-            }
-            transition={{ duration: 0.65, times: [0, 0.38, 1], ease }}
-            onAnimationComplete={() => {
-              if (phase.current === "breaking") advance("breaking", "opening");
+            whileTap={state === "sealed" ? { scale: 0.965, transition: { duration: 0.07 } } : undefined}
+            initial={false}
+            animate={state === "sealed" ? "rest" : "release"}
+            variants={{
+              release: { scale: [0.965, 0.97, 1.015], y: [0, 1, 16], opacity: [1, 1, 0] },
+              rest: { scale: 1, y: 0, opacity: 1 },
+            }}
+            transition={{ duration: 0.38, times: [0, 0.24, 1], ease }}
+            onAnimationComplete={(definition) => {
+              if (definition === "release" && phase.current === "breaking") advance("breaking", "opening");
             }}
           >
             <span className="wax-monogram">
               M<em>&</em>A
             </span>
             <i className="wax-reflection" />
+            <svg className="wax-release-line" viewBox="0 0 94 94" aria-hidden="true"><path d="M18 68 34 57 39 48 50 44 55 32 74 22" /></svg>
           </motion.button>
           <motion.p
             className="letter-open-hint"
@@ -173,7 +182,7 @@ export function EnvelopeScene({
           <motion.div
             className="letter-border-overlay"
             animate={{ y: lifting ? "115%" : "0%" }}
-            transition={{ duration: 1.35, ease }}
+            transition={{ duration: 0.9, ease }}
             aria-hidden="true"
           >
             <Ornament className="letter-corner upper-left" />

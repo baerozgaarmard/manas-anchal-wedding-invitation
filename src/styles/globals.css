@@ -1,5 +1,28 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Italiana&display=swap");
 @import "tailwindcss";
+.letter-chapter .letter-wax {
+  touch-action: manipulation;
+  border: 3px solid #65252f;
+  background: radial-gradient(ellipse at 28% 18%, #a45660 0%, #7a2c40 38%, #541b2d 78%, #401824);
+  box-shadow: 0 8px 14px #441c2938, 0 2px 3px #32111e40,
+    inset 1px 2px 2px #e4af9660, inset -2px -3px 4px #330f25;
+}
+.letter-chapter .wax-monogram {
+  margin: 5px; height: calc(100% - 10px);
+  border: 1px solid #d0a18370;
+  outline: 1px solid #3f162b80; outline-offset: 2px;
+  color: #dbb99a; font-weight: 500;
+  text-shadow: 0 1px 1px #371320, 0 -1px #ecc6a440;
+}
+.letter-chapter .wax-reflection { background: linear-gradient(100deg, transparent 35%, #f2d1b340 50%, transparent 65%); }
+.letter-chapter.letter-breaking .wax-reflection { animation: wax-light .34s ease-out both; }
+.wax-release-line { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
+.wax-release-line path { fill: none; stroke: #ecc6a4; stroke-width: .65; stroke-dasharray: 90; stroke-dashoffset: 90; }
+.letter-breaking .wax-release-line { animation: seal-release .36s ease-out both; }
+.letter-breaking .wax-release-line path { animation: seal-etch .3s ease-out both; }
+@keyframes seal-release { 0% { opacity: 0; } 40% { opacity: .45; } 100% { opacity: 0; } }
+@keyframes seal-etch { to { stroke-dashoffset: 0; } }
+.letter-chapter .letter-top-flap { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 /* Each ceremony owns its content; only decorative layers blend at its edges. */
 section.scene.ceremony:is(.mata, .mehendi, .haldi, .vivah) {
   isolation: isolate;
