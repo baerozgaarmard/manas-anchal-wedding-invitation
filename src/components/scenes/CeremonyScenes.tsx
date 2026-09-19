@@ -115,9 +115,9 @@ function Garlands() {
       {Array.from({ length: 9 }, (_, i) => (
         <div
           key={i}
-          style={{ height: `${95 + (i % 3) * 43}px`, animationDelay: `-${i}s` }}
+          style={{ height: `${[112, 157, 94, 138, 108, 172, 125, 151, 102][i]}px`, animationDelay: `-${i * 1.7}s` }}
         >
-          {Array.from({ length: 9 }, (_, j) => (
+          {Array.from({ length: [6, 8, 5, 7, 6, 9, 5, 8, 6][i] }, (_, j) => (
             <i key={j} />
           ))}
         </div>
@@ -270,9 +270,6 @@ function Ceremony({ event }: { event: WeddingEvent }) {
         )}
       </motion.div>
       <FloatingPetals gold={event.id === "mata" || event.id === "haldi"} />
-      <span className="chapter-number">
-        0{weddingData.events.indexOf(event) + 1} / THE CELEBRATIONS
-      </span>
       <BoundaryFade className="chapter-bridge" />
     </section>
   );

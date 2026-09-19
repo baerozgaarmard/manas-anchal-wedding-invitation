@@ -1,5 +1,49 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Italiana&display=swap");
 @import "tailwindcss";
+/* Each ceremony owns its content; only decorative layers blend at its edges. */
+section.scene.ceremony:is(.mata, .mehendi, .haldi, .vivah) {
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 0;
+  width: 100%;
+  height: auto;
+  min-height: 100dvh;
+}
+.scene.ceremony .ceremony-copy { border-radius: 0; transform: none; }
+.scene.ceremony .event-actions a { color: inherit; }
+.scene.ceremony .chapter-entry-veil, .scene.ceremony .chapter-bridge { z-index: 1; }
+.scene.ceremony .ceremony-copy { z-index: 6; }
+.scene.ceremony.mehendi img.scene-art { width: 100%; height: 100%; object-fit: cover; object-position: 45% center; mask-image: none; -webkit-mask-image: none; }
+.scene.ceremony.haldi .sun-disc {
+  width: 100%; height: 460px; left: 0; top: 135px;
+  border-radius: 0; box-shadow: none; opacity: .45;
+  background: radial-gradient(ellipse, #fff1c2 0%, #fff1c250 45%, transparent 72%);
+}
+.scene.ceremony.haldi .haldi-leaf { right: -100px; bottom: 0; height: 260px; opacity: .35; }
+.scene.ceremony.haldi .foreground-decoration { z-index: 1; opacity: .55; }
+.scene.ceremony.haldi .garlands > div:nth-child(3n) { opacity: .65; }
+.scene.ceremony.haldi .garlands i:nth-child(2n) { transform: rotate(18deg) scale(.88); }
+.scene.ceremony.vivah {
+  /* Lower artwork reserve keeps the mandap below the content at every width. */
+  padding-bottom: clamp(300px, 76vw, 580px);
+}
+.scene.ceremony.vivah .ceremony-copy { padding-bottom: 0; }
+.scene.ceremony.vivah .ceremony-barat-sequence { display: flex; flex-direction: column; gap: 0; }
+.scene.ceremony.vivah .ceremony-route-waypoint { display: flex; flex-direction: column; gap: 0; }
+.scene.ceremony.vivah .ceremony-waypoint-name { font-size: clamp(12.5px, 3.2vw, 14px); line-height: 1.3; text-transform: none; letter-spacing: 0; }
+.scene.ceremony.vivah .ceremony-waypoint-marker { display: block; font-size: 11px; line-height: 1.1; transform: none; color: inherit; opacity: .65; }
+@media (max-width: 599px) {
+  .scene.ceremony.mata div.ceremony-copy { padding-bottom: max(220px, env(safe-area-inset-bottom)); }
+  .scene.ceremony.mehendi div.ceremony-copy { padding-bottom: calc(230px + env(safe-area-inset-bottom)); }
+  .scene.ceremony.haldi div.ceremony-copy { padding-bottom: calc(200px + env(safe-area-inset-bottom)); }
+  .scene.ceremony.vivah div.ceremony-copy { padding-top: 24px; padding-inline: clamp(20px, 6vw, 32px); }
+  .scene.ceremony.vivah .ceremony-copy > .ornament { margin-block: 2px; height: 24px; }
+  .scene.ceremony.vivah h2 { font-size: clamp(38px, 11vw, 49px); }
+  .scene.ceremony.mehendi .ceremony-copy .ceremony-entry-text,
+  .scene.ceremony.mehendi .ceremony-copy .ceremony-venue-addr,
+  .scene.ceremony.mehendi .ceremony-copy .event-actions { font-size: clamp(14px, 3.65vw, 16px); }
+  .scene.ceremony.mehendi .ceremony-copy .ceremony-full-date { font-size: 11.5px; }
+}
 /* Readable editorial details and restrained, scene-specific framing. */
 html:root { scroll-snap-type: none; }
 .scene.ceremony .ceremony-entry-line,
