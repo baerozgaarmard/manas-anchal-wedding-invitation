@@ -120,11 +120,8 @@ export function ScratchRevealScene({
               onAnimationComplete={() => setRevealState("revealed")}
             />
           )}
-          <motion.div
+          <div
             className="invitation-countdown-space"
-            initial={false}
-            animate={{ height: countdownVisible ? "auto" : 0 }}
-            transition={{ duration: reduced ? 0 : 0.85, ease: [0.22, 1, 0.36, 1] }}
           >
             {countdownVisible && (
               <motion.div
@@ -143,7 +140,7 @@ export function ScratchRevealScene({
                 </motion.a>
               </motion.div>
             )}
-          </motion.div>
+          </div>
           <div className="reveal-action">
             {revealed ? (
               <>
