@@ -46,6 +46,7 @@ export function ScratchRevealScene({
       data-reveal-state={revealState}
       aria-labelledby="scratch-title"
     >
+      <FloatingPetals count={7} />
       <motion.div
         className="scratch-environment"
         style={{ y: reduced ? 0 : gardenY }}
@@ -180,3 +181,4 @@ export function ScratchRevealScene({
     </section>
   );
 }
+import { FloatingPetals } from "../ui/FloatingPetals";

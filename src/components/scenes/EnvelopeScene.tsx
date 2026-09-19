@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { weddingData } from "../../data/weddingData";
 import { Ornament, Botanical } from "../ui/Ornament";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
+import { FloatingPetals } from "../ui/FloatingPetals";
 
 export type EnvelopeState =
   "sealed" | "breaking" | "opening" | "revealing" | "opened";
@@ -89,6 +90,7 @@ export function EnvelopeScene({
       </motion.div>
       {state !== "opened" && (
         <>
+          <FloatingPetals count={6} />
           <motion.div
             className="letter-back paper"
             animate={{ y: lifting ? "110%" : "0%" }}

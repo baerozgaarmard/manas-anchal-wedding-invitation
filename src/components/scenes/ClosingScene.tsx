@@ -14,6 +14,7 @@ export function ClosingScene() {
       className="ending-scene"
       aria-label="Our wedding venues"
     >
+      <FloatingPetals count={6} />
       <div className="ending-top-fade" aria-hidden="true" />
       <div className="ending-venues paper">
         <div className="ending-venues-header">
@@ -181,3 +182,4 @@ export function ClosingScene() {
     </section>
   );
 }
+import { FloatingPetals } from "../ui/FloatingPetals";

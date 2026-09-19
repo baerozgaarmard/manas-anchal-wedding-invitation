@@ -1,5 +1,29 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Italiana&display=swap");
 @import "tailwindcss";
+/* Color-matched atmosphere at boundaries; no changes to scroll or geometry. */
+.scratch-scene.scene::after {
+  height: 150px;
+  background: linear-gradient(180deg, transparent, #f7efdf);
+}
+.journey .journey-top-fade { height: 115px; }
+.journey .journey-bottom-fade { height: 155px; }
+.ceremony .chapter-entry-veil { height: 135px; }
+.ceremony .chapter-bridge { height: 155px; }
+.ceremony .chapter-bridge::before { display: none; }
+.ending-scene .ending-top-fade {
+  height: 110px;
+  background: linear-gradient(180deg, #f5ebdb, transparent);
+}
+.ending-scene::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 70px;
+  background: linear-gradient(transparent, #f5ebdb);
+  pointer-events: none;
+  z-index: 2;
+}
+.family-sign-off > .petals { opacity: 0.65; }
 .family-sign-off {
   position: relative;
   isolation: isolate;
@@ -245,17 +269,15 @@ p {
   position: absolute;
   top: -6%;
   left: var(--x);
-  width: 8px;
-  height: 14px;
-  background: #b65f7599;
+  width: var(--size, 8px);
+  height: calc(var(--size, 8px) * 1.45);
+  background: linear-gradient(135deg, #dfa0a9, #a94f69);
   border-radius: 90% 0 80% 20%;
   animation: petal-fall var(--duration) linear infinite;
   animation-delay: var(--delay);
 }
 .petals.gold i {
-  background: #dcaa4988;
-  width: 5px;
-  height: 7px;
+  background: linear-gradient(135deg, #e8b281, #bc795f);
 }
 .reading-thread {
   position: fixed;
@@ -1345,13 +1367,13 @@ p {
     opacity: 0;
   }
   10% {
-    opacity: 0.8;
+    opacity: var(--alpha, 0.65);
   }
   90% {
-    opacity: 0.7;
+    opacity: var(--alpha, 0.65);
   }
   100% {
-    transform: translate3d(65px, 100vh, 0) rotate(220deg);
+    transform: translate3d(var(--drift, 42px), 110vh, 0) rotate(180deg);
     opacity: 0;
   }
 }

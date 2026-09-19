@@ -345,6 +345,7 @@ export function JourneyScene() {
       id="journey"
       className={`journey paper ${reduced ? "journey-reduced" : ""}`}
     >
+      <FloatingPetals count={10} />
       <div className="journey-top-fade" aria-hidden="true" />
       <motion.div
         className="journey-heading"
@@ -393,3 +394,4 @@ export function JourneyScene() {
 }
 
 
+import { FloatingPetals } from "../ui/FloatingPetals";

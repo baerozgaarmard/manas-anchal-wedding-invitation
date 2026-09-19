@@ -7,6 +7,7 @@ export function FamilySignOffScene() {
   const reduced = useReducedMotion();
   return (
     <section id="family-sign-off" className="family-sign-off" aria-label="With affection from our families">
+      <FloatingPetals count={6} />
       <Botanical className="family-foliage family-foliage-left" />
       <Botanical className="family-foliage family-foliage-right" />
       <div className="family-sign-off-copy">
@@ -32,3 +33,4 @@ export function FamilySignOffScene() {
     </section>
   );
 }
+import { FloatingPetals } from "../ui/FloatingPetals";
