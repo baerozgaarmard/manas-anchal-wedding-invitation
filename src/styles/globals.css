@@ -1,5 +1,32 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Italiana&display=swap");
 @import "tailwindcss";
+/* Mobile ceremony composition: keep all practical details within one scene. */
+@media (max-width: 599px) {
+  .scene.ceremony.mata, .scene.ceremony.mehendi,
+  .scene.ceremony.haldi, .scene.ceremony.vivah {
+    min-height: 100dvh;
+    height: 100dvh;
+  }
+  .scene.ceremony.mata .scene-art { object-fit: contain; object-position: center; }
+  .scene.ceremony.mata .ceremony-copy {
+    padding: clamp(235px, 30dvh, 290px) 38px 0;
+  }
+  .scene.ceremony.mehendi .ceremony-copy {
+    padding: clamp(155px, 21dvh, 205px) 10px 0 30px;
+  }
+  .scene.ceremony.haldi .ceremony-copy {
+    padding: clamp(175px, 23dvh, 220px) 32px 0;
+  }
+  .scene.ceremony.vivah .ceremony-copy {
+    padding: clamp(26px, 4dvh, 38px) 25px 0;
+  }
+  .scene.ceremony .ceremony-editorial-details { gap: 5px; margin-bottom: 0; }
+  .scene.ceremony.mata .ceremony-line { width: 100%; max-width: 280px; text-wrap: balance; }
+  .scene.ceremony .ceremony-copy > .ornament { margin-block: 5px; }
+  .scene.ceremony .event-actions { margin-top: 7px; }
+  .scene.ceremony .chapter-bridge { height: clamp(65px, 9dvh, 85px); }
+  .scene.ceremony .chapter-number { bottom: max(18px, env(safe-area-inset-bottom)); }
+}
 .ceremony.mata { min-height: max(1000px, 120dvh); }
 .ceremony.mata .scene-art { object-fit: cover; object-position: center top; }
 .ceremony.mata .ceremony-copy { padding: 390px 45px 210px; }
