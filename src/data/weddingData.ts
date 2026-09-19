@@ -64,6 +64,20 @@ export const weddingData = {
   couple: { groom: "Manas", bride: "Anchal" },
   wedding,
   familyDetails: "",
+  familySignOff: [
+    {
+      heading: "WITH WARMTH AND AFFECTION",
+      names: ["Mr. Jagdish Chandra Sharma", "Mr. Randhir Singh Verma"],
+    },
+    {
+      heading: "EAGERLY AWAITING YOUR GRACIOUS PRESENCE",
+      names: [
+        "Mrs. Rakhi & Mr. Achal Sharma",
+        "Mrs. Shikha & Mr. Vishal Sharma",
+        "Ansh & Manika",
+      ],
+    },
+  ],
   closing: { message: "Join us as we begin our forever." },
   locations: {
     familyResidence: {

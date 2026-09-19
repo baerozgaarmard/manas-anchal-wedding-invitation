@@ -7,6 +7,7 @@ import { CeremonyScenes } from "./components/scenes/CeremonyScenes";
 import { EnvelopeScene } from "./components/scenes/EnvelopeScene";
 import { ScratchRevealScene } from "./components/scenes/ScratchRevealScene";
 import { ClosingScene } from "./components/scenes/ClosingScene";
+import { FamilySignOffScene } from "./components/scenes/FamilySignOffScene";
 import "./styles/globals.css";
 function App() {
   const reduced = useReducedMotion();
@@ -31,6 +32,7 @@ function App() {
           <JourneyScene />
           <CeremonyScenes />
           <ClosingScene />
+          <FamilySignOffScene />
         </div>
       </main>
       {opened && <AudioControl />}

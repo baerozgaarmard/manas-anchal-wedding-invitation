@@ -1,5 +1,44 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Italiana&display=swap");
 @import "tailwindcss";
+.family-sign-off {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: max(88px, env(safe-area-inset-top)) 25px max(80px, env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, #f5ebdb 0%, #f8efE4 28%, #f1e0db 100%);
+  color: #62463f;
+  text-align: center;
+}
+.family-sign-off-copy { position: relative; z-index: 1; width: 100%; max-width: 490px; }
+.family-sign-off h2 {
+  font-family: Georgia, serif;
+  font-size: clamp(10px, 2.6vw, 12px);
+  font-weight: 400;
+  line-height: 1.9;
+  letter-spacing: 0.16em;
+  color: #886b4e;
+  max-width: 300px;
+  margin: 0 auto 23px;
+}
+.family-names p { font-size: clamp(20px, 5.15vw, 27px); line-height: 1.65; font-weight: 500; }
+.family-names p + p { margin-top: 6px; }
+.family-sign-off .ornament { display: block; color: #aa895f; margin-inline: auto; }
+.family-sign-off .family-top-ornament { width: 100px; margin-bottom: 40px; opacity: 0.7; }
+.family-sign-off .family-divider { width: 145px; margin-block: 42px; opacity: 0.65; }
+.family-sign-off .family-final-ornament { width: 80px; margin-top: 44px; opacity: 0.6; }
+.family-sign-off .family-foliage {
+  position: absolute;
+  width: clamp(110px, 27vw, 190px);
+  height: auto;
+  color: #b09a80;
+  opacity: 0.13;
+  pointer-events: none;
+}
+.family-foliage-left { left: -55px; bottom: 0; transform: rotate(12deg); }
+.family-foliage-right { right: -55px; top: 65px; transform: rotate(190deg); }
 :root {
   font-family: "Cormorant Garamond", Georgia, serif;
   color: #50352f;
