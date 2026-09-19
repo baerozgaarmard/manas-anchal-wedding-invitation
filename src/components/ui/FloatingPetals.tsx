@@ -1,5 +1,18 @@
-import { useId, type CSSProperties } from "react";
-export function FloatingPetals({ gold = false, count = 12 }: { gold?: boolean; count?: number }) {
+import { useEffect, useId, useRef, type CSSProperties } from "react";
+export function FloatingPetals({ gold = false, count = 12, fullHeight = false }: { gold?: boolean; count?: number; fullHeight?: boolean }) {
+  const layer = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!fullHeight || !layer.current) return;
+    const element = layer.current;
+    const measure = () => {
+      // Use the whole section, including content added after fonts/layout settle.
+      element.style.setProperty("--fall-distance", `${element.clientHeight * 1.1}px`);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [fullHeight]);
   const id = useId();
   // Stable pseudo-random values keep each chapter unique without changing paths on render.
   const seed = Array.from(id).reduce((value, char) => value * 31 + char.charCodeAt(0), 7);
@@ -8,7 +21,7 @@ export function FloatingPetals({ gold = false, count = 12 }: { gold?: boolean; c
     return value - Math.floor(value);
   };
   return (
-    <div className={`petals ${gold ? "gold" : ""}`} aria-hidden="true">
+    <div ref={layer} className={`petals ${gold ? "gold" : ""}`} aria-hidden="true">
       {Array.from({ length: count }, (_, i) => (
         <i
           key={i}
@@ -24,8 +37,10 @@ export function FloatingPetals({ gold = false, count = 12 }: { gold?: boolean; c
               "--turn": `${12 + random(i, 7) * 32}deg`,
               "--scale": 0.85 + random(i, 8) * 0.25,
               "--alpha": 0.4 + (i % 3) * 0.12,
-              "--delay": `${-random(i, 9) * 36}s`,
-              "--duration": `${23 + random(i, 10) * 18}s`,
+              "--delay": fullHeight
+                ? `${-((i + 0.25 + random(i, 9) * 0.5) / count) * (75 + random(i, 10) * 25)}s`
+                : `${-random(i, 9) * 36}s`,
+              "--duration": `${fullHeight ? 75 + random(i, 10) * 25 : 23 + random(i, 10) * 18}s`,
             } as CSSProperties
           }
         ><span /></i>

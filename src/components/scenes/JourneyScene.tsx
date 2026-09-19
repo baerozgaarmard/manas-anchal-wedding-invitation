@@ -345,7 +345,7 @@ export function JourneyScene() {
       id="journey"
       className={`journey paper ${reduced ? "journey-reduced" : ""}`}
     >
-      <FloatingPetals count={10} />
+      <FloatingPetals count={10} fullHeight />
       <div className="journey-top-fade" aria-hidden="true" />
       <motion.div
         className="journey-heading"
