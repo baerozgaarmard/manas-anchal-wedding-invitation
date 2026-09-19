@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { ScrollReveal } from "../ui/ScrollReveal";
+import { BoundaryFade } from "../ui/BoundaryFade";
 import { weddingData } from "../../data/weddingData";
 import { Ornament, Botanical, VerticalVenueSeparator } from "../ui/Ornament";
 
@@ -15,7 +16,7 @@ export function ClosingScene() {
       aria-label="Our wedding venues"
     >
       <FloatingPetals count={6} />
-      <div className="ending-top-fade" aria-hidden="true" />
+      <BoundaryFade className="ending-top-fade" />
       <div className="ending-venues paper">
         <div className="ending-venues-header">
           <Ornament />
@@ -25,12 +26,8 @@ export function ClosingScene() {
 
         <div className="venues-grid">
           {/* Left Column: Family Residence */}
-          <motion.div
+          <ScrollReveal
             className="venue-column"
-            initial={{ opacity: 0.9 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="venue-meta">
               <p className="venue-tag">CEREMONY VENUE</p>
@@ -53,7 +50,7 @@ export function ClosingScene() {
                   key="map-family-residence"
                   src={familyResidence.embedUrl}
                   title={`Wedding venue: ${familyResidence.name}`}
-                  loading="eager"
+                  loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   allowFullScreen
                 />
@@ -93,22 +90,14 @@ export function ClosingScene() {
             >
               Open in Google Maps <span aria-hidden="true">↗</span>
             </a>
-          </motion.div>
+          </ScrollReveal>
 
           {/* Vertical Decorative Separator Between Venue Previews */}
           <VerticalVenueSeparator />
 
           {/* Right Column: Sharma Farms */}
-          <motion.div
+          <ScrollReveal
             className="venue-column"
-            initial={{ opacity: 0.9 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.6,
-              ease: [0.22, 1, 0.36, 1],
-              delay: 0.05,
-            }}
           >
             <div className="venue-meta">
               <p className="venue-tag">MAIN WEDDING VENUE</p>
@@ -131,7 +120,7 @@ export function ClosingScene() {
                   key="map-sharma-farms"
                   src={sharmaFarms.embedUrl}
                   title={`Wedding venue: ${sharmaFarms.name}`}
-                  loading="eager"
+                  loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   allowFullScreen
                 />
@@ -171,7 +160,7 @@ export function ClosingScene() {
             >
               Open in Google Maps <span aria-hidden="true">↗</span>
             </a>
-          </motion.div>
+          </ScrollReveal>
         </div>
 
         <div className="ending-venues-footer">

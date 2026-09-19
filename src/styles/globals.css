@@ -1,5 +1,64 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Italiana&display=swap");
 @import "tailwindcss";
+/* Readable editorial details and restrained, scene-specific framing. */
+html:root { scroll-snap-type: none; }
+.scene.ceremony .ceremony-entry-line,
+.scene.ceremony .ceremony-entry-text,
+.scene.ceremony .ceremony-venue-addr,
+.scene.ceremony .ceremony-venue-headline,
+.scene.ceremony .event-actions {
+  font-size: clamp(14px, 3.6vw, 16px);
+  line-height: 1.45;
+  font-weight: 500;
+}
+.scene.ceremony .ceremony-editorial-label,
+.scene.ceremony .ceremony-full-date,
+.scene.ceremony .eyebrow { font-size: clamp(11px, 2.8vw, 12.5px); line-height: 1.5; }
+.scene.ceremony .ceremony-line { font-size: clamp(13px, 3.4vw, 15px); line-height: 1.45; }
+.journey .journey-schedule-line,
+.journey .journey-address-line,
+.journey .journey-venue-title,
+.journey .journey-route-name { font-size: clamp(14px, 3.6vw, 16px); line-height: 1.5; }
+.journey .journey-full-date, .journey .journey-detail-label,
+.journey .journey-copy .eyebrow { font-size: 11px; line-height: 1.55; }
+.journey .journey-arrow { font-size: 13px; line-height: 1.5; }
+.ending-scene .venue-address-line, .ending-scene .map-directions { font-size: 14px; line-height: 1.5; }
+.ending-scene .venue-tag, .family-sign-off .family-sign-off-group h2 { font-size: 11px; }
+.scene.ceremony .ceremony-waypoint-name { font-size: 13px; line-height: 1.4; }
+.scratch-scene .scratch-environment img { transform: none; object-fit: contain; object-position: center bottom; }
+.scratch-scene .scratch-environment { background: #e9ded0; }
+.scene.ceremony.vivah .scene-art {
+  height: auto; top: auto; bottom: 0; object-fit: contain; object-position: center bottom;
+  mask-image: linear-gradient(transparent, #000 130px);
+  -webkit-mask-image: linear-gradient(transparent, #000 130px);
+}
+.scene.ceremony.vivah { background: #ead3bb; }
+.scene.ceremony.mehendi .scene-art {
+  object-fit: contain; object-position: right bottom;
+  mask-image: linear-gradient(transparent, #000 100px);
+  -webkit-mask-image: linear-gradient(transparent, #000 100px);
+}
+.scene.ceremony.mehendi { background: #315b4a; }
+@media (min-width: 600px) {
+  .scene.ceremony.mata .scene-art {
+    mask-image: linear-gradient(#000 70%, transparent 84%);
+    -webkit-mask-image: linear-gradient(#000 70%, transparent 84%);
+  }
+  .scene.ceremony.mata::before {
+    content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none;
+    background: url("/images/mata-portraits.webp") center bottom / 100% auto no-repeat;
+    mask-image: linear-gradient(transparent 70%, #000 84%);
+    -webkit-mask-image: linear-gradient(transparent 70%, #000 84%);
+  }
+}
+@media (max-width: 599px) {
+  .scene.ceremony.mata .ceremony-copy .ceremony-entry-line,
+  .scene.ceremony.mata .ceremony-copy .ceremony-venue-addr { font-size: 14px; line-height: 1.4; }
+  .scene.ceremony.mata .ceremony-copy .ceremony-editorial-label,
+  .scene.ceremony.mata .ceremony-copy .ceremony-full-date { font-size: 11px; }
+  .scene.ceremony.mata .ceremony-copy .ceremony-editorial-details { gap: 9px; }
+  .scene.ceremony.vivah .ceremony-copy .ceremony-barat-sequence { gap: 3px; }
+}
 /* Mobile ceremony composition: keep all practical details within one scene. */
 @media (max-width: 599px) {
   .scene.ceremony.mata, .scene.ceremony.mehendi,

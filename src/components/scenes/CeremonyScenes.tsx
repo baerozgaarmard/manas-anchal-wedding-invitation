@@ -1,9 +1,10 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { weddingData, type WeddingEvent } from "../../data/weddingData";
 import { Ornament, Botanical } from "../ui/Ornament";
 import { FloatingPetals } from "../ui/FloatingPetals";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
+import { BoundaryFade } from "../ui/BoundaryFade";
 function EventDetails({
   event,
   reduced,
@@ -12,10 +13,8 @@ function EventDetails({
   reduced: boolean;
 }) {
   const anim = (delay: number) => ({
-    initial: reduced ? false : { opacity: 0, y: 12 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.15 },
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const, delay },
+    initial: false as const,
+    transition: { duration: reduced ? 0 : 0.5, delay },
   });
 
   return (
@@ -158,6 +157,18 @@ export function Garden() {
 }
 function Ceremony({ event }: { event: WeddingEvent }) {
   const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      const image = element.querySelector<HTMLImageElement>(".scene-art");
+      if (image) image.loading = "eager";
+      observer.disconnect();
+    }, { rootMargin: "900px 0px" });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -166,12 +177,12 @@ function Ceremony({ event }: { event: WeddingEvent }) {
   const smooth = useSpring(scrollYProgress, {
     stiffness: 180,
     damping: 28,
-    mass: 0.15,
+    mass: 0.25,
   });
-  const y = useTransform(smooth, [0, 1], [-10, 10]);
+  const y = useTransform(smooth, [0, 1], [-3, 3]);
   const foreground = useTransform(smooth, [0, 1], [22, -22]);
   const copyOpacity = useTransform(
-    scrollYProgress,
+    smooth,
     [0.08, 0.22, 0.78, 0.94],
     [reduced ? 1 : 0.5, 1, 1, reduced ? 1 : 0.5],
   );
@@ -182,7 +193,7 @@ function Ceremony({ event }: { event: WeddingEvent }) {
       className={`scene ceremony ${event.id}`}
       aria-labelledby={`${event.id}-title`}
     >
-      <div className="chapter-entry-veil" aria-hidden="true" />
+      <BoundaryFade className="chapter-entry-veil" />
       {(event.id === "mata" || event.id === "mehendi" || event.id === "vivah") && (
         <motion.img
           className="scene-art"
@@ -190,6 +201,11 @@ function Ceremony({ event }: { event: WeddingEvent }) {
           src={event.id === "mata" ? "/images/mata-portraits.webp" : event.id === "mehendi" ? "/images/mehendi-garden.webp" : `/images/${event.id}-bg.webp`}
           alt=""
           loading="lazy"
+          decoding="async"
+          width={event.id === "mata" ? 785 : event.id === "mehendi" ? 876 : 1024}
+          height={event.id === "mata" ? 2004 : event.id === "mehendi" ? 1796 : 1536}
+          sizes="(max-width: 760px) 100vw, 760px"
+          srcSet={event.id === "mata" ? "/images/mata-portraits-640.webp 640w, /images/mata-portraits.webp 785w" : event.id === "mehendi" ? "/images/mehendi-garden-640.webp 640w, /images/mehendi-garden.webp 876w" : "/images/vivah-bg-640.webp 640w, /images/vivah-bg.webp 1024w"}
         />
       )}
       {event.id === "haldi" && (
@@ -212,9 +228,7 @@ function Ceremony({ event }: { event: WeddingEvent }) {
         {/* Auspicious Small Date */}
         <motion.p
           className="ceremony-full-date"
-          initial={reduced ? false : { opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
+          initial={false}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
         >
           {event.fullDate}
@@ -222,9 +236,8 @@ function Ceremony({ event }: { event: WeddingEvent }) {
 
         {/* Large Ceremony Title */}
         <motion.div
-          initial={reduced ? false : "hidden"}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
+          initial={false}
+          animate="visible"
         >
           <motion.h2
             id={`${event.id}-title`}
@@ -260,7 +273,7 @@ function Ceremony({ event }: { event: WeddingEvent }) {
       <span className="chapter-number">
         0{weddingData.events.indexOf(event) + 1} / THE CELEBRATIONS
       </span>
-      <div className="chapter-bridge" />
+      <BoundaryFade className="chapter-bridge" />
     </section>
   );
 }

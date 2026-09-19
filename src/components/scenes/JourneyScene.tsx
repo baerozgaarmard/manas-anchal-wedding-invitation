@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   motion,
-  useMotionValue,
-  useMotionValueEvent,
   useScroll,
   useSpring,
   useTransform,
@@ -12,6 +10,8 @@ import { weddingData, type WeddingEvent } from "../../data/weddingData";
 import { Botanical, Ornament } from "../ui/Ornament";
 import { JourneyIcon } from "../ui/JourneyIcon";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
+import { BoundaryFade } from "../ui/BoundaryFade";
+import { ScrollReveal } from "../ui/ScrollReveal";
 
 function generateThreadPath(
   totalHeight: number,
@@ -328,37 +328,30 @@ export function JourneyScene() {
     offset: ["start 72%", "end 72%"],
   });
   const smooth = useSpring(scrollYProgress, {
-    stiffness: 240,
+    stiffness: 170,
     damping: 30,
-    mass: 0.1,
+    mass: 0.25,
     restDelta: 0.0005,
   });
   const progress = useTransform(smooth, (value) =>
     reduced ? 1 : Math.max(0, Math.min(1, value)),
   );
-  const visited = useMotionValue(0);
-  useMotionValueEvent(progress, "change", (value) =>
-    visited.set(Math.max(visited.get(), value)),
-  );
+  const visited = progress;
   return (
     <section
       id="journey"
       className={`journey paper ${reduced ? "journey-reduced" : ""}`}
     >
       <FloatingPetals count={10} fullHeight />
-      <div className="journey-top-fade" aria-hidden="true" />
-      <motion.div
+      <BoundaryFade className="journey-top-fade" />
+      <ScrollReveal
         className="journey-heading"
-        initial={reduced ? false : { opacity: 0, y: 8 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       >
         <p className="eyebrow">Four days. Countless memories.</p>
         <h2>The celebrations</h2>
         <p className="script">A journey to forever</p>
         <Ornament />
-      </motion.div>
+      </ScrollReveal>
       <div className="journey-path" ref={pathArea}>
         <svg
           className="thread-svg"
@@ -388,7 +381,7 @@ export function JourneyScene() {
         ))}
       </div>
       <Botanical />
-      <div className="journey-bottom-fade" aria-hidden="true" />
+      <BoundaryFade className="journey-bottom-fade" />
     </section>
   );
 }

@@ -51,7 +51,7 @@ export function ScratchRevealScene({
         className="scratch-environment"
         style={{ y: reduced ? 0 : gardenY }}
       >
-        <img src="/images/opening-bg.webp" alt="" fetchPriority="high" />
+        <img src="/images/opening-bg.webp" srcSet="/images/opening-bg-640.webp 640w, /images/opening-bg.webp 1024w" sizes="(max-width: 760px) 100vw, 760px" width={1024} height={1536} decoding="async" alt="" fetchPriority="high" />
       </motion.div>
       <Botanical className="scratch-foreground" />
       <p className="eyebrow">A secret, just for you</p>
