@@ -1,8 +1,8 @@
 import { useReducedMotion } from "./hooks/useReducedMotion";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, useScroll, useSpring, MotionConfig } from "framer-motion";
 import { JourneyScene } from "./components/scenes/JourneyScene";
-import { AudioControl } from "./components/ui/AudioControl";
+import { AudioControl, type MusicHandle } from "./components/ui/AudioControl";
 import { CeremonyScenes } from "./components/scenes/CeremonyScenes";
 import { EnvelopeScene } from "./components/scenes/EnvelopeScene";
 import { ScratchRevealScene } from "./components/scenes/ScratchRevealScene";
@@ -11,6 +11,7 @@ import { FamilySignOffScene } from "./components/scenes/FamilySignOffScene";
 import "./styles/globals.css";
 function App() {
   const reduced = useReducedMotion();
+  const music = useRef<MusicHandle>(null);
   const [opened, setOpened] = useState(false);
   const [dateRevealed, setDateRevealed] = useState(false);
   const { scrollYProgress } = useScroll();
@@ -19,7 +20,7 @@ function App() {
     <MotionConfig reducedMotion={reduced ? "always" : "never"}>
       <motion.div className="reading-thread" style={{ scaleX }} />
       <main>
-        <EnvelopeScene onOpened={() => setOpened(true)}>
+        <EnvelopeScene onSealTap={() => music.current?.startFromSeal()} onOpened={() => setOpened(true)}>
           <ScratchRevealScene
             revealed={dateRevealed}
             onReveal={() => setDateRevealed(true)}
@@ -35,7 +36,7 @@ function App() {
           <FamilySignOffScene />
         </div>
       </main>
-      {opened && <AudioControl />}
+      <AudioControl ref={music} />
     </MotionConfig>
   );
 }

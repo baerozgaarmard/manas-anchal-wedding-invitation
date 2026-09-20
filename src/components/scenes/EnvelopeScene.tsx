@@ -12,9 +12,11 @@ const ease = [0.22, 1, 0.36, 1] as const;
 export function EnvelopeScene({
   children,
   onOpened,
+  onSealTap,
 }: {
   children: ReactNode;
   onOpened: () => void;
+  onSealTap?: () => void;
 }) {
   const [state, setState] = useState<EnvelopeState>("sealed");
   const phase = useRef<EnvelopeState>("sealed");
@@ -33,6 +35,7 @@ export function EnvelopeScene({
   }
   function open() {
     if (phase.current !== "sealed") return;
+    onSealTap?.();
     if (reduced) {
       finish();
       return;

@@ -1,5 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Italiana&display=swap");
 @import "tailwindcss";
+button.audio-control {
+  top: calc(env(safe-area-inset-top) + 12px);
+  right: max(12px, calc((100vw - 760px) / 2 + 12px));
+  bottom: auto; width: auto; height: auto; min-height: 36px;
+  padding: 6px 10px; border-radius: 20px;
+  border: 1px solid #b4966245; background: #f5eadbeb;
+  color: #73563e; font-size: 13px; box-shadow: none;
+  text-decoration: none; z-index: 40;
+}
 @media (max-width: 599px) {
   section.scene.ceremony.vivah div.ceremony-copy { padding-top: max(10px, env(safe-area-inset-top)); }
   section.scene.ceremony.vivah .ceremony-copy h2 { font-size: clamp(36px, 10vw, 43px); line-height: 1.05; }

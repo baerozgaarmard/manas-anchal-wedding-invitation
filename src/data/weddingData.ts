@@ -110,7 +110,7 @@ export const weddingData = {
     embedUrl:
       "https://maps.google.com/maps?cid=2478930000041440583&hl=en&z=16&output=embed",
   },
-  musicUrl: "",
+  musicUrl: "/audio/aaj-sajeya.mp3",
   events: [
     {
       id: "mata",
