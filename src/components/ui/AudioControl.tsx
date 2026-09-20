@@ -7,17 +7,36 @@ export const AudioControl = forwardRef<MusicHandle>(function AudioControl(_, ref
   const context = useRef<AudioContext | null>(null);
   const gain = useRef<GainNode | null>(null);
   const frame = useRef(0);
+  const fadeEnd = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const generation = useRef(0);
   const desired = useRef(false);
   const interacted = useRef(false);
-  function fade(target: number, done?: () => void) {
+  function cancelFade() {
     cancelAnimationFrame(frame.current);
+    clearTimeout(fadeEnd.current);
+    const ctx = context.current;
+    const param = gain.current?.gain;
+    if (ctx && param) {
+      const value = param.value;
+      param.cancelScheduledValues(ctx.currentTime);
+      param.setValueAtTime(value, ctx.currentTime);
+    }
+  }
+  function fade(target: number, done?: () => void, duration = 500) {
+    cancelFade();
     const element = audio.current;
     if (!element) return;
+    const ctx = context.current;
+    if (ctx && gain.current) {
+      // The audio clock keeps this smooth even when backgrounded frames stop.
+      gain.current.gain.linearRampToValueAtTime(target, ctx.currentTime + duration / 1000);
+      if (done) fadeEnd.current = setTimeout(done, duration + 20);
+      return;
+    }
     const initial = gain.current?.gain.value ?? element.volume;
     const start = performance.now();
     const tick = (now: number) => {
-      const progress = Math.min(1, (now - start) / 500);
+      const progress = Math.min(1, (now - start) / duration);
       const value = initial + (target - initial) * progress;
       if (gain.current) gain.current.gain.value = value;
       else element.volume = value;
@@ -31,7 +50,8 @@ export const AudioControl = forwardRef<MusicHandle>(function AudioControl(_, ref
     if (!element) return;
     const attempt = ++generation.current;
     desired.current = true;
-    cancelAnimationFrame(frame.current);
+    cancelFade();
+    element.muted = false;
     if (!context.current) {
       try {
         const ctx = new AudioContext();
@@ -60,10 +80,42 @@ export const AudioControl = forwardRef<MusicHandle>(function AudioControl(_, ref
     interacted.current = true;
     play();
   } }));
-  useEffect(() => () => {
-    generation.current++;
-    cancelAnimationFrame(frame.current);
-    void context.current?.close();
+  useEffect(() => {
+    const element = audio.current;
+    function stopImmediately() {
+      generation.current++;
+      desired.current = false;
+      cancelFade();
+      if (gain.current && context.current) {
+        // Clear the complete timeline before suspension, including held values.
+        // A scheduled zero may not render once the audio clock has stopped.
+        gain.current.gain.cancelScheduledValues(0);
+        gain.current.gain.value = 0;
+      }
+      if (element) {
+        element.muted = true;
+        element.pause();
+      }
+      setOn(false);
+      // Suspend instead of tearing down a live audio output during navigation.
+      void context.current?.suspend().catch(() => {});
+    }
+    function onVisibilityChange() {
+      if (document.visibilityState !== "hidden") return;
+      generation.current++;
+      desired.current = false;
+      setOn(false);
+      if (gain.current && context.current?.state === "running") {
+        fade(0, stopImmediately, 60);
+      } else stopImmediately();
+    }
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("pagehide", stopImmediately);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("pagehide", stopImmediately);
+      stopImmediately();
+    };
   }, []);
   if (!weddingData.musicUrl) return null;
   function toggle() {

@@ -199,7 +199,7 @@ function Ceremony({ event }: { event: WeddingEvent }) {
       {(event.id === "mata" || event.id === "mehendi" || event.id === "vivah") && (
         <motion.img
           className="scene-art"
-          style={{ y: reduced || event.id === "mata" ? 0 : y }}
+          style={{ y: reduced || event.id === "mata" || event.id === "vivah" ? 0 : y }}
           src={event.id === "mata" ? "/images/mata-portraits.webp" : event.id === "mehendi" ? "/images/mehendi-garden.webp" : `/images/${event.id}-bg.webp`}
           alt=""
           loading="lazy"

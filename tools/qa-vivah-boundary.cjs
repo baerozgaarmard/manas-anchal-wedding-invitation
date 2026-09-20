@@ -35,6 +35,7 @@ const url = process.env.QA_URL || 'http://127.0.0.1:5174';
               overflow: document.documentElement.scrollWidth > innerWidth,
               // The mandap starts near 55% of the original image; reserve extra sky.
               mandapClearance: artwork.top + artwork.height * .53 - copyBounds.bottom,
+              textInsideArtwork: copyBounds.top >= artwork.top + 10,
               safeWidth: text.every(rect => rect.left >= 28 && rect.right <= innerWidth - 28),
               columnHeight: copyBounds.height - parseFloat(getComputedStyle(copy).paddingTop),
               fadeOpacity: [outgoing.opacity, incoming.opacity],
@@ -44,8 +45,9 @@ const url = process.env.QA_URL || 'http://127.0.0.1:5174';
           });
           assert.equal(geometry.overflow, false);
           assert.equal(geometry.safeWidth, true, 'Text must stay within the narrow safe column');
+          assert.equal(geometry.textInsideArtwork, true, 'Even the title must sit inside the marked artwork sky');
           assert.ok(geometry.mandapClearance >= 20, 'The entire text block must end above the mandap');
-          assert.ok(geometry.columnHeight < 385, 'Practical information must remain compact');
+          assert.ok(geometry.columnHeight < 290, 'The entire invitation block must fit the marked region');
           assert.deepEqual(geometry.fadeOpacity, ['1', '1']);
           assert.deepEqual(geometry.fadeHeights, ['64px', '48px']);
           assert.ok(geometry.fadeColors.every(color => color.includes('rgb(234, 211, 187)')));
