@@ -193,7 +193,9 @@ function Ceremony({ event }: { event: WeddingEvent }) {
       className={`scene ceremony ${event.id}`}
       aria-labelledby={`${event.id}-title`}
     >
-      <BoundaryFade className="chapter-entry-veil" />
+      {event.id === "vivah" ? (
+        <div className="chapter-entry-veil" aria-hidden="true" />
+      ) : <BoundaryFade className="chapter-entry-veil" />}
       {(event.id === "mata" || event.id === "mehendi" || event.id === "vivah") && (
         <motion.img
           className="scene-art"
@@ -270,7 +272,9 @@ function Ceremony({ event }: { event: WeddingEvent }) {
         )}
       </motion.div>
       <FloatingPetals gold={event.id === "mata" || event.id === "haldi"} />
-      <BoundaryFade className="chapter-bridge" />
+      {event.id === "haldi" ? (
+        <div className="chapter-bridge" aria-hidden="true" />
+      ) : <BoundaryFade className="chapter-bridge" />}
     </section>
   );
 }
