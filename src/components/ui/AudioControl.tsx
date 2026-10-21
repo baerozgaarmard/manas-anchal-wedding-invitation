@@ -109,9 +109,16 @@ export const AudioControl = forwardRef<MusicHandle>(function AudioControl(_, ref
         fade(0, stopImmediately, 60);
       } else stopImmediately();
     }
+    // Buffer the song only once the page has loaded, so it never competes with the artwork.
+    const warm = () => {
+      if (element) element.preload = "auto";
+    };
+    if (document.readyState === "complete") warm();
+    else window.addEventListener("load", warm, { once: true });
     document.addEventListener("visibilitychange", onVisibilityChange);
     window.addEventListener("pagehide", stopImmediately);
     return () => {
+      window.removeEventListener("load", warm);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("pagehide", stopImmediately);
       stopImmediately();
@@ -128,7 +135,7 @@ export const AudioControl = forwardRef<MusicHandle>(function AudioControl(_, ref
   }
   return (
     <>
-      <audio ref={audio} src={weddingData.musicUrl} loop preload="auto" onPause={() => setOn(false)} onError={() => { desired.current = false; setOn(false); }} />
+      <audio ref={audio} src={weddingData.musicUrl} loop preload="none" onPause={() => { desired.current = false; setOn(false); }} onError={() => { desired.current = false; setOn(false); }} />
       <button
         className="audio-control"
         onClick={toggle}

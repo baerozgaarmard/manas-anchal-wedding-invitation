@@ -13,6 +13,17 @@ export function FloatingPetals({ gold = false, count = 12, fullHeight = false }:
     observer.observe(element);
     return () => observer.disconnect();
   }, [fullHeight]);
+  useEffect(() => {
+    const element = layer.current;
+    if (!element || !window.IntersectionObserver) return;
+    // Petals nobody can see are paused, so only on-screen chapters animate.
+    const observer = new IntersectionObserver(
+      ([entry]) => element.classList.toggle("is-offscreen", !entry.isIntersecting),
+      { rootMargin: "200px 0px" },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
   const id = useId();
   // Stable pseudo-random values keep each chapter unique without changing paths on render.
   const seed = Array.from(id).reduce((value, char) => value * 31 + char.charCodeAt(0), 7);

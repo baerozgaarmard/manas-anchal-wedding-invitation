@@ -316,11 +316,8 @@ export function JourneyScene() {
     });
     ro.observe(pathArea.current);
 
-    window.addEventListener("resize", measureAndSync);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measureAndSync);
-    };
+    // No window resize listener: phones fire it whenever the address bar moves mid-scroll.
+    return () => ro.disconnect();
   }, []);
 
   const { scrollYProgress } = useScroll({
