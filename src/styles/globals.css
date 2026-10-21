@@ -11,40 +11,42 @@ section.scene.ceremony.vivah > .chapter-entry-veil {
 }
 /* Anchor every line within the artwork's upper sky, not the page's top spacer. */
 @media (max-width: 599px) {
-  /* Exactly as tall as the painting (1024x1536 at full width): a full-screen
-     minimum left an empty band above it, growing as browser toolbars hide. */
+  /* The painting (1024x1536 at full width) sits at the bottom, uncropped. The
+     heading gets its own room above it, so every line stays readable and the
+     details still end in the sky, above the mountains and the mandap. */
   section.scene.ceremony.vivah.vivah {
-    min-height: 150vw;
+    /* Narrow phones have a shorter sky for the same text, so they get more room. */
+    min-height: calc(150vw + clamp(100px, 235px - 29vw, 150px));
     padding-bottom: 0;
   }
   section.scene.ceremony.vivah div.ceremony-copy.ceremony-copy {
     position: absolute;
-    top: calc(100% - 150vw + 12px);
+    top: 16px;
     left: 50%;
     translate: -50% 0;
-    width: min(70vw, 280px);
+    width: min(80vw, 320px);
     margin: 0;
     padding: 0;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }
   section.scene.ceremony.vivah .ceremony-copy.ceremony-copy > .ornament { display: none; }
-  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .eyebrow { font-size: 9px; line-height: 1.2; letter-spacing: .12em; }
-  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-full-date { margin: 4px 0 3px; font-size: 9.5px; line-height: 1.2; letter-spacing: .1em; }
-  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy h2 { font-size: clamp(27px, 7.2vw, 30px); line-height: 1.05; margin: 0; }
-  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-line { font-size: 10.5px; line-height: 1.2; margin: 3px 0 3px; }
+  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .eyebrow { font-size: 11px; line-height: 1.35; letter-spacing: .14em; }
+  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-full-date { margin: 3px 0 4px; font-size: 11px; line-height: 1.35; letter-spacing: .1em; }
+  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy h2 { font-size: clamp(34px, 10vw, 42px); line-height: 1.05; margin: 0; }
+  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-line { font-size: 13.5px; line-height: 1.35; margin: 4px 0 8px; }
   section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-entry-line,
   section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-venue-headline,
   section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-venue-addr,
-  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .event-actions { font-size: 11.5px; line-height: 1.2; }
-  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-editorial-details { gap: 1px; margin: 0; width: 100%; }
-  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-editorial-label { font-size: 9.5px; line-height: 1.15; margin: 0 0 2px; }
+  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .event-actions { font-size: clamp(13.5px, 3.5vw, 15px); line-height: 1.35; }
+  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-editorial-details { gap: 8px; margin: 0; width: 100%; }
+  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-editorial-label { font-size: 11px; line-height: 1.3; margin: 0 0 3px; }
   section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-schedule-grid { gap: 0; }
   section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-barat-sequence { gap: 0; width: 100%; }
   section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-route-waypoint { gap: 0; }
-  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-waypoint-name { font-size: 10.5px; line-height: 1.15; }
-  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-waypoint-marker { height: 5px; line-height: 5px; font-size: 7px; }
-  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .event-actions { margin-top: 1px; }
+  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-waypoint-name { font-size: clamp(13px, 3.4vw, 14.5px); line-height: 1.3; }
+  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .ceremony-waypoint-marker { height: 10px; line-height: 10px; font-size: 9px; }
+  section.scene.ceremony.vivah .ceremony-copy.ceremony-copy .event-actions { margin-top: 4px; }
 }
 section.ending-scene .ending-venues { padding-bottom: 8px; }
 section.ending-scene .ending-venues-footer { margin-top: 8px; }
