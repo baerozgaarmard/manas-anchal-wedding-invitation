@@ -18,17 +18,10 @@ export function ScratchRevealScene({
   const reduced = useReducedMotion();
   const [scratching, setScratching] = useState(false);
   const [revealState, setRevealState] = useState<RevealState>("covered");
-  const [countdownVisible, setCountdownVisible] = useState(false);
   useEffect(() => {
     if (revealed) setRevealState("revealing");
     else if (scratching) setRevealState("scratching");
   }, [revealed, scratching]);
-  useEffect(() => {
-    if (revealState !== "revealed") return;
-    // Let the completed date composition breathe before introducing time.
-    const pause = window.setTimeout(() => setCountdownVisible(true), 750);
-    return () => window.clearTimeout(pause);
-  }, [revealState]);
   const scene = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: scene,
@@ -123,7 +116,7 @@ export function ScratchRevealScene({
           <div
             className="invitation-countdown-space"
           >
-            {countdownVisible && (
+            {revealed && (
               <motion.div
                 id="countdown"
                 className="invitation-countdown"

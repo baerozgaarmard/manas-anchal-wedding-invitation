@@ -561,7 +561,8 @@ p {
   left: var(--x);
   width: var(--size, 8px);
   height: calc(var(--size, 8px) * 1.45);
-  animation: petal-fall var(--duration) linear infinite;
+  /* Each petal names its own keyframes (FloatingPetals). */
+  animation: var(--duration) linear infinite;
   animation-delay: var(--delay);
 }
 .petals i > span {
@@ -570,7 +571,7 @@ p {
   height: 100%;
   background: linear-gradient(135deg, #dfa0a9, #a94f69);
   border-radius: 90% 0 80% 20%;
-  animation: petal-sway var(--sway-duration) cubic-bezier(.45, 0, .55, 1) infinite;
+  animation: var(--sway-duration) cubic-bezier(.45, 0, .55, 1) infinite;
   animation-delay: var(--sway-delay);
 }
 .petals.is-offscreen i,
@@ -1662,40 +1663,8 @@ p {
 .skip-link:focus {
   top: 15px;
 }
-@keyframes petal-fall {
-  0% {
-    transform: translate3d(0, -20px, 0);
-    opacity: 0;
-  }
-  10% {
-    opacity: var(--alpha, 0.65);
-  }
-  90% {
-    opacity: var(--alpha, 0.65);
-  }
-  100% {
-    transform: translate3d(var(--drift, 42px), var(--fall-distance, 110vh), 0);
-    opacity: 0;
-  }
-}
-@keyframes petal-sway {
-  0%, 100% {
-    transform: translate3d(calc(var(--sway) * -0.7), 0, 0) rotate(calc(var(--rotation) - var(--turn))) scale(var(--scale));
-    opacity: .85;
-  }
-  28% {
-    transform: translate3d(calc(var(--sway) * .35), -9px, 0) rotate(var(--rotation)) scale(calc(var(--scale) * .94));
-    opacity: 1;
-  }
-  54% {
-    transform: translate3d(var(--sway), 3px, 0) rotate(calc(var(--rotation) + var(--turn))) scale(var(--scale));
-    opacity: .92;
-  }
-  78% {
-    transform: translate3d(calc(var(--sway) * -.15), -5px, 0) rotate(calc(var(--rotation) + var(--turn) * .2)) scale(calc(var(--scale) * .96));
-    opacity: .78;
-  }
-}
+
+
 @keyframes glow {
   from {
     opacity: 0.5;
