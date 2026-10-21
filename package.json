@@ -2,14 +2,15 @@
   "name": "invitations",
   "private": true,
   "version": "0.0.0",
+  "description": "Interactive, illustrated wedding invitation for Manas & Anchal",
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "deploy:vercel": "npx --yes vercel --prod --yes",
-    "publish": "npm run build && git push origin HEAD:main"
+    "test": "node tools/test-countdown.cjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

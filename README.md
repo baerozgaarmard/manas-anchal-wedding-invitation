@@ -1,65 +1,64 @@
+<div align="center">
+
 # Manas & Anchal — A Wedding Story
 
-An illustrated mobile-first invitation, built with React, TypeScript, Vite, Tailwind CSS and Framer Motion.
+**An interactive, illustrated wedding invitation, made for phones.**
 
-## Run
+### [Open the invitation →](https://invitations-xi.vercel.app)
+
+30 October – 2 November 2026 · Dehradun
+
+<br>
+
+<img src="docs/showcase.jpg" alt="Six screens of the invitation: the sealed envelope, the gold scratch card, the celebrations timeline, Mata Ki Chowki, Mehendi & Cocktail, and Vivah Sanskar" width="760">
+
+</div>
+
+<br>
+
+## The experience
+
+1. **A sealed letter.** Tap the wax seal and the envelope opens, the invitation rising out of it.
+2. **A secret date.** Scratch away a gold-foil panel to uncover the wedding date, with flakes of foil falling under your finger. Or reveal it with a single tap.
+3. **A live countdown** to the wedding day, kept in India time wherever guests open it.
+4. **The celebrations.** A gold thread draws through the four days as you scroll, from Mata Ki Chowki to Vivah Sanskar.
+5. **Four illustrated chapters**, one per ceremony, each with its schedule, venue and a map link.
+6. **The venues and the families.** Interactive maps for both venues, then a closing note from both families.
+
+Music begins softly when the seal is tapped, with a mute button always within reach.
+
+## Made with care
+
+- **Phone first.** Designed for one-handed scrolling and checked at phone widths from 360 to 430 px.
+- **Smooth on modest phones.** Each part plays its entrance once as it arrives, on the graphics hardware; nothing is recalculated on every scrolled frame, and sections keep their size when mobile browser toolbars hide or show.
+- **Gentle on everyone.** With the system's "reduce motion" setting on, everything appears at once and decorative motion stops. A tap reveals the date for anyone who'd rather not scratch, and the date is still there if JavaScript doesn't load.
+- **Private.** No forms, no sign-ups. Visits are counted with Vercel Web Analytics, which doesn't use cookies.
+
+## Built with
+
+React 19 · TypeScript · Vite · Tailwind CSS 4 · Framer Motion · Canvas 2D · Vercel
+
+```text
+src/
+  data/weddingData.ts        every wedding detail: dates, schedules, venues, families
+  components/scenes/         one component per chapter of the story
+  components/interactive/    the scratch card and the countdown
+  components/ui/             petals, music control, ornaments, reveal helpers
+  styles/globals.css         the look of every chapter
+public/                      illustrations and music
+```
+
+## For the maintainer
 
 ```sh
 npm install
-npm run dev
-npm run build
+npm run dev      # local preview
+npm test         # countdown time-zone checks
+npm run build    # production build
 ```
 
-## Wedding configuration
+Every push to `main` is deployed to the live invitation by Vercel.
 
-All wedding information lives in `src/data/weddingData.ts`.
+## Rights
 
-- Confirmed wedding date: **02 November 2026**.
-- `wedding.time` is intentionally `null`. The countdown targets the beginning of the wedding day in `Asia/Kolkata`, explicitly labeled as such. This does not imply a midnight ceremony.
-- Set `wedding.time` to a confirmed local `HH:mm` ceremony time to count down to that moment instead.
-- Set `wedding.year` to `null` if it becomes unconfirmed: the interface shows an honest waiting state instead of guessing a year.
-- `todayMessage` and `pastMessage` control the finished countdown text. The wedding day is determined in the configured time zone, independent of guests' device time zones.
-- Venue, address, ceremony times and family details remain unfilled. `mapUrl` enables a location link. Confirmed `startsAt` and `endsAt` ISO timestamps enable calendar downloads.
-- `location.venue`, `location.address`, `location.googleMapsUrl`, and `location.embedUrl` configure the final venue/map chapter. Empty values show an illustrated, clearly labeled placeholder. An embed URL enables the interactive iframe; the external directions link only appears when its URL is supplied.
-- `closing.message` controls the final emotional sentence.
-- `musicUrl` enables optional user-controlled music. Supply a licensed audio file; music never autoplays.
-
-## Story and interaction
-
-Full-screen sealed letter → physical opening → scratch-to-reveal date → live countdown → illustrated journey → four unchanged ceremonies → emotional ending → venue → framed Google Map.
-
-The first viewport is the sealed letter itself. Its explicit `sealed → breaking → opening → revealing → opened` state machine advances through Framer Motion completion callbacks. A synchronous guard prevents repeated opening; scrolling is locked until the same invitation sheet finishes emerging. No timeout chains or scroll repositioning are used. Reduced motion opens immediately.
-
-The scratch card is the actual sheet inside the envelope, not a replacement screen. The date remains hidden until this chapter. A champagne foil canvas uses Pointer Events, pointer capture, a soft 46 CSS-pixel brush and `destination-out` compositing. It samples a small offscreen surface at most every 160 ms, excluding the arch's transparent corners, and completes when 50% is erased. Remaining foil dissolves and a few petals fall. No automatic scrolling follows the reveal.
-
-The scratch surface captures pointer gestures; page scrolling is temporarily prevented while a stroke is active and restored on release, cancellation or completion. Resizing preserves the erased surface. Canvas failure, reduced motion and keyboard interaction are supported by the permanent tap-to-reveal alternative. The static HTML also includes a native details-based reveal when JavaScript cannot start; its date is injected from the same centralized configuration by Vite. A React error boundary preserves critical information if an interactive scene fails.
-
-Countdown rendering and its one-second interval are isolated in `WeddingCountdown`. Timers and visibility listeners are cleaned up on unmount. No guest information is collected or stored.
-
-## Artwork
-
-Three original painted illustrations live in `public/images/`. The scratch garden is preloaded; later artwork is lazy loaded. The scratch leaf uses bespoke foil engraving and paper ornament. The countdown expands into an illustrated twilight palace. Reduced motion disables parallax, particles and number transitions.
-
-## Verification
-
-- Production TypeScript/Vite build.
-- Browser QA: 390×844, 393×852, 430×932, 1440×1000; DPR 1–3.
-- Physical mouse scratching, partial erasure, completion, no forced scrolling, live seconds, no form controls, no overflow or browser errors.
-- Envelope state-order, duplicate-tap, scroll lock/release, no vertical jump and original ceremony visual checks.
-- Venue placeholder plus mocked configured map: interactive iframe and safe new-tab directions link.
-- Chrome touch emulation: cancellation, resize preservation, auto-completion, restored normal scrolling.
-- Reduced-motion keyboard reveal, unavailable-canvas fallback and JavaScript-disabled date reveal.
-- Countdown tests: Asia/Kolkata conversion, confirmed ceremony time, unknown/invalid targets, exact midnight boundary, wedding-day and post-wedding states.
-
-These browser checks use desktop Chrome and mobile emulation. Physical Android devices and iPhone Safari have not been tested.
-
-Useful checks:
-
-```sh
-node tools/test-countdown.cjs
-node tools/qa-functional.cjs
-node tools/qa-touch.cjs
-node tools/qa-envelope-map.cjs
-```
-
-Browser QA scripts currently use the workspace's bundled Playwright runtime and local preview at port 5174; adjust these paths for another machine.
+© 2026 Ayush Bhatt. All rights reserved. This repository is public so the project can be seen, not reused: see [LICENSE](LICENSE).
