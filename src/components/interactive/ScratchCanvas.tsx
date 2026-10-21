@@ -28,13 +28,23 @@ interface SparkleParticle {
   maxSize: number;
   life: number;
   maxLife: number;
-  type: "dust" | "star";
+  type: "dust" | "star" | "flake";
   color: string;
+  shade?: string;
+  shape?: number[][];
   twinkleSpeed: number;
   twinklePhase: number;
   rotation: number;
   rotSpeed: number;
 }
+
+// Lit and shaded faces of foil flakes, taken from the foil's own gradient.
+const FLAKE_TONES = [
+  ["#f0ddb2", "#c9a46a"],
+  ["#e9d4a0", "#b8915a"],
+  ["#cfad79", "#a98550"],
+  ["#f6e7c4", "#d2b07a"],
+];
 
 function drawStar(
   ctx: CanvasRenderingContext2D,
@@ -147,6 +157,8 @@ export function ScratchCanvas({
   const context = useRef<CanvasRenderingContext2D | null>(null);
   const geometry = useRef({ width: 0, height: 0, dpr: 1 });
   const lastPoint = useRef<Point | null>(null);
+  // Strokes run through midpoints of the finger's path, so fast swipes curve instead of zigzagging.
+  const lastMid = useRef<Point | null>(null);
   const activePointer = useRef<number | null>(null);
   const completed = useRef(revealed);
   const lastSample = useRef(0);
@@ -207,6 +219,35 @@ export function ScratchCanvas({
       const twinkle = 0.78 + 0.22 * Math.sin(p.twinklePhase);
       alpha = Math.max(0, Math.min(1, alpha * twinkle));
 
+      if (p.type === "flake") {
+        // Foil flakes tumble down: gravity with air drag, catching the light as they flip.
+        p.vy += 0.05 * (dt / 16.67);
+        p.vx *= 0.985;
+        p.vy *= 0.985;
+        p.x += p.vx * (dt / 16.67);
+        p.y += p.vy * (dt / 16.67);
+        p.rotation += p.rotSpeed * (dt / 16.67);
+        p.twinklePhase += p.twinkleSpeed * (dt / 1000);
+        const face = Math.cos(p.twinklePhase);
+        const fade = progress < 0.1 ? progress / 0.1 : progress > 0.7 ? (1 - progress) / 0.3 : 1;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.scale(1, Math.max(0.18, Math.abs(face)));
+        ctx.globalAlpha = Math.max(0, fade) * 0.95;
+        ctx.fillStyle = face > 0 ? p.color : p.shade ?? p.color;
+        ctx.beginPath();
+        p.shape?.forEach(([angle, radius], k) => {
+          const px = Math.cos(angle) * radius * p.maxSize, py = Math.sin(angle) * radius * p.maxSize;
+          if (k === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        });
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+        continue;
+      }
+
       p.x += p.vx * (dt / 16.67);
       p.y += p.vy * (dt / 16.67);
       p.vx *= 0.97;
@@ -236,7 +277,43 @@ export function ScratchCanvas({
     if (now - lastSpawn.current < 25) return;
     lastSpawn.current = now;
 
-    if (particles.current.length > 24) return;
+    const flakes = particles.current.filter((p) => p.type === "flake").length;
+    if (flakes < 28) {
+      // A flake or two of foil breaks off at the edge of the finger.
+      const pieces = Math.random() < 0.45 ? 2 : 1;
+      for (let i = 0; i < pieces; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 12 + Math.random() * 10;
+        const [color, shade] = FLAKE_TONES[Math.floor(Math.random() * FLAKE_TONES.length)];
+        const life = 750 + Math.random() * 450;
+        const corners = 4 + Math.floor(Math.random() * 2);
+        particles.current.push({
+          x: x + Math.cos(angle) * dist,
+          y: y + Math.sin(angle) * dist,
+          vx: (Math.random() - 0.5) * 1.2,
+          vy: -0.5 + Math.random() * 0.6,
+          maxSize: 2.2 + Math.random() * 2.2,
+          life,
+          maxLife: life,
+          type: "flake",
+          color,
+          shade,
+          shape: Array.from({ length: corners }, (_, k) => [
+            ((k + Math.random() * 0.6) / corners) * Math.PI * 2,
+            0.6 + Math.random() * 0.4,
+          ]),
+          twinkleSpeed: 7 + Math.random() * 8,
+          twinklePhase: Math.random() * Math.PI * 2,
+          rotation: Math.random() * Math.PI,
+          rotSpeed: (Math.random() - 0.5) * 0.18,
+        });
+      }
+    }
+
+    if (particles.current.length - flakes > 24) {
+      startParticleLoop();
+      return;
+    }
 
     const count = Math.random() < 0.65 ? 2 : 1;
     for (let i = 0; i < count; i++) {
@@ -406,6 +483,7 @@ export function ScratchCanvas({
     const pointer = activePointer.current;
     activePointer.current = null;
     lastPoint.current = null;
+    lastMid.current = null;
     if (pointer !== null && canvas.current?.hasPointerCapture(pointer))
       canvas.current.releasePointerCapture(pointer);
     onScratchingChange?.(false);
@@ -429,7 +507,9 @@ export function ScratchCanvas({
       const { width, height } = geometry.current;
       const mask = foilPath(width, height);
       let total = 0,
-        erased = 0;
+        erased = 0,
+        centreTotal = 0,
+        centreErased = 0;
       for (let y = 0; y < 80; y++)
         for (let x = 0; x < 64; x++) {
           if (
@@ -441,38 +521,81 @@ export function ScratchCanvas({
           )
             continue;
           total++;
-          if (pixels[(y * 64 + x) * 4 + 3] < 80) erased++;
+          const clear = pixels[(y * 64 + x) * 4 + 3] < 80;
+          if (clear) erased++;
+          // The day and month sit in the middle of the card.
+          if (x >= 14 && x < 50 && y >= 22 && y < 58) {
+            centreTotal++;
+            if (clear) centreErased++;
+          }
         }
-      if (total && erased / total >= 0.5) finish();
+      // Reveal once a third of the foil is gone, or as soon as the date itself shows.
+      if (
+        (total && erased / total >= 0.35) ||
+        (centreTotal && centreErased / centreTotal >= 0.65)
+      )
+        finish();
     } catch {
       setReady(false);
     }
   }
-  function point(event: PointerEvent<HTMLCanvasElement>): Point {
+  // Every position the finger passed through since the last frame (Chrome reports
+  // in-between points on fast screens; other browsers give the one event).
+  function points(event: PointerEvent<HTMLCanvasElement>): Point[] {
     const rect = event.currentTarget.getBoundingClientRect();
-    return {
-      x: ((event.clientX - rect.left) * geometry.current.width) / rect.width,
-      y: ((event.clientY - rect.top) * geometry.current.height) / rect.height,
-    };
+    const native = event.nativeEvent;
+    const all = native.getCoalescedEvents?.() ?? [];
+    return (all.length ? all : [native]).map((e) => ({
+      x: ((e.clientX - rect.left) * geometry.current.width) / rect.width,
+      y: ((e.clientY - rect.top) * geometry.current.height) / rect.height,
+    }));
   }
-  function erase(to: Point) {
-    const ctx = context.current;
-    if (!ctx || completed.current) return;
-    const from = lastPoint.current ?? to;
+  function brush(ctx: CanvasRenderingContext2D) {
     ctx.save();
     ctx.globalCompositeOperation = "destination-out";
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.lineWidth = 44;
     ctx.beginPath();
-    ctx.moveTo(from.x, from.y);
-    ctx.lineTo(to.x + 0.01, to.y + 0.01);
+  }
+  function erase(path: Point[]) {
+    const ctx = context.current;
+    if (!ctx || completed.current || !path.length) return;
+    brush(ctx);
+    for (const to of path) {
+      const from = lastPoint.current;
+      if (!from || !lastMid.current) {
+        ctx.moveTo(to.x, to.y);
+        ctx.lineTo(to.x + 0.01, to.y + 0.01);
+        lastMid.current = to;
+      } else {
+        const mid = { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 };
+        ctx.moveTo(lastMid.current.x, lastMid.current.y);
+        ctx.quadraticCurveTo(from.x, from.y, mid.x, mid.y);
+        lastMid.current = mid;
+      }
+      lastPoint.current = to;
+    }
     ctx.stroke();
     ctx.restore();
-    lastPoint.current = to;
+    const to = path[path.length - 1];
     addScratchSparkles(to.x, to.y);
     if (dust.current)
       dust.current.style.transform = `translate(${to.x}px, ${to.y}px)`;
+  }
+  // The curve stops at the last midpoint; finish the stroke under the finger.
+  function endStroke() {
+    const ctx = context.current;
+    const from = lastMid.current, to = lastPoint.current;
+    if (ctx && from && to && !completed.current) {
+      brush(ctx);
+      ctx.moveTo(from.x, from.y);
+      ctx.lineTo(to.x + 0.01, to.y + 0.01);
+      ctx.stroke();
+      ctx.restore();
+    }
+    lastPoint.current = null;
+    lastMid.current = null;
   }
   function down(event: PointerEvent<HTMLCanvasElement>) {
     if (
@@ -488,19 +611,19 @@ export function ScratchCanvas({
     onScratchingChange?.(true);
     try { event.currentTarget.setPointerCapture(event.pointerId); }
     catch { /* Uncaptured pointers are cleaned up on leave. */ }
-    erase(point(event));
+    erase(points(event).slice(-1));
     progress();
   }
   function move(event: PointerEvent<HTMLCanvasElement>) {
     if (activePointer.current !== event.pointerId || completed.current) return;
     event.preventDefault();
-    erase(point(event));
+    erase(points(event));
     progress();
   }
   function end(event: PointerEvent<HTMLCanvasElement>) {
     if (activePointer.current !== event.pointerId) return;
     activePointer.current = null;
-    lastPoint.current = null;
+    endStroke();
     onScratchingChange?.(false);
     if (event.currentTarget.hasPointerCapture(event.pointerId))
       event.currentTarget.releasePointerCapture(event.pointerId);

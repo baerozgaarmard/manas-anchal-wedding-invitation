@@ -2861,14 +2861,13 @@ p {
     transform: scaleX(1);
   }
 }
+/* Transform only: animating letter-spacing re-laid out the text every frame of the reveal. */
 @keyframes date-focus {
   from {
     transform: translateY(5px);
-    letter-spacing: -0.035em;
   }
   to {
     transform: translateY(0);
-    letter-spacing: -0.055em;
   }
 }
 @keyframes scratch-leaf {
