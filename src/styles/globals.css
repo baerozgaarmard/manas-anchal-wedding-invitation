@@ -11,8 +11,10 @@ section.scene.ceremony.vivah > .chapter-entry-veil {
 }
 /* Anchor every line within the artwork's upper sky, not the page's top spacer. */
 @media (max-width: 599px) {
-  section.scene.ceremony.vivah {
-    min-height: max(100svh, calc(150vw + 24px));
+  /* Exactly as tall as the painting (1024x1536 at full width): a full-screen
+     minimum left an empty band above it, growing as browser toolbars hide. */
+  section.scene.ceremony.vivah.vivah {
+    min-height: 150vw;
     padding-bottom: 0;
   }
   section.scene.ceremony.vivah div.ceremony-copy.ceremony-copy {
