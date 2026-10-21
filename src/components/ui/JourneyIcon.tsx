@@ -1,6 +1,3 @@
-import { motion } from "framer-motion";
-import type { MotionValue } from "framer-motion";
-
 const illustrations: Record<string, string[]> = {
   mata: [
     "M18 57Q48 88 78 57Z M22 61Q48 78 74 61 M34 77H62 M29 82H67",
@@ -32,13 +29,8 @@ const illustrations: Record<string, string[]> = {
   ],
 };
 
-export function JourneyIcon({
-  kind,
-  draw,
-}: {
-  kind: string;
-  draw: MotionValue<number>;
-}) {
+// Lines are drawn in by CSS when their stop is shown (.journey-icon-line).
+export function JourneyIcon({ kind }: { kind: string }) {
   return (
     <svg
       className="journey-illustration"
@@ -59,10 +51,11 @@ export function JourneyIcon({
         opacity=".22"
       />
       {(illustrations[kind] ?? illustrations.vivah).map((d, i) => (
-        <motion.path
+        <path
           key={d}
           d={d}
-          style={{ pathLength: draw }}
+          className="journey-icon-line"
+          pathLength={1}
           strokeWidth={i === 0 ? 1.15 : 0.85}
           opacity={i < 2 ? 1 : 0.75}
         />

@@ -1,6 +1,6 @@
 import { useReducedMotion } from "../../hooks/useReducedMotion";
-import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { weddingData } from "../../data/weddingData";
 import { WeddingCountdown } from "../interactive/WeddingCountdown";
 import { ScratchCanvas } from "../interactive/ScratchCanvas";
@@ -22,36 +22,25 @@ export function ScratchRevealScene({
     if (revealed) setRevealState("revealing");
     else if (scratching) setRevealState("scratching");
   }, [revealed, scratching]);
-  const scene = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: scene,
-    offset: ["start start", "end start"],
-  });
-  const smooth = useSpring(scrollYProgress, { stiffness: 110, damping: 24, mass: 0.3 });
-  const sheetY = useTransform(smooth, [0, 1], [0, -18]);
-  const gardenY = useTransform(smooth, [0, 1], [-10, 10]);
   const [day, month] = weddingData.wedding.dateLabel.split(" ");
   return (
     <section
       id="scratch-date"
-      ref={scene}
       className={`scene scratch-scene paper ${revealed ? "date-discovered" : ""} ${scratching ? "is-scratching" : ""}`}
       data-reveal-state={revealState}
       aria-labelledby="scratch-title"
     >
       <FloatingPetals count={7} />
-      <motion.div
+      {/* Held where the scroll parallax placed it at the top of the page, where the card is seen. */}
+      <div
         className="scratch-environment"
-        style={{ y: reduced ? 0 : gardenY }}
+        style={{ transform: reduced ? undefined : "translateY(-10px)" }}
       >
         <img src="/images/opening-bg.webp" srcSet="/images/opening-bg-640.webp 640w, /images/opening-bg.webp 1024w" sizes="(max-width: 760px) 100vw, 760px" width={1024} height={1536} decoding="async" alt="" fetchPriority="high" />
-      </motion.div>
+      </div>
       <Botanical className="scratch-foreground" />
       <p className="eyebrow">A secret, just for you</p>
-      <motion.div
-        className="scratch-card-drift"
-        style={{ y: revealed && !reduced ? sheetY : 0 }}
-      >
+      <div className="scratch-card-drift">
         <div className="date-stationery">
           <div className="stationery-rule" />
           <Botanical className="date-floral left" />
@@ -164,7 +153,7 @@ export function ScratchRevealScene({
             )}
           </div>
         </div>
-      </motion.div>
+      </div>
       <p className="script scratch-footnote">
         Some moments are worth uncovering.
       </p>

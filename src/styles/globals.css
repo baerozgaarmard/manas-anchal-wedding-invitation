@@ -3299,6 +3299,46 @@ p {
 .date-discovered .revealed-month { animation: month-arrive .7s var(--ease) 1s both; }
 @keyframes month-arrive { from { opacity: .2; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-:root[data-motion="reduced"] .date-discovered .revealed-month { animation: none; } 
+:root[data-motion="reduced"] .date-discovered .revealed-month { animation: none; }
 
-
+/* Entrances play once, on the compositor, when each part first comes on screen
+   (data-shown is set by useShownOnce). Starting states match where the old
+   scroll-driven effects began; nothing follows the scroll frame by frame. */
+[data-reveal] { transition: opacity .8s ease, transform .8s var(--ease); }
+[data-reveal="rise"]:not([data-shown]) { opacity: .55; transform: translateY(8px); }
+[data-reveal="fade"]:not([data-shown]) { opacity: .5; }
+.journey-stop .journey-icon-wrap,
+.journey-stop .journey-copy,
+.journey-stop .journey-copy > *,
+.journey-stop .journey-details > * { transition: opacity .6s ease, transform .7s var(--ease); }
+.journey-stop:not([data-shown]) .journey-icon-wrap { opacity: .2; transform: scale(.97); }
+.journey-right:not([data-shown]) .journey-copy { transform: translateX(6px); }
+.journey-left:not([data-shown]) .journey-copy { transform: translateX(-6px); }
+.journey-stop:not([data-shown]) .journey-copy > .eyebrow,
+.journey-stop:not([data-shown]) .journey-copy > h3 { opacity: .25; }
+.journey-stop:not([data-shown]) .journey-full-date { opacity: .15; }
+.journey-stop:not([data-shown]) .journey-schedule-block { opacity: .1; }
+.journey-stop:not([data-shown]) .journey-venue-block { opacity: .08; }
+.journey-stop:not([data-shown]) .journey-route-block { opacity: .05; }
+.journey-stop:not([data-shown]) .journey-arrow { opacity: 0; }
+/* The same order the scrolled version revealed them in. */
+.journey-stop .journey-copy > h3 { transition-delay: 60ms; }
+.journey-stop .journey-full-date { transition-delay: 120ms; }
+.journey-stop .journey-schedule-block { transition-delay: 200ms; }
+.journey-stop .journey-venue-block { transition-delay: 280ms; }
+.journey-stop .journey-route-block { transition-delay: 360ms; }
+.journey-stop .journey-arrow { transition-delay: 440ms; }
+.journey-icon-line { stroke-dasharray: 1 1; stroke-dashoffset: .9; transition: stroke-dashoffset .9s var(--ease); }
+.journey-stop[data-shown] .journey-icon-line { stroke-dashoffset: 0; }
+.journey-drawn-path { stroke-dasharray: 1 1; transition: stroke-dashoffset 1.1s var(--ease); }
+.journey-reduced .journey-drawn-path { stroke-dasharray: none; }
+/* Reading thread: drawn by the browser's scroll timeline where supported, else
+   updated by script ten times a second and gliding between updates. */
+.reading-thread { transform: scaleX(0); transition: transform .25s linear; }
+@supports (animation-timeline: scroll()) {
+  .reading-thread { transition: none; animation: reading-progress linear both; animation-timeline: scroll(root); }
+}
+@keyframes reading-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+:root[data-motion="reduced"] [data-reveal],
+:root[data-motion="reduced"] [data-reveal] *,
+:root[data-motion="reduced"] .journey-drawn-path { transition: none !important; }

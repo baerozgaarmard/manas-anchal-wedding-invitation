@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
+import { useShownOnce } from "../../hooks/useShownOnce";
 import { weddingData, type WeddingEvent } from "../../data/weddingData";
 import { Ornament, Botanical } from "../ui/Ornament";
 import { FloatingPetals } from "../ui/FloatingPetals";
@@ -170,22 +171,10 @@ function Ceremony({ event }: { event: WeddingEvent }) {
     return () => observer.disconnect();
   }, []);
   const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const smooth = useSpring(scrollYProgress, {
-    stiffness: 180,
-    damping: 28,
-    mass: 0.25,
-  });
-  const y = useTransform(smooth, [0, 1], [-3, 3]);
-  const foreground = useTransform(smooth, [0, 1], [22, -22]);
-  const copyOpacity = useTransform(
-    smooth,
-    [0.08, 0.22, 0.78, 0.94],
-    [reduced ? 1 : 0.5, 1, 1, reduced ? 1 : 0.5],
-  );
+  // The text fades up once as the chapter arrives (CSS: [data-reveal="fade"]); the
+  // artwork and foreground stay where the scroll parallax had them mid-chapter.
+  const copy = useRef<HTMLDivElement>(null);
+  const shown = useShownOnce(copy) || reduced;
   return (
     <section
       id={event.id}
@@ -197,9 +186,8 @@ function Ceremony({ event }: { event: WeddingEvent }) {
         <div className="chapter-entry-veil" aria-hidden="true" />
       ) : <BoundaryFade className="chapter-entry-veil" />}
       {(event.id === "mata" || event.id === "mehendi" || event.id === "vivah") && (
-        <motion.img
+        <img
           className="scene-art"
-          style={{ y: reduced || event.id === "mata" || event.id === "vivah" ? 0 : y }}
           src={event.id === "mata" ? "/images/mata-portraits.webp" : event.id === "mehendi" ? "/images/mehendi-garden.webp" : `/images/${event.id}-bg.webp`}
           alt=""
           loading="lazy"
@@ -223,7 +211,7 @@ function Ceremony({ event }: { event: WeddingEvent }) {
           <div className="turmeric-bowl" aria-hidden="true" />
         </>
       )}
-      <motion.div className="ceremony-copy" style={{ opacity: copyOpacity }}>
+      <div ref={copy} className="ceremony-copy" data-reveal="fade" data-shown={shown || undefined}>
         <p className="eyebrow">{event.chapter}</p>
         <Ornament />
 
@@ -258,11 +246,8 @@ function Ceremony({ event }: { event: WeddingEvent }) {
 
         {/* Full Ceremony Event Details */}
         <EventDetails event={event} reduced={!!reduced} />
-      </motion.div>
-      <motion.div
-        className="foreground-decoration"
-        style={{ y: reduced ? 0 : foreground }}
-      >
+      </div>
+      <div className="foreground-decoration">
         {event.id === "mata" ? (
           <div className="lamp-glow" />
         ) : event.id === "haldi" ? (
@@ -270,7 +255,7 @@ function Ceremony({ event }: { event: WeddingEvent }) {
         ) : (
           <Botanical />
         )}
-      </motion.div>
+      </div>
       <FloatingPetals gold={event.id === "mata" || event.id === "haldi"} />
       {event.id === "haldi" ? (
         <div className="chapter-bridge" aria-hidden="true" />

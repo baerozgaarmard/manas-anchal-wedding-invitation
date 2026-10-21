@@ -1,11 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  motion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
-import type { MotionValue } from "framer-motion";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useShownOnce } from "../../hooks/useShownOnce";
 import { weddingData, type WeddingEvent } from "../../data/weddingData";
 import { Botanical, Ornament } from "../ui/Ornament";
 import { JourneyIcon } from "../ui/JourneyIcon";
@@ -60,107 +54,44 @@ function findPathLengthAtY(
 function JourneyStop({
   event,
   index,
-  anchor,
-  visited,
   reduced,
+  onShown,
 }: {
   event: WeddingEvent;
   index: number;
-  anchor: number;
-  visited: MotionValue<number>;
   reduced: boolean;
+  onShown: (index: number) => void;
 }) {
-  const side = index % 2 === 0 ? 1 : -1;
-  const icon = useTransform(
-    visited,
-    [anchor - 0.008, anchor + 0.024],
-    [0.2, 1],
-  );
-  const draw = useTransform(
-    visited,
-    [anchor - 0.005, anchor + 0.035],
-    [0.1, 1],
-  );
-  const scale = useTransform(
-    visited,
-    [anchor - 0.005, anchor + 0.03],
-    [0.97, 1],
-  );
-  const x = useTransform(
-    visited,
-    [anchor - 0.008, anchor + 0.032],
-    [side * 6, 0],
-  );
-  const date = useTransform(
-    visited,
-    [anchor - 0.008, anchor + 0.022],
-    [0.25, 1],
-  );
-  const title = useTransform(
-    visited,
-    [anchor - 0.004, anchor + 0.026],
-    [0.25, 1],
-  );
-  const fullDateAnim = useTransform(
-    visited,
-    [anchor, anchor + 0.032],
-    [0.15, 1],
-  );
-  const scheduleAnim = useTransform(
-    visited,
-    [anchor + 0.006, anchor + 0.04],
-    [0.1, 1],
-  );
-  const venueAnim = useTransform(
-    visited,
-    [anchor + 0.014, anchor + 0.048],
-    [0.08, 1],
-  );
-  const secondaryAnim = useTransform(
-    visited,
-    [anchor + 0.022, anchor + 0.056],
-    [0.05, 1],
-  );
-  const action = useTransform(
-    visited,
-    [anchor + 0.03, anchor + 0.065],
-    [0, 1],
-  );
+  const ref = useRef<HTMLDivElement>(null);
+  // Shown when it reaches 72% down the screen, where the scrolled thread used to reach it.
+  const shown = useShownOnce(ref, "0px 0px -28% 0px") || reduced;
+  useEffect(() => {
+    if (shown) onShown(index);
+  }, [shown, index, onShown]);
 
   return (
     <div
+      ref={ref}
       className={`journey-stop ${index % 2 ? "journey-left" : "journey-right"}`}
-      data-anchor={anchor}
+      data-reveal="stop"
+      data-shown={shown || undefined}
     >
-      <motion.span
-        className="journey-icon-wrap"
-        style={{ opacity: reduced ? 1 : icon, scale: reduced ? 1 : scale }}
-      >
-        <JourneyIcon kind={event.id} draw={draw} />
-      </motion.span>
-      <motion.div className="journey-copy" style={{ x: reduced ? 0 : x }}>
-        <motion.p className="eyebrow" style={{ opacity: reduced ? 1 : date }}>
-          {event.shortDate || event.date}
-        </motion.p>
-        <motion.h3 style={{ opacity: reduced ? 1 : title }}>
+      <span className="journey-icon-wrap">
+        <JourneyIcon kind={event.id} />
+      </span>
+      <div className="journey-copy">
+        <p className="eyebrow">{event.shortDate || event.date}</p>
+        <h3>
           <a href={`#${event.id}`}>{event.title}</a>
-        </motion.h3>
+        </h3>
 
         {/* Complete Event Information directly under title */}
         <div className="journey-details">
           {/* 1. Auspicious Full Date */}
-          <motion.p
-            className="journey-full-date"
-            style={{ opacity: reduced ? 1 : fullDateAnim }}
-          >
-            {event.fullDate}
-          </motion.p>
+          <p className="journey-full-date">{event.fullDate}</p>
 
           {/* 2. Schedule Timings */}
-          <motion.div
-            className="journey-section-block"
-            style={{ opacity: reduced ? 1 : scheduleAnim }}
-          >
+          <div className="journey-section-block journey-schedule-block">
             {event.schedule.map((item, sIdx) => (
               <div key={sIdx} className="journey-schedule-item">
                 {item.label && item.time ? (
@@ -175,13 +106,10 @@ function JourneyStop({
                 )}
               </div>
             ))}
-          </motion.div>
+          </div>
 
           {/* 3. Venue */}
-          <motion.div
-            className="journey-section-block"
-            style={{ opacity: reduced ? 1 : venueAnim }}
-          >
+          <div className="journey-section-block journey-venue-block">
             <p className="journey-detail-label">{event.venueLabel || "VENUE"}</p>
             {event.venueTitle && (
               <p
@@ -197,14 +125,11 @@ function JourneyStop({
                 {addrLine}
               </p>
             ))}
-          </motion.div>
+          </div>
 
           {/* 4. Barat Route (for Vivah Sanskar) */}
           {event.baratRoute && (
-            <motion.div
-              className="journey-section-block"
-              style={{ opacity: reduced ? 1 : secondaryAnim }}
-            >
+            <div className="journey-section-block journey-route-block">
               <div className="journey-sub-block">
                 <p className="journey-detail-label">BARAT ROUTE</p>
                 <div className="journey-route-steps">
@@ -220,19 +145,15 @@ function JourneyStop({
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
 
           {/* 5. Discover the celebration link */}
-          <motion.a
-            href={`#${event.id}`}
-            className="journey-arrow"
-            style={{ opacity: reduced ? 1 : action }}
-          >
+          <a href={`#${event.id}`} className="journey-arrow">
             Discover the celebration <span aria-hidden="true">↗</span>
-          </motion.a>
+          </a>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -320,20 +241,17 @@ export function JourneyScene() {
     return () => ro.disconnect();
   }, []);
 
-  const { scrollYProgress } = useScroll({
-    target: pathArea,
-    offset: ["start 72%", "end 72%"],
-  });
-  const smooth = useSpring(scrollYProgress, {
-    stiffness: 170,
-    damping: 30,
-    mass: 0.25,
-    restDelta: 0.0005,
-  });
-  const progress = useTransform(smooth, (value) =>
-    reduced ? 1 : Math.max(0, Math.min(1, value)),
-  );
-  const visited = progress;
+  const [reached, setReached] = useState(-1);
+  const onShown = useCallback((index: number) => setReached((r) => Math.max(r, index)), []);
+  const { anchors } = pathState;
+  // Draw the thread just past the furthest stop shown, and to the end with the last one.
+  const drawn = reduced
+    ? 1
+    : reached < 0
+      ? 0
+      : reached >= anchors.length - 1
+        ? 1
+        : Math.min(1, (anchors[reached] ?? 0) + 0.03);
   return (
     <section
       id="journey"
@@ -358,12 +276,13 @@ export function JourneyScene() {
           aria-hidden="true"
         >
           <path d={pathState.d} stroke="#b79a7040" />
-          <motion.path
+          <path
             ref={path}
             className="journey-drawn-path"
             d={pathState.d}
             stroke="#aa8551"
-            style={{ pathLength: progress }}
+            pathLength={1}
+            style={{ strokeDashoffset: 1 - drawn }}
           />
         </svg>
         {weddingData.events.map((event, index) => (
@@ -371,9 +290,8 @@ export function JourneyScene() {
             key={event.id}
             event={event}
             index={index}
-            anchor={pathState.anchors[index] ?? (index + 0.5) / 4}
-            visited={visited}
             reduced={reduced}
+            onShown={onShown}
           />
         ))}
       </div>
