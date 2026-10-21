@@ -142,7 +142,7 @@ section.scene.ceremony:is(.mata, .mehendi, .haldi, .vivah) {
   border-radius: 0;
   width: 100%;
   height: auto;
-  min-height: 100dvh;
+  min-height: 100svh;
 }
 .scene.ceremony .ceremony-copy { border-radius: 0; transform: none; }
 .scene.ceremony .event-actions a { color: inherit; }
@@ -242,8 +242,8 @@ html:root { scroll-snap-type: none; }
 @media (max-width: 599px) {
   .scene.ceremony.mata, .scene.ceremony.mehendi,
   .scene.ceremony.haldi, .scene.ceremony.vivah {
-    min-height: 100dvh;
-    height: 100dvh;
+    min-height: 100svh;
+    height: 100svh;
   }
   .scene.ceremony.mata .scene-art {
     object-fit: cover; object-position: center top;
@@ -261,18 +261,18 @@ html:root { scroll-snap-type: none; }
     -webkit-mask-image: linear-gradient(transparent 42%, #000 55%);
   }
   .scene.ceremony.mata .ceremony-copy {
-    padding: clamp(250px, 30dvh, 282px) clamp(28px, 8vw, 38px) 0;
+    padding: clamp(250px, 30svh, 282px) clamp(28px, 8vw, 38px) 0;
     color: #ffe9bd;
     text-shadow: 0 1px 2px #45131580;
   }
   .scene.ceremony.mehendi .ceremony-copy {
-    padding: clamp(155px, 21dvh, 205px) 10px 0 30px;
+    padding: clamp(155px, 21svh, 205px) 10px 0 30px;
   }
   .scene.ceremony.haldi .ceremony-copy {
-    padding: clamp(175px, 23dvh, 220px) 32px 0;
+    padding: clamp(175px, 23svh, 220px) 32px 0;
   }
   .scene.ceremony.vivah .ceremony-copy {
-    padding: clamp(26px, 4dvh, 38px) 25px 0;
+    padding: clamp(26px, 4svh, 38px) 25px 0;
   }
   .scene.ceremony .ceremony-editorial-details { gap: 5px; margin-bottom: 0; }
   .scene.ceremony.mata .ceremony-copy > .ornament { display: none; }
@@ -288,14 +288,14 @@ html:root { scroll-snap-type: none; }
   .scene.ceremony.mata .event-actions { margin-top: 0; }
   .scene.ceremony .ceremony-copy > .ornament { margin-block: 5px; }
   .scene.ceremony .event-actions { margin-top: 7px; }
-  .scene.ceremony .chapter-bridge { height: clamp(65px, 9dvh, 85px); }
+  .scene.ceremony .chapter-bridge { height: clamp(65px, 9svh, 85px); }
   .scene.ceremony .chapter-number { bottom: max(18px, env(safe-area-inset-bottom)); }
 }
 .scene.ceremony.mata .chapter-number { display: none; }
-.ceremony.mata { min-height: max(1000px, 120dvh); }
+.ceremony.mata { min-height: max(1000px, 120svh); }
 .ceremony.mata .scene-art { object-fit: cover; object-position: center top; }
 .ceremony.mata .ceremony-copy { padding: 390px 45px 210px; }
-.ceremony.mehendi { min-height: max(1000px, 120dvh); background: #315b4a; }
+.ceremony.mehendi { min-height: max(1000px, 120svh); background: #315b4a; }
 .ceremony.mehendi .scene-art { object-fit: cover; object-position: 45% top; }
 .ceremony.mehendi .ceremony-copy { width: 69%; padding: 240px 12px 300px 34px; }
 .ceremony.mehendi h2 { font-size: clamp(2.3rem, 8vw, 3.5rem); }
@@ -334,7 +334,7 @@ html:root { scroll-snap-type: none; }
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-height: 100dvh;
+  min-height: 100svh;
   display: grid;
   place-items: center;
   padding: max(88px, env(safe-area-inset-top)) 25px max(80px, env(safe-area-inset-bottom));
@@ -441,7 +441,7 @@ p {
 }
 .scene {
   position: relative;
-  min-height: 100dvh;
+  min-height: 100svh;
   overflow: hidden;
   scroll-snap-align: start;
   isolation: isolate;
@@ -508,8 +508,8 @@ p {
   letter-spacing: 0.08em;
 }
 .opening {
-  min-height: 100dvh;
-  height: max(740px, 100dvh);
+  min-height: 100svh;
+  height: max(740px, 100svh);
   color: #513940;
 }
 .opening-copy {
@@ -517,7 +517,7 @@ p {
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: clamp(130px, 20dvh, 230px) 32px 0;
+  padding: clamp(130px, 20svh, 230px) 32px 0;
   text-align: center;
 }
 .opening-copy > .ornament {
@@ -1109,7 +1109,7 @@ p {
   }
 }
 .ceremony {
-  min-height: max(880px, 115dvh);
+  min-height: max(880px, 115svh);
   text-align: center;
   position: relative;
 }
@@ -1631,7 +1631,7 @@ p {
 .vivah {
   color: #66362f;
   background: #d2b9a9;
-  min-height: max(880px, 110dvh);
+  min-height: max(880px, 110svh);
 }
 .vivah .ceremony-copy {
   padding-top: clamp(36px, 4.5vh, 56px);
@@ -1706,7 +1706,7 @@ p {
     max-width: 680px;
   }
   .opening {
-    height: max(900px, 100dvh);
+    height: max(900px, 100svh);
   }
   .opening-copy {
     padding-top: 180px;
@@ -1815,7 +1815,7 @@ p {
   transform: translateY(-35px);
 }
 .opening-copy {
-  padding-top: max(130px, 20dvh, calc(env(safe-area-inset-top) + 100px));
+  padding-top: max(130px, 20svh, calc(env(safe-area-inset-top) + 100px));
 }
 .envelope-front:after {
   content: "";
@@ -1853,7 +1853,7 @@ p {
   justify-content: center;
   text-align: center;
   gap: 24px;
-  min-height: 100dvh;
+  min-height: 100svh;
 }
 .date-stationery {
   position: relative;
@@ -2112,7 +2112,7 @@ p {
 .countdown-scene {
   background: #493f59;
   color: #fff0d9;
-  min-height: 100dvh;
+  min-height: 100svh;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -2376,7 +2376,7 @@ p {
 /* One continuous paper object: the sealed letter opens around the scratch leaf. */
 .letter-chapter {
   position: relative;
-  min-height: 100dvh;
+  min-height: 100svh;
   isolation: isolate;
   perspective: 1800px;
   scroll-snap-align: start;
@@ -2462,7 +2462,7 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: max(62px, 10dvh);
+  padding-top: max(62px, 10svh);
   box-shadow: inset 0 -2px 3px #a4875250;
   will-change: transform;
   pointer-events: none;
@@ -3295,7 +3295,7 @@ p {
 .scratch-scene.date-discovered:before { content: ""; position: absolute; bottom: 0; left: 50%; width: 1px; height: 32px; background: #b79a7070; pointer-events: none; }
 .journey { position: relative; }
 .journey:before { content: ""; position: absolute; top: 0; left: 50%; width: 1px; height: 55px; background: linear-gradient(#b79a7070, #b79a7020); pointer-events: none; }
-.chapter-bridge { height: clamp(70px, 12dvh, 110px); }
+.chapter-bridge { height: clamp(70px, 12svh, 110px); }
 .date-discovered .revealed-month { animation: month-arrive .7s var(--ease) 1s both; }
 @keyframes month-arrive { from { opacity: .2; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
