@@ -19,6 +19,18 @@ section.scene.ceremony.vivah > .chapter-entry-veil {
     min-height: calc(150vw + clamp(100px, 235px - 29vw, 150px));
     padding-bottom: 0;
   }
+  /* The painting's own top (curtains and sky) continues behind the heading, so
+     the heading sits on the artwork rather than a flat band. Same file as Haldi. */
+  section.scene.ceremony.vivah.vivah::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -4;
+    background: url("/images/vivah-bg.webp") center top / 100% auto no-repeat;
+    -webkit-mask-image: linear-gradient(transparent, #000 90px);
+    mask-image: linear-gradient(transparent, #000 90px);
+    pointer-events: none;
+  }
   section.scene.ceremony.vivah div.ceremony-copy.ceremony-copy {
     position: absolute;
     top: 16px;
