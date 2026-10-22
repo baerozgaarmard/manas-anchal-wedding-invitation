@@ -124,3 +124,5 @@ export function VerticalVenueSeparator({ className = "" }: { className?: string 
   );
 }
 
+// ↗ with the text-style selector, so iPhones draw a thin arrow rather than an emoji.
+export const LINK_ARROW = "\u2197\uFE0E";

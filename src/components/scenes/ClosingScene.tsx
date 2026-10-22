@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { BoundaryFade } from "../ui/BoundaryFade";
 import { weddingData } from "../../data/weddingData";
-import { Ornament, Botanical, VerticalVenueSeparator } from "../ui/Ornament";
+import { Ornament, Botanical, VerticalVenueSeparator, LINK_ARROW } from "../ui/Ornament";
 
 export function ClosingScene() {
   const { locations } = weddingData;
@@ -88,7 +88,7 @@ export function ClosingScene() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Open in Google Maps <span aria-hidden="true">↗</span>
+              Open in Google Maps <span aria-hidden="true">{LINK_ARROW}</span>
             </a>
           </ScrollReveal>
 
@@ -158,7 +158,7 @@ export function ClosingScene() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Open in Google Maps <span aria-hidden="true">↗</span>
+              Open in Google Maps <span aria-hidden="true">{LINK_ARROW}</span>
             </a>
           </ScrollReveal>
         </div>

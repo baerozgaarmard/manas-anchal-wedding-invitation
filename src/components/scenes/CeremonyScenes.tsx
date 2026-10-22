@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useShownOnce } from "../../hooks/useShownOnce";
 import { weddingData, type WeddingEvent } from "../../data/weddingData";
-import { Ornament, Botanical } from "../ui/Ornament";
+import { Ornament, Botanical, LINK_ARROW } from "../ui/Ornament";
 import { FloatingPetals } from "../ui/FloatingPetals";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { BoundaryFade } from "../ui/BoundaryFade";
@@ -103,7 +103,7 @@ function EventDetails({
             target="_blank"
             rel="noopener noreferrer"
           >
-            View location <span aria-hidden="true">↗</span>
+            View location <span aria-hidden="true">{LINK_ARROW}</span>
           </a>
         </motion.div>
       )}

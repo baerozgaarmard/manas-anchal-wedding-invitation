@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { weddingData } from "../../data/weddingData";
 import { WeddingCountdown } from "../interactive/WeddingCountdown";
 import { ScratchCanvas } from "../interactive/ScratchCanvas";
-import { Ornament, Botanical } from "../ui/Ornament";
+import { Ornament, Botanical, LINK_ARROW } from "../ui/Ornament";
 
 type RevealState = "covered" | "scratching" | "revealing" | "revealed";
 
@@ -147,7 +147,7 @@ export function ScratchRevealScene({
                   aria-label="Tap to reveal our wedding date"
                 >
                   {reduced ? "Tap to reveal" : "Or, reveal with a tap"}{" "}
-                  <span>↗</span>
+                  <span>{LINK_ARROW}</span>
                 </button>
               </>
             )}

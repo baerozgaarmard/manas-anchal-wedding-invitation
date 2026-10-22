@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useShownOnce } from "../../hooks/useShownOnce";
 import { weddingData, type WeddingEvent } from "../../data/weddingData";
-import { Botanical, Ornament } from "../ui/Ornament";
+import { Botanical, Ornament, LINK_ARROW } from "../ui/Ornament";
 import { JourneyIcon } from "../ui/JourneyIcon";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { BoundaryFade } from "../ui/BoundaryFade";
@@ -150,7 +150,7 @@ function JourneyStop({
 
           {/* 5. Discover the celebration link */}
           <a href={`#${event.id}`} className="journey-arrow">
-            Discover the celebration <span aria-hidden="true">↗</span>
+            Discover the celebration <span aria-hidden="true">{LINK_ARROW}</span>
           </a>
         </div>
       </div>
