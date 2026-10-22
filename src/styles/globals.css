@@ -112,29 +112,6 @@ section.scene.ceremony.vivah div.ceremony-copy { padding-top: max(12px, env(safe
 .ending-scene .ending-venues-footer { margin-top: 15px; }
 section.family-sign-off { min-height: auto; padding-top: 24px; padding-bottom: max(60px, env(safe-area-inset-bottom)); }
 section.family-sign-off .family-top-ornament { margin-bottom: 25px; }
-.letter-chapter .letter-wax {
-  touch-action: manipulation;
-  border: 3px solid #65252f;
-  background: radial-gradient(ellipse at 28% 18%, #a45660 0%, #7a2c40 38%, #541b2d 78%, #401824);
-  box-shadow: 0 8px 14px #441c2938, 0 2px 3px #32111e40,
-    inset 1px 2px 2px #e4af9660, inset -2px -3px 4px #330f25;
-}
-.letter-chapter .wax-monogram {
-  margin: 5px; height: calc(100% - 10px);
-  border: 1px solid #d0a18370;
-  outline: 1px solid #3f162b80; outline-offset: 2px;
-  color: #dbb99a; font-weight: 500;
-  text-shadow: 0 1px 1px #371320, 0 -1px #ecc6a440;
-}
-.letter-chapter .wax-reflection { background: linear-gradient(100deg, transparent 35%, #f2d1b340 50%, transparent 65%); }
-.letter-chapter.letter-breaking .wax-reflection { animation: wax-light .34s ease-out both; }
-.wax-release-line { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
-.wax-release-line path { fill: none; stroke: #ecc6a4; stroke-width: .65; stroke-dasharray: 90; stroke-dashoffset: 90; }
-.letter-breaking .wax-release-line { animation: seal-release .36s ease-out both; }
-.letter-breaking .wax-release-line path { animation: seal-etch .3s ease-out both; }
-@keyframes seal-release { 0% { opacity: 0; } 40% { opacity: .45; } 100% { opacity: 0; } }
-@keyframes seal-etch { to { stroke-dashoffset: 0; } }
-.letter-chapter .letter-top-flap { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 /* Each ceremony owns its content; only decorative layers blend at its edges. */
 section.scene.ceremony:is(.mata, .mehendi, .haldi, .vivah) {
   isolation: isolate;
@@ -2386,198 +2363,626 @@ p {
 .letter-content {
   position: relative;
   z-index: 2;
-  transform-origin: center 65%;
+  opacity: 0;
+}
+.letter-handoff .letter-content,
+.letter-opened .letter-content {
+  opacity: 1;
 }
 .letter-content .scratch-scene {
   scroll-snap-align: none;
 }
-.letter-back {
+/* Royal envelope. The sealed invitation is drawn on a 390×790 stage scaled to fit the
+   screen (--re-scale). A tap adds s-press … s-handoff classes to .re-overlay in turn. */
+.re-overlay {
   position: absolute;
-  inset: 0;
-  z-index: 1;
-  background-color: #eee2cc;
-}
-.letter-border {
-  position: absolute;
-  inset: 19px;
-  border: 1px solid #bfa472;
-  outline: 1px solid #bfa47240;
-  outline-offset: 6px;
-  pointer-events: none;
-}
-.letter-bottom-ornament {
-  position: absolute;
-  bottom: 34px;
-  left: calc(50% - 57px);
-}
-.letter-botanical {
-  height: 350px;
-  opacity: 0.23;
-  color: #9e885d;
-}
-.letter-botanical.left {
-  left: -60px;
-  bottom: -45px;
-  transform: rotate(-15deg);
-}
-.letter-botanical.right {
-  right: -60px;
-  bottom: -40px;
-  transform: rotate(180deg);
-}
-.letter-front {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  background-color: #f2e8d5;
-  clip-path: polygon(0 100%, 50% 57%, 100% 100%);
-  transform-origin: bottom;
-  pointer-events: none;
-}
-.letter-side {
-  position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   z-index: 3;
-  background-color: #f5ecd9;
-  pointer-events: none;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  color: #6a4841;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  background: radial-gradient(ellipse at 50% 46%, #fffaf0 0, #f4e8d4 52%, #e4cfae 100%);
 }
-.letter-side.left {
-  clip-path: polygon(0 22%, 53% 62%, 0 100%);
-  transform-origin: left center;
-  background-image: linear-gradient(40deg, #eadcc4, #fbf3e3);
-}
-.letter-side.right {
-  clip-path: polygon(100% 22%, 47% 62%, 100% 100%);
-  transform-origin: right center;
-  background-image: linear-gradient(-40deg, #e6d5bb, #f9f0de);
-}
-.letter-top-flap {
+.re-defs {
   position: absolute;
-  inset: 0 0 auto;
-  height: 63%;
-  transform-origin: center top;
-  backface-visibility: visible;
-  clip-path: polygon(0 0, 100% 0, 100% 45%, 50% 100%, 0 45%);
-  background-color: #faf2e2;
+}
+.re-damask {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image:
+    radial-gradient(circle at 50% 50%, transparent 0 9px, #c9a25322 10px 11px, transparent 12px),
+    radial-gradient(circle at 0 0, transparent 0 4px, #c9a2531c 5px 6px, transparent 7px);
+  background-size: 44px 44px;
+  background-position: 0 0, 22px 22px;
+}
+.re-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 390px;
+  height: 790px;
+  margin: -395px 0 0 -195px;
+  transform: scale(var(--re-scale, 1));
+}
+.re-bloom {
+  position: absolute;
+  left: -40px;
+  right: -40px;
+  top: 120px;
+  height: 540px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #fff8e6, #fff8e600);
+  opacity: 0;
+  transition: opacity 1.4s ease 0.2s;
+}
+.re-names {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: max(62px, 10svh);
-  box-shadow: inset 0 -2px 3px #a4875250;
-  will-change: transform;
-  pointer-events: none;
+  transition: opacity 0.5s ease;
 }
-.letter-top-flap:after {
-  content: "";
-  position: absolute;
-  inset: 18px 20px;
-  z-index: -1;
-  border-top: 1px solid #bda372;
-  border-left: 1px solid #bda372;
-  border-right: 1px solid #bda372;
-}
-.letter-flap-engraving {
-  position: absolute;
-  inset: 0;
-  opacity: 0.25;
-  background-image: repeating-radial-gradient(
-    ellipse at 50% 0,
-    transparent 0 45px,
-    #b5a07522 46px 47px,
-    transparent 48px 74px
-  );
-  pointer-events: none;
-}
-.letter-top-flap > .ornament {
-  margin-bottom: 25px;
+.re-names .ornament {
   width: 145px;
   height: 40px;
   color: #ab8953;
 }
-.letter-names {
-  font-family: "Italiana", Georgia, serif;
-  font-weight: 400;
+.re-names h1 {
+  margin: 12px 0 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  font: 400 46px/1.05 "Italiana", Georgia, serif;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  font-size: clamp(3.4rem, 14vw, 5.7rem);
-  line-height: 1.05;
-  letter-spacing: 0.065em;
-  color: #6a4841;
+  color: #5f3f39;
 }
-.letter-names em {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 0.45em;
-  line-height: 1.5;
+.re-names em {
+  font: 20px/1.5 "Cormorant Garamond", Georgia, serif;
   letter-spacing: 0;
 }
-.letter-wax {
+.re-envelope {
   position: absolute;
-  left: calc(50% - 47px);
-  top: calc(59% - 36px);
-  width: 94px;
-  height: 94px;
-  z-index: 7;
+  left: 23px;
+  top: 250px;
+  z-index: 4;
+  width: 344px;
+  height: 440px;
+  perspective: 1000px;
+}
+.re-envelope > * {
+  position: absolute;
+}
+.re-shadow {
+  inset: 0;
+  border-radius: 3px;
+  box-shadow: 0 26px 44px -14px #5a321f66, 0 6px 14px #5a321f26;
+}
+.re-back,
+.re-pocket {
+  left: 0;
+  top: 0;
+  width: 344px;
+  height: 440px;
+}
+.re-pocket {
+  z-index: 4;
+}
+.re-body {
+  transform: translateY(0) scale(1);
+  transition: transform 1.2s cubic-bezier(0.45, 0.05, 0.2, 1);
+}
+.re-card {
+  left: 16px;
+  top: 24px;
+  z-index: 2;
+  width: 312px;
+  height: 400px;
   overflow: hidden;
-  isolation: isolate;
-  border: 4px solid #793932;
-  border-radius: 47% 44% 46% 43%;
-  background: radial-gradient(
-    ellipse at 28% 15%,
-    #bd7765,
-    #843f3d 58%,
-    #58272d
-  );
-  box-shadow:
-    3px 7px 11px #48242640,
-    inset 1px 3px 3px #efb58c70,
-    inset -3px -4px 5px #54252a;
+  box-shadow: 0 10px 26px -10px #5a321f40;
+  transform: translate(0px, 0px) scale(1);
+  transition: transform 1.2s cubic-bezier(0.45, 0.05, 0.2, 1);
+}
+/* Shade inside the closed envelope, lifting as the flap opens. */
+.re-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#2e140a61, #2e140a00 55%);
+  transition: opacity 0.8s ease 0.35s;
+}
+.date-stationery.re-face {
+  transform-origin: 0 0;
   transition: none;
 }
-.wax-monogram {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #bd806755;
-  border-radius: 50%;
+.re-face .re-foil {
+  flex: 1 1 0;
+  width: 100%;
+  max-width: 274px;
+  min-height: 0;
+  margin-bottom: 26px;
+}
+.re-cast {
+  left: 0;
+  top: 0;
+  z-index: 4;
+  width: 344px;
+  height: 206px;
+  transform: translateY(5px);
+}
+.re-flap {
+  left: 0;
+  top: 0;
+  z-index: 5;
+  width: 344px;
+  height: 206px;
+  transform-origin: 50% 0;
+  transform-style: preserve-3d;
+  transform: translateY(0) scale(1) rotateX(0deg);
+}
+.re-side {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+/* Turned about the vertical axis so that, once the flap folds up, the liner reads point-up. */
+.re-side.back {
+  transform: rotateY(180deg);
+}
+.re-art {
+  position: absolute;
+  inset: 0;
+  width: 344px;
+  height: 206px;
+}
+.re-shade {
+  opacity: 0;
+  transition: opacity 1.1s cubic-bezier(0.6, 0, 0.4, 1);
+}
+.re-side.back .re-shade {
+  opacity: 0.55;
+}
+.re-line {
+  fill: none;
+  stroke: #c39a4f;
+  stroke-width: 1.8;
+}
+.re-line-hi {
+  fill: none;
+  stroke: #f2dca6;
+  stroke-width: 0.6;
+}
+.re-line-fine {
+  fill: none;
+  stroke: #c39a4f;
+  stroke-width: 0.7;
+  stroke-dasharray: 1 3;
+  stroke-linecap: round;
+}
+.re-stain {
+  opacity: 0;
+  transition: opacity 0.6s ease 0.15s;
+}
+.re-stamp {
+  position: absolute;
+  right: 20px;
+  top: 14px;
+  width: 50px;
+  height: 62px;
+  padding: 4px;
+  box-sizing: border-box;
+  background: radial-gradient(circle, transparent 1.9px, #fbf5e9 2.1px) -3.5px -3.5px / 7px 7px;
+  filter: drop-shadow(0 1px 1.5px #6a48413a);
+  transform: rotate(4deg);
+}
+.re-stamp-face {
   height: 100%;
-  font:
-    1.7rem "Cormorant Garamond",
-    Georgia,
-    serif;
-  color: #d7a88b;
-  text-shadow: 0 -1px 1px #4b2229;
+  box-sizing: border-box;
+  padding: 3px 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #d8b47a;
+  background: linear-gradient(160deg, #8d3742, #6a2530);
 }
-.wax-monogram em {
-  font-size: 0.8rem;
-  padding: 0 2px;
+.re-stamp svg {
+  width: 30px;
+  height: 33px;
+  fill: #e6c78a;
+  stroke: #e6c78a;
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
-.wax-reflection {
+.re-stamp path {
+  fill: none;
+}
+.re-stamp span {
+  font-size: 4.8px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: #efd6a2;
+}
+.re-postmark {
   position: absolute;
-  inset: -20%;
-  transform: translateX(-100%) rotate(15deg);
-  background: linear-gradient(90deg, transparent, #f2c49c70, transparent);
-  pointer-events: none;
+  left: 146px;
+  top: 22px;
+  width: 168px;
+  height: 76px;
+  color: #7d4a3e;
+  opacity: 0.6;
+  transform: rotate(-8deg);
 }
-.letter-breaking .wax-reflection {
-  animation: wax-light 0.55s ease-in-out both;
+.re-ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
 }
-.letter-open-hint {
+.re-ring.thin {
+  stroke-width: 0.8;
+}
+.re-postmark text {
+  fill: currentColor;
+  font-weight: 600;
+  text-anchor: middle;
+}
+.re-arc-text {
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+.re-year {
+  font-size: 11.5px;
+  letter-spacing: 1.5px;
+}
+.re-waves {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+}
+.re-ribbon {
+  left: 87px;
+  top: 150px;
+  z-index: 6;
+  width: 170px;
+  height: 140px;
+  transform-origin: 85px 44px;
+  animation: re-sway 4.2s ease-in-out infinite;
+  transition: transform 0.9s cubic-bezier(0.45, 0.05, 0.8, 0.6), opacity 0.5s ease-in 0.35s;
+}
+.re-halo {
+  left: 116px;
+  top: 138px;
+  z-index: 6;
+  width: 112px;
+  height: 112px;
+  border: 1.5px solid #d4a85a;
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: re-halo 3.4s ease-out infinite;
+}
+.re-seal-shadow {
+  left: 102px;
+  top: 126px;
+  z-index: 6;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #2a060c66, #2a060c00);
+  transform: translate(3px, 7px);
+  transition: transform 0.7s cubic-bezier(0.3, 0.1, 0.3, 1), opacity 0.5s ease;
+}
+.re-seal {
+  left: 116px;
+  top: 138px;
+  z-index: 7;
+  width: 112px;
+  height: 112px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  touch-action: manipulation;
+  animation: re-breathe 3.4s ease-in-out infinite;
+  transition: transform 0.16s ease;
+}
+.re-seal:focus-visible {
+  outline: 2px solid #c39a4f;
+  outline-offset: 6px;
+}
+/* The seal folds back over itself along a line sweeping in from its lower-right edge
+   (the peel is turned 45°, so the fold runs along x). Each half is a clipping window
+   that slides one way while its artwork slides back, so only transforms animate. */
+.re-peel {
   position: absolute;
-  top: 75%;
+  inset: 0;
+  transform: translate(0px, 0px) rotate(45deg) scale(1);
+  transition:
+    transform 0.9s cubic-bezier(0.45, 0.05, 0.55, 0.95),
+    opacity 0.4s ease 0.45s;
+}
+.re-peel span {
+  position: absolute;
+  inset: 0;
+}
+.re-peel svg {
+  display: block;
+  width: 112px;
+  height: 112px;
+  transform: rotate(-45deg);
+}
+.re-stuck,
+.re-flip {
+  overflow: hidden;
+}
+.re-stuck,
+.re-stuck-art,
+.re-flip,
+.re-flip-art {
+  transition: transform 0.75s cubic-bezier(0.45, 0, 0.2, 1);
+}
+.re-stuck {
+  transform: translateX(0px);
+}
+.re-stuck-art {
+  transform: translateX(0px);
+}
+/* Mirrored about its left edge, which is the fold line. */
+.re-flip {
+  transform-origin: 0 50%;
+  transform: translateX(112px) scaleX(-1);
+}
+.re-flip-art {
+  transform: translateX(-112px);
+}
+.re-flip-wrap {
+  filter: drop-shadow(4px 4px 3px #2a060c70);
+}
+/* Light catching the fold; it sits where the fold line comes to rest, inside the seal's outline. */
+.re-crease {
+  background: linear-gradient(90deg, #ffe6d600 69px, #ffe6d68c 72px, #ffe6d600 96px);
+  clip-path: circle(52px at 56px 56px);
+}
+.re-stuck .re-glint {
+  position: absolute;
+  inset: 7px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.re-glint::before {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  background: linear-gradient(90deg, transparent 32%, #ffe2bd8c 50%, transparent 68%);
+  transform: translateX(-130%) rotate(18deg);
+  animation: re-glint 5s ease-in-out infinite;
+}
+.re-crumbs {
+  left: 210px;
+  top: 232px;
+  z-index: 8;
+}
+.re-crumbs i {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  margin: -1.5px 0 0 -1.5px;
+  border-radius: 1px;
+  background: #7a1a29;
+  opacity: 0;
+}
+.re-crumbs i:nth-child(3n) { width: 2.5px; height: 2.5px; background: #d9b46a; }
+.re-crumbs i:nth-child(4n) { width: 4px; background: #a83848; }
+.re-crumbs i:nth-child(1) { --dx: -8px; --dy: 96px; animation-delay: 0.05s; }
+.re-crumbs i:nth-child(2) { --dx: 10px; --dy: 120px; animation-delay: 0.12s; }
+.re-crumbs i:nth-child(3) { --dx: -18px; --dy: 80px; animation-delay: 0.2s; }
+.re-crumbs i:nth-child(4) { --dx: 22px; --dy: 140px; animation-delay: 0.08s; }
+.re-crumbs i:nth-child(5) { --dx: 4px; --dy: 110px; animation-delay: 0.26s; }
+.re-crumbs i:nth-child(6) { --dx: -26px; --dy: 130px; animation-delay: 0.16s; }
+.re-crumbs i:nth-child(7) { --dx: 16px; --dy: 70px; animation-delay: 0.3s; }
+.re-crumbs i:nth-child(8) { --dx: -4px; --dy: 150px; animation-delay: 0.22s; }
+.re-crumbs i:nth-child(9) { --dx: 28px; --dy: 104px; animation-delay: 0.34s; }
+.re-crumbs i:nth-child(10) { --dx: -14px; --dy: 118px; animation-delay: 0.1s; }
+.re-hint {
+  position: absolute;
+  top: 712px;
   left: 0;
   right: 0;
-  text-align: center;
   z-index: 6;
+  margin: 0;
+  text-align: center;
+  font-size: 19px;
   font-style: italic;
   color: #8d7056;
-  font-size: 1.25rem;
+  animation: re-hint 3.4s ease-in-out infinite;
+  transition: opacity 0.3s;
+}
+.re-frame {
+  position: absolute;
+  inset: 14px;
+  z-index: 20;
+  border: 1px solid #c39a4f;
   pointer-events: none;
 }
-.letter-opening .letter-wax,
-.letter-revealing .letter-wax {
+.re-frame::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 1px solid #c39a4f66;
+}
+.re-corner {
+  position: absolute;
+  z-index: 21;
+  width: 58px;
+  height: 58px;
+  fill: none;
+  stroke: #b98f45;
+  stroke-width: 1.1;
+  stroke-linecap: round;
   pointer-events: none;
+}
+.re-corner circle {
+  fill: #b98f45;
+  stroke: none;
+}
+.re-corner.tl { left: 18px; top: 18px; }
+.re-corner.tr { right: 18px; top: 18px; transform: scaleX(-1); }
+.re-corner.bl { left: 18px; bottom: 18px; transform: scaleY(-1); }
+.re-corner.br { right: 18px; bottom: 18px; transform: scale(-1, -1); }
+.re-mono {
+  font: 15px "Italiana", Georgia, serif;
+  text-anchor: middle;
+}
+.re-amp {
+  font: 8px "Cormorant Garamond", Georgia, serif;
+  text-anchor: middle;
+}
+/* Tap: the seal dips, peels back from one edge, then lifts away with its ribbon. */
+.s-press .re-seal {
+  animation: none;
+  transform: scale(0.97);
+}
+.s-press .re-ribbon,
+.s-press .re-hint {
+  animation: none;
+}
+.s-press .re-hint {
+  opacity: 0;
+}
+.s-press .re-halo,
+.s-press .re-glint {
+  display: none;
+}
+/* Fold line at 69px of the seal's 112. */
+.s-peel .re-stuck {
+  transform: translateX(-43px);
+}
+.s-peel .re-stuck-art {
+  transform: translateX(43px);
+}
+.s-peel .re-flip {
+  transform: translateX(69px) scaleX(-1);
+}
+.s-peel .re-flip-art {
+  transform: translateX(-69px);
+}
+.s-peel .re-stain {
+  opacity: 1;
+}
+.s-peel .re-seal-shadow {
+  transform: translate(-4px, 9px) scale(1.03);
+}
+.s-peel .re-crumbs i {
+  animation: re-crumb 1.15s cubic-bezier(0.4, 0, 0.8, 0.6) forwards;
+}
+.s-lift .re-peel {
+  transform: translate(90px, -250px) rotate(80deg) scale(1.15);
+  opacity: 0;
+}
+.s-lift .re-seal-shadow {
+  transform: translate(40px, 40px) scale(1.4);
+  opacity: 0;
+  transition: transform 0.8s ease, opacity 0.4s ease;
+}
+.s-lift .re-ribbon {
+  transform: translateY(170px) rotate(8deg);
+  opacity: 0;
+}
+/* The flap lifts toward the reader, shading as it turns edge-on, and lands liner-up. */
+.s-flap .re-names {
+  opacity: 0;
+}
+.s-flap .re-flap {
+  z-index: 1;
+  transform: translateY(0) scale(1) rotateX(180deg);
+  transition: transform 1.1s cubic-bezier(0.6, 0, 0.4, 1), z-index 0s 0.55s;
+}
+.s-flap .re-side.front .re-shade {
+  opacity: 0.4;
+}
+.s-flap .re-side.back .re-shade {
+  opacity: 0;
+}
+.s-flap .re-cast {
+  animation: re-cast 1.1s linear forwards;
+}
+.s-flap .re-card::after {
+  opacity: 0;
+}
+/* The card slides out while the envelope lowers, clearing the pocket in one move. */
+.s-rise .re-card {
+  transform: translate(0px, -230px) scale(1);
+}
+.s-rise .re-body {
+  transform: translateY(190px) scale(1);
+}
+.s-rise .re-flap {
+  transform: translateY(190px) scale(1) rotateX(180deg);
+  transition: transform 1.2s cubic-bezier(0.45, 0.05, 0.2, 1);
+}
+/* The card settles onto the scratch card (aimed in script); the envelope drops away. */
+.s-present .re-bloom {
+  opacity: 0.9;
+}
+.s-present .re-card {
+  z-index: 9;
+  box-shadow: 0 15px 35px #76573526, 1px 2px 4px #6c4c3910;
+  transform: translate(var(--aim-x, 0px), var(--aim-y, -88px)) scale(var(--aim-s, 1.06));
+  transition: transform 1.1s cubic-bezier(0.3, 0.9, 0.3, 1);
+}
+.s-present .re-body {
+  transform: translateY(760px) scale(0.94);
+  transition: transform 1.1s cubic-bezier(0.55, 0, 0.6, 1);
+}
+.s-present .re-flap {
+  transform: translateY(773px) scale(0.94) rotateX(180deg);
+  transition: transform 1.1s cubic-bezier(0.55, 0, 0.6, 1);
+}
+.re-overlay.s-handoff {
+  opacity: 0;
+  transition: opacity 0.6s ease 0.15s;
+}
+@keyframes re-sway {
+  50% { transform: rotate(1.6deg); }
+}
+@keyframes re-halo {
+  0% { transform: scale(1); opacity: 0.55; }
+  70%, 100% { transform: scale(1.45); opacity: 0; }
+}
+@keyframes re-breathe {
+  50% { transform: scale(1.035); }
+}
+@keyframes re-glint {
+  0%, 66% { transform: translateX(-130%) rotate(18deg); }
+  86%, 100% { transform: translateX(130%) rotate(18deg); }
+}
+@keyframes re-hint {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+@keyframes re-crumb {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0); }
+  10% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(200deg); }
+}
+@keyframes re-cast {
+  0% { transform: translateY(5px); opacity: 1; }
+  30% { transform: translateY(22px); opacity: 0.9; }
+  48%, 100% { transform: translateY(30px); opacity: 0; }
 }
 .letter-opened {
   perspective: none;
@@ -2587,11 +2992,6 @@ p {
 }
 .scratch-instruction:focus {
   outline: none;
-}
-@keyframes wax-light {
-  to {
-    transform: translateX(100%) rotate(15deg);
-  }
 }
 /* The scratch invitation is set within the garden rather than on a blank stage. */
 .scratch-scene {
@@ -3181,17 +3581,6 @@ p {
   margin-top: 18px;
 }
 @media (min-width: 800px) {
-  .letter-top-flap {
-    padding-top: 90px;
-  }
-  .letter-wax {
-    width: 110px;
-    height: 110px;
-    left: calc(50% - 55px);
-  }
-  .letter-names {
-    font-size: 5.7rem;
-  }
   .letter-chapter {
     min-height: 1000px;
   }
@@ -3222,49 +3611,7 @@ p {
 :root[data-motion="reduced"] .scratch-foreground {
     animation: none;
   }
-:root[data-motion="reduced"] .letter-content {
-    transform: none !important;
-  }
 
-.letter-border-overlay {
-  position: absolute;
-  inset: 19px;
-  z-index: 6;
-  border: 1px solid #bda37285;
-  outline: 1px solid #bda37225;
-  outline-offset: 5px;
-  pointer-events: none;
-}
-.letter-top-flap:after {
-  border: 0;
-}
-.letter-corner {
-  position: absolute;
-  width: 60px;
-  height: 26px;
-  color: #a88b56;
-  opacity: 0.65;
-}
-.letter-corner.upper-left {
-  top: 9px;
-  left: 6px;
-  transform: rotate(-40deg);
-}
-.letter-corner.upper-right {
-  top: 9px;
-  right: 6px;
-  transform: rotate(40deg);
-}
-.letter-corner.lower-left {
-  bottom: 9px;
-  left: 6px;
-  transform: rotate(40deg);
-}
-.letter-corner.lower-right {
-  bottom: 9px;
-  right: 6px;
-  transform: rotate(-40deg);
-}
 .date-discovered .date-beneath:before {
   z-index: 0;
 }
