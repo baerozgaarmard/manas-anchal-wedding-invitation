@@ -159,16 +159,18 @@ export function Garden() {
 function Ceremony({ event }: { event: WeddingEvent }) {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return;
-      const image = element.querySelector<HTMLImageElement>(".scene-art");
-      if (image) image.loading = "eager";
-      observer.disconnect();
-    }, { rootMargin: "900px 0px" });
-    observer.observe(element);
-    return () => observer.disconnect();
+    const image = ref.current?.querySelector<HTMLImageElement>(".scene-art");
+    if (!image) return;
+    // Fetched and decoded once the page has loaded, while guests are still on the envelope
+    // and scratch card. Waiting until the chapter was near the screen left phones on
+    // mobile data showing a bare background before the artwork arrived.
+    const start = () => {
+      image.loading = "eager";
+      image.decode?.().catch(() => {});
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+    return () => window.removeEventListener("load", start);
   }, []);
   const reduced = useReducedMotion();
   // The text fades up once as the chapter arrives (CSS: [data-reveal="fade"]); the
