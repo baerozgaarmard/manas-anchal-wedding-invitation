@@ -147,7 +147,8 @@ export const weddingData = {
       shortDate: "31 OCTOBER",
       fullDate: "SATURDAY · 31 OCTOBER 2026",
       chapter: "Under the stars",
-      line: "Henna on our hands. A little magic in the air.",
+      // Non-breaking space keeps "A" with the second sentence when the line wraps.
+      line: "Henna on our hands. A little magic in the air.",
       scheduleLabel: "TIME",
       schedule: [
         {

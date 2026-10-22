@@ -146,7 +146,9 @@ section.scene.ceremony:is(.mata, .mehendi, .haldi, .vivah) {
 .scene.ceremony.vivah .ceremony-waypoint-marker { display: block; font-size: 11px; line-height: 1.1; transform: none; color: inherit; opacity: .65; }
 @media (max-width: 599px) {
   .scene.ceremony.mata div.ceremony-copy { padding-bottom: max(220px, env(safe-area-inset-bottom)); }
-  .scene.ceremony.mehendi div.ceremony-copy { padding-bottom: calc(230px + env(safe-area-inset-bottom)); }
+  /* The Mehandi text sits on the plain wall: clear of the paisley border (left 16% of the
+     artwork) and the flowers (from 60%), and above the leaf at the lower left. */
+  .scene.ceremony.mehendi div.ceremony-copy { width: 60%; padding: 165px 0 calc(350px + env(safe-area-inset-bottom)) 16%; }
   .scene.ceremony.haldi div.ceremony-copy { padding-bottom: calc(200px + env(safe-area-inset-bottom)); }
   .scene.ceremony.vivah div.ceremony-copy { padding-top: 24px; padding-inline: clamp(20px, 6vw, 32px); }
   .scene.ceremony.vivah .ceremony-copy > .ornament { margin-block: 2px; height: 24px; }
@@ -154,7 +156,7 @@ section.scene.ceremony:is(.mata, .mehendi, .haldi, .vivah) {
   .scene.ceremony.mehendi .ceremony-copy .ceremony-entry-text,
   .scene.ceremony.mehendi .ceremony-copy .ceremony-venue-addr,
   .scene.ceremony.mehendi .ceremony-copy .event-actions { font-size: clamp(14px, 3.65vw, 16px); }
-  .scene.ceremony.mehendi .ceremony-copy .ceremony-full-date { font-size: 11.5px; }
+  .scene.ceremony.mehendi .ceremony-copy .ceremony-full-date { font-size: clamp(9.5px, 2.55vw, 11px); letter-spacing: 0.07em; white-space: nowrap; }
 }
 /* Readable editorial details and restrained, scene-specific framing. */
 html:root { scroll-snap-type: none; }
@@ -1383,8 +1385,10 @@ p {
   width: 95px;
   color: #bf9c62;
 }
+/* Wraps into even lines rather than leaving a word alone. */
 .mehendi .ceremony-line {
   max-width: 220px;
+  text-wrap: balance;
 }
 .night-garden {
   position: absolute;
