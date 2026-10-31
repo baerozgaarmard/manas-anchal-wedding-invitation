@@ -88,7 +88,7 @@ export const weddingData = {
         "Vikas Nagar, Dehradun",
       ],
       googleMapsUrl:
-        "https://maps.app.goo.gl/s63AymCiJmfkugBp9?g_st=ic",
+        "https://www.google.com/maps?q=30.44698,77.853333",
       embedUrl:
         "https://maps.google.com/maps?q=30.4469800,77.8533330&hl=en&z=16&output=embed",
     },
@@ -98,7 +98,7 @@ export const weddingData = {
       address: [
         "Bahuwala, Dehradun",
       ],
-      googleMapsUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
+      googleMapsUrl: "https://www.google.com/maps/place/Sharma+Farm/@30.3947001,77.924638,17z/data=!3m1!4b1!4m6!3m5!1s0x390f2b00322517c9:0x2266edb37b877547!8m2!3d30.3947001!4d77.924638!16s%2Fg%2F11x2_dz289",
       embedUrl:
         "https://maps.google.com/maps?cid=2478930000041440583&hl=en&z=16&output=embed",
     },
@@ -106,7 +106,7 @@ export const weddingData = {
   location: {
     venue: "Sharma Farms",
     address: "Bahuwala, Dehradun",
-    googleMapsUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
+    googleMapsUrl: "https://www.google.com/maps/place/Sharma+Farm/@30.3947001,77.924638,17z/data=!3m1!4b1!4m6!3m5!1s0x390f2b00322517c9:0x2266edb37b877547!8m2!3d30.3947001!4d77.924638!16s%2Fg%2F11x2_dz289",
     embedUrl:
       "https://maps.google.com/maps?cid=2478930000041440583&hl=en&z=16&output=embed",
   },
@@ -137,7 +137,7 @@ export const weddingData = {
       venueAddress: ["Village & Post Rudrapur", "Vikas Nagar, Dehradun"],
       venue: "Family Residence, Rudrapur, Vikas Nagar",
       address: "Village & Post Rudrapur, Vikas Nagar, Dehradun",
-      mapUrl: "https://maps.app.goo.gl/s63AymCiJmfkugBp9?g_st=ic",
+      mapUrl: "https://www.google.com/maps?q=30.44698,77.853333",
     },
     {
       id: "mehendi",
@@ -163,7 +163,7 @@ export const weddingData = {
       venueAddress: ["Village & Post Rudrapur", "Vikas Nagar, Dehradun"],
       venue: "Family Residence, Rudrapur, Vikas Nagar",
       address: "Village & Post Rudrapur, Vikas Nagar, Dehradun",
-      mapUrl: "https://maps.app.goo.gl/s63AymCiJmfkugBp9?g_st=ic",
+      mapUrl: "https://www.google.com/maps?q=30.44698,77.853333",
     },
     {
       id: "haldi",
@@ -194,7 +194,7 @@ export const weddingData = {
       venueAddress: ["Village & Post Rudrapur", "Dehradun"],
       venue: "Family Residence, Rudrapur",
       address: "Village & Post Rudrapur, Dehradun",
-      mapUrl: "https://maps.app.goo.gl/s63AymCiJmfkugBp9?g_st=ic",
+      mapUrl: "https://www.google.com/maps?q=30.44698,77.853333",
     },
     {
       id: "vivah",
@@ -239,7 +239,7 @@ export const weddingData = {
       isMainVenueEmphasized: true,
       venue: "SHARMA FARMS, Bahuwala",
       address: "Bahuwala, Dehradun",
-      mapUrl: "https://maps.app.goo.gl/RHxXSteNytH2wAbE9",
+      mapUrl: "https://www.google.com/maps/place/Sharma+Farm/@30.3947001,77.924638,17z/data=!3m1!4b1!4m6!3m5!1s0x390f2b00322517c9:0x2266edb37b877547!8m2!3d30.3947001!4d77.924638!16s%2Fg%2F11x2_dz289",
     },
   ] as WeddingEvent[],
 };
